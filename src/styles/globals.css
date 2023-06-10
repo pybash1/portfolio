@@ -1,3 +1,61 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: Labil Grotesk;
+  src: url(https://2586labs.com/static/fonts/LabilGrotesk-Medium.woff2)
+    format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Labil Grotesk;
+  src: url(https://2586labs.com/static/fonts/LabilGrotesk-Regular.woff2)
+    format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #585858;
+  border-radius: 20px;
+}
+
+@layer base {
+  ul,
+  ol {
+    list-style: revert;
+  }
+
+  blockquote {
+    border-left: 2px solid white;
+    padding-left: 20px;
+  }
+
+  h1 {
+    @apply text-3xl
+  }
+
+  h2 {
+    @apply text-2xl
+  }
+
+  h3 {
+    @apply text-xl
+  }
+
+  h4 {
+    @apply text-lg;
+  }
+}
