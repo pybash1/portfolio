@@ -18,6 +18,13 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: Palatino;
+  src: url(/palatino-linotype-corsivo.ttf) format("ttf");
+  font-weight: 400;
+  font-style: italic;
+}
+
 ::-webkit-scrollbar {
   width: 7px;
   border-radius: 20px;
@@ -30,4 +37,14 @@
 ::-webkit-scrollbar-thumb {
   background: #585858;
   border-radius: 20px;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateY(100px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
