@@ -104,7 +104,9 @@ const Home: NextPage = () => {
       Math.floor(Math.abs(rn - (vsc?.timestamps?.start || 0)) / 1000 / 60) -
       hrs * 60;
     return `
-      ${(hrs > 0 ? `${hrs}${(hrs > 1 ? " hours, " : " hour, ")}` : "")}${mins}${(mins > 1 ? " minutes" : " minute")}`;
+      ${hrs > 0 ? `${hrs}${hrs > 1 ? " hours, " : " hour, "}` : ""}${mins}${
+      mins > 1 ? " minutes" : " minute"
+    }`;
   };
 
   return (
