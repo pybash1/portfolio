@@ -38,13 +38,3 @@
   background: #585858;
   border-radius: 20px;
 }
-
-@keyframes slide {
-  0% {
-    transform: translateY(100px);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
