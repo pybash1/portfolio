@@ -1,70 +1,7 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useState, useEffect } from "react";
-
-interface Lanyard {
-  success: boolean;
-  data: {
-    spotify: Spotify;
-    listening_to_spotify: boolean;
-    kv: {
-      [key: string]: string;
-    };
-    discord_user: DiscordUser;
-    discord_status: "online" | "offline" | "idle" | "dnd";
-    activities: Activity[];
-    active_on_discord_web: boolean;
-    active_on_discord_mobile: boolean;
-    active_on_discord_desktop: boolean;
-  };
-}
-
-interface Spotify {
-  track_id: string;
-  timestamps: {
-    start: number;
-    end: number;
-  };
-  song: string;
-  artist: string;
-  album_art_url: string;
-  album: string;
-}
-
-interface Activity {
-  type: number;
-  timestamps: {
-    start: number;
-    end?: number;
-  };
-  sync_id?: string;
-  state: string;
-  session_id: string;
-  party?: {
-    id: string;
-  };
-  name: string;
-  id: string;
-  details: string;
-  created_at: number;
-  buttons?: string[];
-  application_id?: string;
-  assets: {
-    [key: string]: string;
-  };
-}
-
-interface DiscordUser {
-  username: string;
-  public_flags: number;
-  id: string;
-  global_name: string | null;
-  display_name: string | null;
-  discriminator: string | null;
-  bot: boolean;
-  avatar_decoration: null;
-  avatar: string;
-}
+import type { Lanyard, Spotify, Activity } from "~/types/lanyard";
 
 const Home: NextPage = () => {
   const [lanyard, setLanyard] = useState<Lanyard>();
@@ -193,7 +130,7 @@ const Home: NextPage = () => {
               {clicks >= 1 ? (
                 <li className="flex gap-2">
                   <a
-                    href="https://solo.pybash.xyz"
+                    href={lanyard?.data?.kv?.rnlink}
                     className="umami--click--solo-building cursor-[url('/cursor.svg'),_pointer] font-bold text-green-400"
                   >
                     {lanyard?.data?.kv?.rnname}
