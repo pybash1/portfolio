@@ -80,22 +80,34 @@ const Home: NextPage = () => {
             >
               pybash
             </a>
-            {spotify ? (
-              <>
-                , rn am vibing to{" "}
-                <a
-                  href={`https://open.spotify.com/track/${spotify?.track_id}`}
-                  className="umami--click--song mx-1 cursor-[url('/cursor.svg'),_pointer] rounded-md bg-gray-300 bg-opacity-40 px-1.5 py-0.5 transition duration-300 ease-in-out hover:bg-opacity-60 hover:text-black"
-                >
-                  {spotify?.song}
-                </a>
-                by
-                <span className="mx-1 rounded-md bg-gray-300 bg-opacity-40 px-1.5 py-0.5 transition duration-300 ease-in-out hover:bg-opacity-60 hover:text-black">
-                  {spotify?.artist}
-                </span>
-              </>
-            ) : null}
+            , a 15yo frontend dev from india.
+            <br />
           </div>
+          <div className="items-center justify-center md:flex">
+            looking for a proper resume? head{" "}
+            <a
+              href="https://read.cv/pybash"
+              className="umami--click--username ml-1 cursor-[url('/cursor.svg'),_pointer] rounded-md bg-gray-300 bg-opacity-40 px-1.5 py-0.5 transition duration-300 ease-in-out hover:bg-opacity-60 hover:text-black"
+            >
+              here
+            </a>
+            .
+          </div>
+          {spotify ? (
+            <div className="items-center justify-center md:flex">
+              rn am vibing to{" "}
+              <a
+                href={`https://open.spotify.com/track/${spotify?.track_id}`}
+                className="umami--click--song mx-1 cursor-[url('/cursor.svg'),_pointer] rounded-md bg-gray-300 bg-opacity-40 px-1.5 py-0.5 transition duration-300 ease-in-out hover:bg-opacity-60 hover:text-black"
+              >
+                {spotify?.song}
+              </a>
+              by
+              <span className="mx-1 rounded-md bg-gray-300 bg-opacity-40 px-1.5 py-0.5 transition duration-300 ease-in-out hover:bg-opacity-60 hover:text-black">
+                {spotify?.artist}
+              </span>
+            </div>
+          ) : null}
           {vsc ? (
             <div className="flex items-center justify-center">
               {spotify ? (
