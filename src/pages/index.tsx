@@ -157,6 +157,14 @@ const Home: NextPage = () => {
                 building the frontend at a stealth startup
               </li>
               <li className="flex gap-2">
+                <div className="font-bold text-emerald-200">thinking</div> about
+                philosophy and knowledge at times
+              </li>
+              <li className="flex gap-2">
+                <div className="font-bold text-blue-400">reading</div> or rather
+                trying to read books
+              </li>
+              <li className="flex gap-2">
                 <div className="font-bold">trying</div> to pass school somehow
               </li>
             </ul>
