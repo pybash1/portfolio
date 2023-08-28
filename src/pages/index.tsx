@@ -104,7 +104,7 @@ const Home: NextPage = () => {
               </a>
               by
               <span className="mx-1 rounded-md bg-gray-300 bg-opacity-40 px-1.5 py-0.5 transition duration-300 ease-in-out hover:bg-opacity-60 hover:text-black">
-                {spotify?.artist}
+                {spotify?.artist?.split(";")[0]}
               </span>
             </div>
           ) : null}
@@ -169,9 +169,9 @@ const Home: NextPage = () => {
                   href="https://elusidate.app"
                   className="umami--click--project cursor-[url('/cursor.svg'),_pointer] font-bold text-yellow-400"
                 >
-                  elusidate(cancelled)
-                </a>{" "}
-                - we turn data to reports in 1 click
+                  elusidate
+                </a>
+                (cancelled) - we turn data to reports in 1 click
               </li>
               <li className="flex gap-2">
                 <a
@@ -187,9 +187,9 @@ const Home: NextPage = () => {
                   href="https://solo.pybash.xyz"
                   className="umami--click--project cursor-[url('/cursor.svg'),_pointer] font-bold text-yellow-400"
                 >
-                  solo(wip)
-                </a>{" "}
-                - connecting artists with their die-hard fans
+                  solo
+                </a>
+                (wip) - connecting artists with their die-hard fans
               </li>
               <li className="flex gap-2">
                 <a
@@ -197,8 +197,8 @@ const Home: NextPage = () => {
                   className="umami--click--project cursor-[url('/cursor.svg'),_pointer] font-bold text-yellow-400"
                 >
                   authdeck
-                </a>{" "}
-                - verify your identity on chain
+                </a>
+                (dead) - verify your identity on chain
               </li>
               <li className="flex gap-2">
                 <a
