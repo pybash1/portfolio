@@ -27,14 +27,12 @@
 
 ::-webkit-scrollbar {
   width: 7px;
-  border-radius: 20px;
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #000;
+  background-color: #faf5f1;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #585858;
-  border-radius: 20px;
+  background: #ff0000;
 }
