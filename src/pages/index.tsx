@@ -3,11 +3,11 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import Navbar from "~/components/Navbar";
+import Topbar from "~/components/Topbar";
 import type { Lanyard, Spotify, Activity } from "~/types/lanyard";
 import { chooseRandom, pronounciations } from "~/utils/utils";
 
 const Home: NextPage = () => {
-  const [lanyard, setLanyard] = useState<Lanyard>();
   const [spotify, setSpotify] = useState<Spotify>();
   const [vsc, setVsc] = useState<Activity>();
   const [rn, setRn] = useState(0);
@@ -15,7 +15,6 @@ const Home: NextPage = () => {
     chooseRandom(["craftsman", "innovator", "artisan", "maverick"])
   );
   const [loading, setLoading] = useState(true);
-  const [display, setDisplay] = useState<"variant1" | "variant2">("variant1");
   const [navbar, setNavbar] = useState(false);
 
   useEffect(() => {
@@ -27,7 +26,6 @@ const Home: NextPage = () => {
       method: "GET",
     }).then((res) =>
       res.json().then((data: Lanyard) => {
-        setLanyard(data);
         if (data.data.spotify) {
           setSpotify(data.data.spotify);
         }
@@ -78,48 +76,11 @@ const Home: NextPage = () => {
         <main
           className={`relative flex min-h-screen flex-col items-center justify-center bg-[#faf5f1] py-8 font-['Labil_Grotesk'] leading-none text-[#ff0000] selection:bg-[#ff0000] selection:text-[#faf5f1]`}
         >
-          <AnimatePresence>
-            {navbar ? <Navbar   /> : null}
-          </AnimatePresence>
-          <div className="absolute left-0 right-0 top-8 flex w-full items-center justify-between px-8">
-            <button
-              className="z-[0] text-3xl text-black transition-transform duration-300 hover:rotate-[360deg]"
-              onClick={() =>
-                navbar
-                  ? setNavbar(false)
-                  : setDisplay(display === "variant1" ? "variant2" : "variant1")
-              }
-            >
-              *
-            </button>
-            <div
-              className={`uppercase transition duration-300 ease-in-out ${
-                navbar ? "text-white" : "text-black"
-              }`}
-            >
-              Portfolio
-            </div>
-            <button
-              className="group flex flex-col gap-1"
-              onClick={() => setNavbar(!navbar)}
-            >
-              <div
-                className={`h-[1.5px] w-10 transition-transform duration-300 ease-in-out ${
-                  navbar === true ? "-rotate-45 bg-white" : "bg-black"
-                }`}
-              ></div>
-              <div
-                className={`h-[1.5px] transition-all duration-300 ease-in-out ${
-                  navbar === true
-                    ? "ml-0 w-10 -translate-y-1 rotate-45 bg-white"
-                    : "ml-5 w-5 bg-black"
-                }`}
-              ></div>
-            </button>
-          </div>
+          <AnimatePresence>{navbar ? <Navbar /> : null}</AnimatePresence>
+          <Topbar navbar={navbar} setNavbar={setNavbar} />
           <div className="text-center text-[12rem] uppercase">
             <div className="flex items-start justify-center">
-              {spotify && display === "variant1" ? (
+              {spotify ? (
                 <a
                   href={`https://open.spotify.com/track/${
                     spotify?.track_id ?? ""
@@ -137,7 +98,7 @@ const Home: NextPage = () => {
                 </a>
               )}
               <a href="https://twitter.com/py_bash1">Py</a>
-              {vsc && display === "variant1" ? (
+              {vsc ? (
                 <div className="text-2xl lowercase text-black">
                   {vsc?.details.split(" ")[1]} {vsc?.state}
                   <br />
