@@ -39,7 +39,7 @@ const About: NextPage = () => {
       >
         <AnimatePresence>{navbar ? <Navbar /> : null}</AnimatePresence>
         <Topbar navbar={navbar} setNavbar={setNavbar} />
-        <div className="flex w-1/3 flex-col gap-8 border-r px-8 pt-24 text-9xl">
+        <div className="fixed z-0 flex w-1/3 flex-col gap-8 px-8 pt-24 text-9xl">
           <div>About &mdash; Me</div>
           <div className="flex gap-2 text-xl text-black">
             <Link href="mailto:hi@pybash.xyz" className="text-[#ff0000]">
@@ -51,6 +51,7 @@ const About: NextPage = () => {
             rn am <span className="text-[#ff0000]">{status}</span>
           </div>
         </div>
+        <div className="w-1/3 border-r"></div>
         <div className="mr-24 w-2/3 border-r pt-24">
           <div className="flex h-fit">
             <div className="h-fit px-8 text-6xl text-black [text-orientation:mixed] [writing-mode:vertical-lr]">
