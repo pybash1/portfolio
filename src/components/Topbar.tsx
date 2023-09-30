@@ -8,7 +8,11 @@ interface Props {
 
 const Topbar = ({ navbar, setNavbar }: Props) => {
   return (
-    <div className="absolute left-0 right-0 top-8 flex w-full items-center justify-between px-8">
+    <div
+      className={`left-0 right-0 top-0 z-[90] flex w-full items-center justify-between px-8 py-8 ${
+        navbar ? "fixed" : "absolute"
+      }`}
+    >
       <Link
         className="z-[0] text-3xl text-black transition-transform duration-300 hover:rotate-[360deg]"
         href="/"
@@ -16,14 +20,14 @@ const Topbar = ({ navbar, setNavbar }: Props) => {
         *
       </Link>
       <div
-        className={`uppercase transition duration-300 ease-in-out ${
+        className={`z-50 uppercase transition duration-300 ease-in-out ${
           navbar ? "text-white" : "text-black"
         }`}
       >
         Portfolio
       </div>
       <button
-        className="group flex flex-col gap-1"
+        className="group z-[60] flex flex-col gap-1"
         onClick={() => setNavbar(!navbar)}
       >
         <div
