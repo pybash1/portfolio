@@ -68,17 +68,20 @@ const Projects: NextPage = () => {
               3
             </div>
           </Link>
-          <div className="group flex flex-col items-center justify-between overflow-hidden px-8 text-8xl text-black transition duration-300 ease-in-out hover:text-[#ff0000]">
+          <Link
+            href="/purp.game"
+            className="group flex flex-col items-center justify-between overflow-hidden px-8 text-8xl text-black transition duration-300 ease-in-out hover:text-[#ff0000]"
+          >
             <div className="flex flex-col gap-2">
               <div className="uppercase [overflow-wrap:anywhere]">
-                On its Way
+                purp.game
               </div>
-              <div className="text-xl">another project coming soon</div>
+              <div className="text-xl">p2p creator rewards for farcaster</div>
             </div>
             <div className="text-[22rem] text-[#ff0000] transition duration-300 ease-in-out group-hover:text-black">
               4
             </div>
-          </div>
+          </Link>
         </div>
       </main>
     </>
