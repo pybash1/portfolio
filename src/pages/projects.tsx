@@ -27,7 +27,7 @@ const Projects: NextPage = () => {
       >
         <AnimatePresence>{navbar ? <Navbar /> : null}</AnimatePresence>
         <Topbar navbar={navbar} setNavbar={setNavbar} />
-        <div className="grid w-full grid-cols-4 divide-x-2 pt-24">
+        <div className="grid w-full sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 divide-x-2 pt-24">
           <Link
             href="/supertable"
             className="group flex flex-col items-center justify-between overflow-hidden px-8 text-8xl text-black transition duration-300 ease-in-out hover:text-[#ff0000]"
