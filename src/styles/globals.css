@@ -36,3 +36,11 @@
 ::-webkit-scrollbar-thumb {
   background: #ff0000;
 }
+
+.cursor {
+  opacity: 0;
+}
+
+*:hover > .cursor {
+  opacity: 1;
+}
