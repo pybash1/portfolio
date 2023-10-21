@@ -86,6 +86,7 @@ const Home: NextPage = () => {
                     spotify?.track_id ?? ""
                   }`}
                   className="text-2xl lowercase text-black hidden md:block"
+                  data-type="M"
                 >
                   {spotify?.song} &ndash; {spotify?.artist?.split(";")[0]}
                 </a>

@@ -31,6 +31,7 @@ const Work: NextPage = () => {
           <Link
             href="/@authdeck"
             className="group flex flex-col items-center justify-between overflow-hidden px-8 text-8xl text-black transition duration-300 ease-in-out hover:text-[#ff0000]"
+            data-type="W"
           >
             <div className="flex flex-col gap-2">
               <div className="uppercase [overflow-wrap:anywhere]">Authdeck</div>
@@ -45,6 +46,7 @@ const Work: NextPage = () => {
           <Link
             href="/@deva"
             className="group flex flex-col items-center justify-between overflow-hidden px-8 text-8xl text-black transition duration-300 ease-in-out hover:text-[#ff0000]"
+            data-type="W"
           >
             <div className="flex flex-col gap-2">
               <div className="uppercase [overflow-wrap:anywhere]">Deva.me</div>

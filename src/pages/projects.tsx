@@ -31,6 +31,7 @@ const Projects: NextPage = () => {
           <Link
             href="/supertable"
             className="group flex flex-col items-center justify-between overflow-hidden px-8 text-8xl text-black transition duration-300 ease-in-out hover:text-[#ff0000]"
+            data-type="P"
           >
             <div className="flex flex-col gap-2">
               <div className="uppercase [overflow-wrap:anywhere]">
@@ -45,6 +46,7 @@ const Projects: NextPage = () => {
           <Link
             href="/solo"
             className="group flex flex-col items-center justify-between overflow-hidden px-8 text-8xl text-black transition duration-300 ease-in-out hover:text-[#ff0000]"
+            data-type="P"
           >
             <div className="flex flex-col gap-2">
               <div className="uppercase [overflow-wrap:anywhere]">Solo</div>
@@ -57,6 +59,7 @@ const Projects: NextPage = () => {
           <Link
             href="/authdeck"
             className="group flex flex-col items-center justify-between overflow-hidden px-8 text-8xl text-black transition duration-300 ease-in-out hover:text-[#ff0000]"
+            data-type="P"
           >
             <div className="flex flex-col gap-2">
               <div className="uppercase [overflow-wrap:anywhere]">Authdeck</div>
@@ -71,6 +74,7 @@ const Projects: NextPage = () => {
           <Link
             href="/purp.game"
             className="group flex flex-col items-center justify-between overflow-hidden px-8 text-8xl text-black transition duration-300 ease-in-out hover:text-[#ff0000]"
+            data-type="P"
           >
             <div className="flex flex-col gap-2">
               <div className="uppercase [overflow-wrap:anywhere]">
