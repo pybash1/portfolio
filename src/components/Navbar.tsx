@@ -7,9 +7,9 @@ const Navbar = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed bottom-0 right-0 top-0 z-40 flex w-2/3 flex-col justify-between bg-[#ff0000] py-24 pl-24 pr-48 text-right font-['Labil_Grotesk'] text-8xl text-[#faf5f1] duration-300 ease-in-out"
+      className="fixed bottom-0 right-0 top-0 z-40 flex w-full md:w-2/3 flex-col justify-between bg-[#ff0000] py-24 pl-10 md:pl-24 pr-48 text-right font-['Labil_Grotesk'] text-6xl md:text-8xl text-[#faf5f1] duration-300 ease-in-out"
     >
-      <aside className="fixed left-0 top-0 z-40 h-full w-1/3 blur-md backdrop-blur-md"></aside>
+      <aside className="fixed left-0 top-0 z-40 h-full w-1/3 md:blur-md md:backdrop-blur-md"></aside>
       <Link href="/work">
         <span className="text-2xl">I</span>Work
       </Link>
@@ -27,7 +27,7 @@ const Navbar = () => {
         <br />
         <Link href="mailto:hi@pybash.xyz">hi@pybash.xyz</Link>
       </div>
-      <div className="absolute bottom-0 right-24 top-0 h-full w-[1px] bg-[#faf5f1]"></div>
+      <div className="absolute bottom-0 right-24 top-0 h-full md:w-[1px] bg-[#faf5f1]"></div>
     </motion.aside>
   );
 };
