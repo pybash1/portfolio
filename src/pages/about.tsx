@@ -35,25 +35,27 @@ const About: NextPage = () => {
         />
       </Head>
       <main
-        className={`relative flex min-h-screen bg-[#faf5f1] font-['Labil_Grotesk'] leading-none text-[#ff0000] selection:bg-[#ff0000] selection:text-[#faf5f1]`}
+        className={`relative flex min-h-screen flex-col bg-[#faf5f1] font-['Labil_Grotesk'] leading-none text-[#ff0000] selection:bg-[#ff0000] selection:text-[#faf5f1] lg:flex-row`}
       >
         <AnimatePresence>{navbar ? <Navbar /> : null}</AnimatePresence>
         <Topbar navbar={navbar} setNavbar={setNavbar} />
-        <div className="fixed z-0 flex w-1/3 flex-col gap-8 px-8 pt-24 text-9xl">
-          <div>About &mdash; Me</div>
-          <div className="flex gap-2 text-xl text-black">
+        <div className="flex w-full flex-col gap-8 px-8 pt-24 text-5xl lg:fixed lg:w-1/3 lg:text-9xl">
+          <div>
+            About <span className="hidden lg:block">&mdash;</span> Me
+          </div>
+          <div className="flex gap-2 text-base text-black lg:text-xl">
             <Link href="mailto:hi@pybash.xyz" className="text-[#ff0000]">
               hi@pybash.xyz
             </Link>
             or @pybash on discord
           </div>
-          <div className="flex gap-2 text-xl text-black">
+          <div className="-mt-6 flex gap-2 text-base text-black lg:mt-0 lg:text-xl">
             rn am <span className="text-[#ff0000]">{status}</span>
           </div>
         </div>
-        <div className="w-1/3 border-r"></div>
-        <div className="mr-24 w-2/3 border-r pt-24">
-          <div className="flex h-fit">
+        <div className="hidden w-1/3 border-r lg:block"></div>
+        <div className="overflow-hidden border-r lg:mr-24 lg:w-2/3 lg:pt-24">
+          <div className="hidden lg:flex">
             <div className="h-fit px-8 text-6xl text-black [text-orientation:mixed] [writing-mode:vertical-lr]">
               Few Details
             </div>
@@ -62,7 +64,7 @@ const About: NextPage = () => {
               className="h-[34rem] w-full object-cover object-bottom"
             />
           </div>
-          <div className="p-12 pl-[7.5rem] pr-10 text-xl text-gray-800">
+          <div className="p-12 pr-10 pt-12 text-xl text-gray-800 lg:pl-[7.5rem]">
             Yes, I&apos;m yet another indian, and yes I also code. Right now,
             I&apos;m working at Deva.me and gonna be turning 16 soon. I was born
             15 years ago obviously and have had a passion or rather interest for
