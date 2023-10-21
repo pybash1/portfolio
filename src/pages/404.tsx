@@ -20,15 +20,19 @@ const NotFound: NextPage<Props> = ({ wip = false }: Props) => {
       <main
         className={`relative flex min-h-screen flex-col items-center justify-center bg-[#faf5f1] py-8 font-['Labil_Grotesk'] leading-none text-[#ff0000] selection:bg-[#ff0000] selection:text-[#faf5f1]`}
       >
-        <div className="text-center text-[12rem] uppercase">
+        <div className="text-center text-[4rem] uppercase md:text-[6rem] lg:text-[12rem]">
           <div className="flex items-start justify-center">
-            <div className="text-2xl lowercase text-black">click the</div>
+            <div className="hidden text-2xl lowercase text-black md:block">
+              click the
+            </div>
             <Link href="/">{wip ? "Working" : "You're"}</Link>
-            <div className="text-2xl lowercase text-black">text</div>
+            <div className="hidden text-2xl lowercase text-black md:block">
+              text
+            </div>
           </div>
           <Link href="/">&mdash;{wip ? "On it" : "Lost"}</Link>
         </div>
-        <div className="flex items-center gap-4 text-4xl">
+        <div className="flex items-center gap-4 text-xl md:text-2xl lg:text-4xl">
           {wip ? "check back in a while" : "let's go home"}
         </div>
       </main>

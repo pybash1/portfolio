@@ -78,28 +78,28 @@ const Home: NextPage = () => {
         >
           <AnimatePresence>{navbar ? <Navbar /> : null}</AnimatePresence>
           <Topbar navbar={navbar} setNavbar={setNavbar} />
-          <div className="text-center text-[12rem] uppercase">
+          <div className="text-center text-[7rem] md:text-[12rem] uppercase">
             <div className="flex items-start justify-center">
               {spotify ? (
                 <a
                   href={`https://open.spotify.com/track/${
                     spotify?.track_id ?? ""
                   }`}
-                  className="text-2xl lowercase text-black"
+                  className="text-2xl lowercase text-black hidden md:block"
                 >
                   {spotify?.song} &ndash; {spotify?.artist?.split(";")[0]}
                 </a>
               ) : (
                 <a
                   href="https://read.cv/pybash"
-                  className="text-2xl lowercase text-black"
+                  className="text-2xl lowercase text-black hidden md:block"
                 >
                   resume
                 </a>
               )}
               <a href="https://twitter.com/py_bash1">Py</a>
               {vsc ? (
-                <div className="text-2xl lowercase text-black">
+                <div className="text-2xl lowercase text-black hidden md:block">
                   {vsc?.details.split(" ")[1]} {vsc?.state}
                   <br />
                   for {formatTime()}
@@ -107,7 +107,7 @@ const Home: NextPage = () => {
               ) : (
                 <a
                   href="https://github.com/pybash1"
-                  className="text-2xl lowercase text-black"
+                  className="text-2xl lowercase text-black hidden md:block"
                 >
                   github
                 </a>
@@ -115,9 +115,9 @@ const Home: NextPage = () => {
             </div>
             <a href="https://twitter.com/py_bash1">&mdash;Bash</a>
           </div>
-          <div className="flex items-center gap-4 text-4xl">
+          <div className="flex items-center gap-4 text-xl md:text-4xl">
             {title}
-            <span className="text-lg text-black">
+            <span className="text-sm md:text-lg text-black">
               {
                 pronounciations[
                   title as "maverick" | "artisan" | "craftsman" | "innovator"
