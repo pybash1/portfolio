@@ -109,7 +109,15 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       const x = e.clientX - (trailer?.offsetWidth as number) / 2,
         y = e.clientY - (trailer?.offsetHeight as number) / 2;
       const interactable = (e.target as Element).closest("a");
-      const isBgRed = (e.target as Element).closest("[class~='bg-[#ff0000]']");
+      const isBgRed =
+        (e.target as Element).closest("[class~='bg-[#ff0000]']") ||
+        ((e.target as Element)
+          .closest("div.left-0.right-0.top-0")
+          ?.checkVisibility() &&
+          e.clientX >
+            (document
+              .querySelector("aside.fixed.bottom-0")
+              ?.getBoundingClientRect().x as number));
 
       if (trailer)
         trailer.animate(
