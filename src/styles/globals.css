@@ -4,16 +4,14 @@
 
 @font-face {
   font-family: Labil Grotesk;
-  src: url(https://2586labs.com/static/fonts/LabilGrotesk-Medium.woff2)
-    format("woff2");
+  src: url(/LabilGrotesk-Medium.woff2) format("woff2");
   font-weight: 500;
   font-style: normal;
 }
 
 @font-face {
   font-family: Labil Grotesk;
-  src: url(https://2586labs.com/static/fonts/LabilGrotesk-Regular.woff2)
-    format("woff2");
+  src: url(/LabilGrotesk-Regular.woff2) format("woff2");
   font-weight: 400;
   font-style: normal;
 }
