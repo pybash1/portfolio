@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import { otBrut } from "~/components/fonts";
 
 interface Props {
   wip?: boolean;
@@ -18,23 +19,18 @@ const NotFound: NextPage<Props> = ({ wip = false }: Props) => {
         />
       </Head>
       <main
-        className={`relative flex min-h-screen flex-col items-center justify-center bg-[#faf5f1] py-8 font-['Labil_Grotesk'] leading-none text-[#ff0000] selection:bg-[#ff0000] selection:text-[#faf5f1]`}
+        className={`relative flex min-h-screen flex-col items-center justify-center gap-6 bg-black bg-cover bg-center text-white selection:bg-white selection:text-black ${otBrut.className}`}
       >
-        <div className="text-center text-[4rem] uppercase md:text-[6rem] lg:text-[12rem]">
-          <div className="flex items-start justify-center">
-            <div className="hidden text-2xl lowercase text-black md:block">
-              click the
-            </div>
-            <Link href="/">{wip ? "Working" : "You're"}</Link>
-            <div className="hidden text-2xl lowercase text-black md:block">
-              text
-            </div>
-          </div>
-          <Link href="/">&mdash;{wip ? "On it" : "Lost"}</Link>
+        <div className="text-[12rem]">404</div>
+        <div className="text-xl uppercase">
+          &bull;{wip ? "still crafting" : "we got lost"}&bull;
         </div>
-        <div className="flex items-center gap-4 text-xl md:text-2xl lg:text-4xl">
-          {wip ? "check back in a while" : "let's go home"}
-        </div>
+        <Link
+          href="/"
+          className="text-3xl uppercase text-blue-300 underline decoration-wavy decoration-1"
+        >
+          {wip ? "check back later" : "let's go back"}
+        </Link>
       </main>
     </>
   );
