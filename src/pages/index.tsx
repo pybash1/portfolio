@@ -1,25 +1,13 @@
-import { AnimatePresence } from "framer-motion";
 import { type NextPage } from "next";
-import Head from "next/head";
+import Link from "next/link";
 import { useState, useEffect } from "react";
-import Navbar from "~/components/Navbar";
-import Topbar from "~/components/Topbar";
+import { dmSans, otBrut, otBrutMono } from "~/components/fonts";
 import type { Lanyard, Spotify, Activity } from "~/types/lanyard";
-import { chooseRandom, pronounciations } from "~/utils/utils";
 
 const Home: NextPage = () => {
   const [spotify, setSpotify] = useState<Spotify>();
   const [vsc, setVsc] = useState<Activity>();
-  const [rn, setRn] = useState(0);
-  const [title] = useState(
-    chooseRandom(["craftsman", "innovator", "artisan", "maverick"])
-  );
-  const [loading, setLoading] = useState(true);
-  const [navbar, setNavbar] = useState(false);
-
-  useEffect(() => {
-    setRn(Date.now());
-  });
+  const [status, setStatus] = useState<boolean>();
 
   useEffect(() => {
     void fetch("https://api.lanyard.rest/v1/users/626461325744275464", {
@@ -29,110 +17,116 @@ const Home: NextPage = () => {
         if (data.data.spotify) {
           setSpotify(data.data.spotify);
         }
+        setStatus(
+          data.data.active_on_discord_desktop ||
+            data.data.active_on_discord_mobile ||
+            data.data.active_on_discord_web
+        );
         data.data.activities.forEach((activity, ind) => {
           if (activity.application_id == "383226320970055681") {
             setVsc(data.data.activities[ind]);
           }
         });
-        setLoading(false);
       })
     );
-    setRn(Date.now());
   }, []);
 
-  const formatTime = () => {
-    const hrs = Math.floor(
-      Math.abs(rn - (vsc?.timestamps?.start || 0)) / 1000 / 60 / 60
-    );
-    const mins =
-      Math.floor(Math.abs(rn - (vsc?.timestamps?.start || 0)) / 1000 / 60) -
-      hrs * 60;
-    return `
-      ${
-        hrs > 0
-          ? `${hrs}${hrs > 1 ? " hours" : " hour"}`
-          : `${mins}${mins > 1 ? " minutes" : " minute"}`
-      }`;
-  };
-
   return (
-    <>
-      <Head>
-        <title>home of pybash</title>
-        <meta
-          name="description"
-          content={`i'm ${
-            ["innovator", "artisan"].includes(title as string) ? "an" : "a"
-          } ${title} except i use code instead of ${
-            title === "artisan" ? "paint and brushes" : "a hammer and wrench"
-          }. not enough? click the link and see for yourself.`}
-        />
-        <link
-          rel="icon"
-          href="https://cdn.discordapp.com/avatars/626461325744275464/9b8baa867dcbb45519996adb9397d7f4.png?size=4096"
-        />
-      </Head>
-      {!loading ? (
-        <main
-          className={`relative flex min-h-screen flex-col items-center justify-center bg-[#faf5f1] py-8 font-['Labil_Grotesk'] leading-none text-[#ff0000] selection:bg-[#ff0000] selection:text-[#faf5f1]`}
+    <main
+      className={`flex min-h-screen flex-col gap-2 bg-black bg-cover bg-center text-white selection:bg-white selection:text-black ${otBrutMono.className}`}
+    >
+      <nav className="flex items-center justify-between gap-6 px-24 py-12 uppercase">
+        <Link href="/craft">Craft</Link>
+        &bull;
+        <Link href="https://parchments.pybash.xyz">Writing</Link>
+      </nav>
+      <div
+        className={`flex w-full flex-col items-center justify-center pb-36 pt-24 text-[10rem] uppercase ${otBrut.className}`}
+      >
+        <span className="-mb-8 text-sm">完璧主義者</span>
+        pybash
+        <span
+          className={`-mt-12 text-center text-base uppercase ${dmSans.className}`}
         >
-          <AnimatePresence>{navbar ? <Navbar /> : null}</AnimatePresence>
-          <Topbar navbar={navbar} setNavbar={setNavbar} />
-          <div className="text-center text-[7rem] md:text-[12rem] uppercase">
-            <div className="flex items-start justify-center">
-              {spotify ? (
-                <a
-                  href={`https://open.spotify.com/track/${
-                    spotify?.track_id ?? ""
-                  }`}
-                  className="text-2xl lowercase text-black hidden md:block"
-                  data-type="M"
-                >
-                  {spotify?.song} &ndash; {spotify?.artist?.split(";")[0]}
-                </a>
-              ) : (
-                <a
-                  href="https://read.cv/pybash"
-                  className="text-2xl lowercase text-black hidden md:block"
-                >
-                  resume
-                </a>
-              )}
-              <a href="https://twitter.com/py_bash1">Py</a>
-              {vsc ? (
-                <div className="text-2xl lowercase text-black hidden md:block">
-                  {vsc?.details.split(" ")[1]} {vsc?.state}
-                  <br />
-                  for {formatTime()}
-                </div>
-              ) : (
-                <a
-                  href="https://github.com/pybash1"
-                  className="text-2xl lowercase text-black hidden md:block"
-                >
-                  github
-                </a>
-              )}
-            </div>
-            <a href="https://twitter.com/py_bash1">&mdash;Bash</a>
-          </div>
-          <div className="flex items-center gap-4 text-xl md:text-4xl">
-            {title}
-            <span className="text-sm md:text-lg text-black">
-              {
-                pronounciations[
-                  title as "maverick" | "artisan" | "craftsman" | "innovator"
-                ]
-              }
-            </span>
-          </div>
-        </main>
-      ) : (
-        <main className="flex min-h-screen flex-col items-center justify-center bg-[#faf5f1] py-8 font-['Labil_Grotesk'] text-xl text-black selection:bg-[#ff0000] selection:text-[#faf5f1]">
-          <div>loading...</div>
-        </main>
-      )}
-    </>
+          &bull;&nbsp;Crafting perfection&nbsp;&bull;
+          <br />
+          {spotify ? (
+            <>
+              &bull;&nbsp;{spotify?.song} - {spotify?.artist.split(";")[0]}
+              &nbsp;&bull;
+            </>
+          ) : null}
+          {spotify ? <br /> : null}
+          {vsc ? (
+            <>
+              &bull;&nbsp;
+              {vsc?.details} {vsc?.state}&nbsp;&bull;
+            </>
+          ) : null}
+        </span>
+      </div>
+      <div className="flex w-full flex-col items-center gap-6">
+        <div className="w-[45%] text-center text-2xl">
+          I&apos;m an avid builder. I try to create things that help people and
+          the world. I strive to make beauty a standard for the web. I&apos;ve
+          worked at leading startups including{" "}
+          <Link
+            href="https://deva.me"
+            className=" text-blue-300 underline decoration-wavy decoration-1"
+          >
+            10Planet
+          </Link>{" "}
+          and Authdeck.
+        </div>
+        <span>&bull;×&bull;</span>
+        <div className="w-[45%] text-center text-2xl">
+          2024 <span className="text-gray-300">/</span> I decided to take a
+          break from working and work on myself. This year, I want to focus on
+          building more quality products and upskilling myself.
+        </div>
+        <span>&bull;×&bull;</span>
+        <div className="w-[45%] text-center text-2xl">
+          2023 <span className="text-gray-300">/</span> Spent most of my time
+          juggling between school, and{" "}
+          <Link
+            href="/craft"
+            className=" text-blue-300 underline decoration-wavy decoration-1"
+          >
+            work
+          </Link>
+          . Out of the spare time I got, I competed in hackathons, and built
+          mini-projects.
+        </div>
+      </div>
+      <div
+        className={`flex h-screen w-full flex-col items-center justify-center text-center text-9xl uppercase ${otBrut.className}`}
+      >
+        <span className="pb-2 text-sm">接触</span>
+        hi@
+        <br />
+        pybash
+        <br />
+        .xyz
+        <span className={`text-base uppercase ${dmSans.className}`}>
+          &bull;&nbsp;20.5937° 78.9629°&nbsp;&bull;
+          <br />
+          &bull;&nbsp;
+          <Link
+            href="https://twitter.com/py_bash1"
+            className="text-blue-300 underline decoration-wavy decoration-1 underline-offset-2"
+          >
+            Twitter
+          </Link>
+          &nbsp;&bull;
+          <br />
+          &bull;&nbsp; Discord:{" "}
+          <span className={status ? "text-green-300" : "text-red-300"}>
+            {status ? "Online" : "Offline"}
+          </span>
+          &nbsp;&bull;
+        </span>
+      </div>
+    </main>
   );
 };
 
