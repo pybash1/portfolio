@@ -2,6 +2,7 @@ import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import Script from "next/script";
+import Head from "next/head";
 import { type ReactNode, useEffect, useState } from "react";
 
 const icons: { [key: string]: ReactNode } = {
@@ -109,8 +110,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       const x = e.clientX - (trailer?.offsetWidth as number) / 2,
         y = e.clientY - (trailer?.offsetHeight as number) / 2;
       const interactable = (e.target as Element).closest("a");
-      const isBgRed =
-        (e.target as Element).closest("[class~='bg-[#ff0000]']") ||
+      const isBgWhite =
+        (e.target as Element).closest("[class~='bg-white']") ||
+        (e.target as Element).closest("[class~='bg-[#ffffff]']") ||
         ((e.target as Element)
           .closest("div.left-0.right-0.top-0")
           ?.checkVisibility() &&
@@ -125,7 +127,8 @@ const MyApp: AppType = ({ Component, pageProps }) => {
             transform: `translate(${x}px, ${y}px) scale(${
               interactable ? 3 : 1
             })`,
-            background: isBgRed ? "#faf5f1" : "#ff0000",
+            background: isBgWhite ? "#000000" : "#ffffff",
+            color: isBgWhite ? "#ffffff" : "#000000",
           },
           {
             fill: "forwards",
@@ -154,15 +157,20 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
   return (
     <>
-      <Script
-        async
-        defer
-        data-website-id="326dbd9c-9714-423c-bf95-50f327f76c98"
-        src="https://umami-trn.up.railway.app/umami.js"
-      />
+      <Head>
+        <title>home of pybash</title>
+        <meta
+          name="description"
+          content={`i strive to create perfection on the web. currently crafting things for the internet. previously @10planet. sometimes i dabble into design and writing, while juggling high school.`}
+        />
+        <link
+          rel="icon"
+          href="https://cdn.discordapp.com/avatars/626461325744275464/9b8baa867dcbb45519996adb9397d7f4.png?size=4096"
+        />
+      </Head>
       <div
         id="cursor"
-        className="cursor bg-[#ff 0000] pointer-events-none fixed z-[99999] flex h-8 w-8 items-center justify-center rounded-full p-3 transition ease-in-out"
+        className="cursor pointer-events-none fixed z-[99999] flex h-8 w-8 items-center justify-center rounded-full p-3 transition ease-in-out"
       >
         {icons[type]}
       </div>

@@ -2,39 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: Labil Grotesk;
-  src: url(/LabilGrotesk-Medium.woff2) format("woff2");
-  font-weight: 500;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: Labil Grotesk;
-  src: url(/LabilGrotesk-Regular.woff2) format("woff2");
-  font-weight: 400;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: Palatino;
-  src: url(/palatino-linotype-corsivo.ttf) format("ttf");
-  font-weight: 400;
-  font-style: italic;
-}
-
-::-webkit-scrollbar {
-  width: 7px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #faf5f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #ff0000;
-}
-
 .cursor {
   opacity: 0;
 }
