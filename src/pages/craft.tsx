@@ -37,10 +37,10 @@ const Craft = () => {
       <div
         className={`flex w-full flex-col items-center justify-center pb-12 pt-10 text-7xl uppercase md:pb-36 md:pt-24 md:text-[10rem] ${otBrut.className}`}
       >
-        <span className="text-sm md:-mb-8">仕事とプロジェクト</span>
+        <span className="text-sm md:leading-10">仕事とプロジェクト</span>
         Craft
         <span
-          className={`text-center text-base uppercase md:-mt-12 ${dmSans.className}`}
+          className={`text-center text-base uppercase md:leading-5 ${dmSans.className}`}
         >
           &bull;&nbsp;My Work&nbsp;&bull;
           <br />
@@ -70,7 +70,7 @@ const Craft = () => {
               width={550}
               height={200}
               alt="project image"
-              className="absolute bottom-14 right-28 w-1/3 shadow-2xl"
+              className="absolute bottom-14 right-28 hidden w-1/3 shadow-2xl md:block"
             />
           ) : null}
           <Link href="https://deva.me" data-type="W">

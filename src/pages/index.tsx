@@ -43,10 +43,10 @@ const Home: NextPage = () => {
       <div
         className={`flex w-full flex-col items-center justify-center pb-12 pt-10 text-7xl uppercase md:pb-36 md:pt-24 md:text-[10rem] ${otBrut.className}`}
       >
-        <span className="text-sm md:-mb-8">完璧主義者</span>
+        <span className="text-sm md:leading-10">完璧主義者</span>
         pybash
         <span
-          className={`text-center text-base uppercase md:-mt-12 ${dmSans.className}`}
+          className={`text-center text-base uppercase md:leading-5 ${dmSans.className}`}
         >
           &bull;&nbsp;Crafting perfection&nbsp;&bull;
           <br />
