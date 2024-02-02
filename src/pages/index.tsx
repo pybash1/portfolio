@@ -33,20 +33,20 @@ const Home: NextPage = () => {
 
   return (
     <main
-      className={`flex min-h-screen flex-col gap-2 bg-black bg-cover bg-center text-white selection:bg-white selection:text-black ${otBrutMono.className}`}
+      className={`flex min-h-screen flex-col gap-2 bg-black bg-cover bg-center px-3 text-white selection:bg-white selection:text-black md:px-0 ${otBrutMono.className}`}
     >
-      <nav className="flex items-center justify-between gap-6 px-24 py-12 uppercase">
+      <nav className="flex items-center justify-between gap-6 px-12 py-12 uppercase md:px-24">
         <Link href="/craft">Craft</Link>
         &bull;
         <Link href="https://parchments.pybash.xyz">Writing</Link>
       </nav>
       <div
-        className={`flex w-full flex-col items-center justify-center pb-36 pt-24 text-[10rem] uppercase ${otBrut.className}`}
+        className={`flex w-full flex-col items-center justify-center pb-12 pt-10 text-7xl uppercase md:pb-36 md:pt-24 md:text-[10rem] ${otBrut.className}`}
       >
-        <span className="-mb-8 text-sm">完璧主義者</span>
+        <span className="text-sm md:-mb-8">完璧主義者</span>
         pybash
         <span
-          className={`-mt-12 text-center text-base uppercase ${dmSans.className}`}
+          className={`text-center text-base uppercase md:-mt-12 ${dmSans.className}`}
         >
           &bull;&nbsp;Crafting perfection&nbsp;&bull;
           <br />
@@ -66,7 +66,7 @@ const Home: NextPage = () => {
         </span>
       </div>
       <div className="flex w-full flex-col items-center gap-6">
-        <div className="w-[45%] text-center text-2xl">
+        <div className="text-center text-lg md:w-[45%] md:text-2xl">
           I&apos;m an avid builder. I try to create things that help people and
           the world. I strive to make beauty a standard for the web. I&apos;ve
           worked at leading startups including{" "}
@@ -79,13 +79,13 @@ const Home: NextPage = () => {
           and Authdeck.
         </div>
         <span>&bull;×&bull;</span>
-        <div className="w-[45%] text-center text-2xl">
+        <div className="text-center text-lg md:w-[45%] md:text-2xl">
           2024 <span className="text-gray-300">/</span> I decided to take a
           break from working and work on myself. This year, I want to focus on
           building more quality products and upskilling myself.
         </div>
         <span>&bull;×&bull;</span>
-        <div className="w-[45%] text-center text-2xl">
+        <div className="text-center text-lg md:w-[45%] md:text-2xl">
           2023 <span className="text-gray-300">/</span> Spent most of my time
           juggling between school, and{" "}
           <Link
@@ -99,7 +99,7 @@ const Home: NextPage = () => {
         </div>
       </div>
       <div
-        className={`flex h-screen w-full flex-col items-center justify-center text-center text-9xl uppercase ${otBrut.className}`}
+        className={`flex h-screen w-full flex-col items-center justify-center text-center text-6xl uppercase md:text-9xl ${otBrut.className}`}
       >
         <span className="pb-2 text-sm">接触</span>
         hi@

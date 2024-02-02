@@ -29,18 +29,18 @@ const Craft = () => {
     <main
       className={`flex min-h-screen flex-col gap-2 bg-black bg-cover bg-center text-white selection:bg-white selection:text-black ${otBrutMono.className}`}
     >
-      <nav className="flex items-center justify-between gap-6 px-24 py-12 uppercase">
+      <nav className="flex items-center justify-between gap-6 px-12 py-12 uppercase md:px-24">
         <Link href="/">Home</Link>
         &bull;
         <Link href="https://parchments.pybash.xyz">Writing</Link>
       </nav>
       <div
-        className={`flex w-full flex-col items-center justify-center pb-36 pt-24 text-[10rem] uppercase ${otBrut.className}`}
+        className={`flex w-full flex-col items-center justify-center pb-12 pt-10 text-7xl uppercase md:pb-36 md:pt-24 md:text-[10rem] ${otBrut.className}`}
       >
-        <span className="-mb-8 text-sm">仕事とプロジェクト</span>
+        <span className="text-sm md:-mb-8">仕事とプロジェクト</span>
         Craft
         <span
-          className={`-mt-12 text-center text-base uppercase ${dmSans.className}`}
+          className={`text-center text-base uppercase md:-mt-12 ${dmSans.className}`}
         >
           &bull;&nbsp;My Work&nbsp;&bull;
           <br />
@@ -50,14 +50,14 @@ const Craft = () => {
         </span>
       </div>
       <div className="flex w-full flex-col items-center gap-6">
-        <div className="w-[45%] text-center text-2xl">
+        <div className="px-3 text-center text-lg md:w-[45%] md:px-0 md:text-2xl">
           A selection of my work across startups, clients, personal projects,
           and more, organised randomly, in no specific order.
         </div>
         <span>&bull;×&bull;</span>
       </div>
       <div className={`uppercase ${dmSans.className} px-8`}>Selected Work</div>
-      <div className="relative flex flex-col divide-y divide-white border-y border-white text-5xl uppercase [&>div]:px-8 [&>div]:pt-2">
+      <div className="relative flex flex-col divide-y divide-white border-y border-white text-2xl uppercase md:text-5xl [&>div]:px-8 [&>div]:pt-2">
         <div
           onMouseEnter={() => setHovering(0)}
           onMouseLeave={() => setHovering(-1)}
@@ -150,7 +150,7 @@ const Craft = () => {
         </div>
       </div>
       <div
-        className={`flex h-screen w-full flex-col items-center justify-center text-center text-9xl uppercase ${otBrut.className}`}
+        className={`flex h-screen w-full flex-col items-center justify-center text-center text-6xl uppercase md:text-9xl ${otBrut.className}`}
       >
         <span className="pb-2 text-sm">接触</span>
         hi@
