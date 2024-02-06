@@ -73,9 +73,7 @@ const Craft = () => {
               className="absolute bottom-14 right-28 hidden w-1/3 shadow-2xl md:block"
             />
           ) : null}
-          <Link href="https://deva.me" data-type="W">
-            Deva.me
-          </Link>
+          <Link href="https://deva.me">Deva.me</Link>
           <div>2023-24</div>
         </div>
         <div
@@ -83,9 +81,7 @@ const Craft = () => {
           onMouseLeave={() => setHovering(-1)}
           className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
         >
-          <Link href="https://authdeck.xyz" data-type="W">
-            Authdeck
-          </Link>
+          <Link href="https://authdeck.xyz">Authdeck</Link>
           <div>2022-23</div>
         </div>
         <div
@@ -93,9 +89,7 @@ const Craft = () => {
           onMouseLeave={() => setHovering(-1)}
           className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
         >
-          <Link href="https://purp.game" data-type="W">
-            Purp.game
-          </Link>
+          <Link href="https://purp.game">Purp.game</Link>
           <div>2023</div>
         </div>
         <div
@@ -103,9 +97,7 @@ const Craft = () => {
           onMouseLeave={() => setHovering(-1)}
           className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
         >
-          <Link href="https://parchments.pybash.xyz" data-type="P">
-            Parchments
-          </Link>
+          <Link href="https://parchments.pybash.xyz">Parchments</Link>
           <div>2023</div>
         </div>
         <div
@@ -113,9 +105,7 @@ const Craft = () => {
           onMouseLeave={() => setHovering(-1)}
           className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
         >
-          <Link href="https://github.com/pybash1/today" data-type="P">
-            Today
-          </Link>
+          <Link href="https://github.com/pybash1/today">Today</Link>
           <div>2023</div>
         </div>
         <div
@@ -123,9 +113,7 @@ const Craft = () => {
           onMouseLeave={() => setHovering(-1)}
           className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
         >
-          <Link href="https://solo.pybash.xyz" data-type="P">
-            Solo
-          </Link>
+          <Link href="https://solo.pybash.xyz">Solo</Link>
           <div>2022</div>
         </div>
         <div
@@ -133,9 +121,7 @@ const Craft = () => {
           onMouseLeave={() => setHovering(-1)}
           className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
         >
-          <Link href="https://n0.pybash.xyz" data-type="P">
-            n0
-          </Link>
+          <Link href="https://n0.pybash.xyz">n0</Link>
           <div>2023</div>
         </div>
         <div
@@ -143,9 +129,7 @@ const Craft = () => {
           onMouseLeave={() => setHovering(-1)}
           className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
         >
-          <Link href="https://supertable.fun" data-type="W">
-            Supertable
-          </Link>
+          <Link href="https://supertable.fun">Supertable</Link>
           <div>2023</div>
         </div>
       </div>
