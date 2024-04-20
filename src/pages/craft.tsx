@@ -70,7 +70,7 @@ const Craft: NextPage = () => {
           </Link>
         </nav>
       </div>
-      <div className="flex grow flex-col gap-6 pb-8 pt-36 md:px-96">
+      <div className="flex grow flex-col gap-6 pb-8 pt-36 md:px-36 lg:px-96">
         <div className={`text-lg`}>
           Craft
           <br />
@@ -78,7 +78,7 @@ const Craft: NextPage = () => {
             Selected work and experiments.
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="flex flex-col gap-6">
             <div className="text-sm text-[#E4E2DD]/60">Professional</div>
             <ProjectCard
@@ -145,7 +145,7 @@ const Craft: NextPage = () => {
           </div>
         </div>
       </div>
-      <footer className="-mx-8 flex items-center justify-between border-t border-[#313136] px-4 pt-2 text-sm text-[#E4E2DD]/50 md:px-72">
+      <footer className="-mx-8 flex items-center justify-between border-t border-[#313136] px-4 pt-2 text-sm text-[#E4E2DD]/50 md:px-24 lg:px-72">
         <div>Never settle.</div>
         <div>{formatTime(rn)}</div>
       </footer>

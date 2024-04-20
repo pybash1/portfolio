@@ -74,7 +74,7 @@ const NotFound: NextPage = () => {
             </Link>
           </nav>
         </div>
-        <div className="flex grow flex-col gap-6 md:px-96 pb-8 pt-36">
+        <div className="flex grow flex-col gap-6 md:px-36 lg:px-96 pb-8 pt-36">
           <div className={`text-xl text-[#E4E2DD]/60 ${newsreader.className}`}>
             Not Found
           </div>
@@ -90,7 +90,7 @@ const NotFound: NextPage = () => {
             .
           </div>
         </div>
-        <footer className="-mx-8 flex items-center justify-between border-t border-[#313136] px-4 md:px-72 pt-2 text-sm text-[#E4E2DD]/50">
+        <footer className="-mx-8 flex items-center justify-between border-t border-[#313136] px-4 md:px-24 lg:px-72 pt-2 text-sm text-[#E4E2DD]/50">
           <div>Never settle.</div>
           <div>{formatTime(rn)}</div>
         </footer>
