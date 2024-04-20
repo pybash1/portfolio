@@ -1,13 +1,18 @@
 import { type NextPage } from "next";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { dmSans, otBrut, otBrutMono } from "~/components/fonts";
+import { matter, newsreader } from "~/components/fonts";
 import type { Lanyard, Spotify, Activity } from "~/types/lanyard";
+import Image from "next/image";
+import { formatTime } from "~/utils/time";
+import { ContactCard } from "~/components/card";
 
 const Home: NextPage = () => {
   const [spotify, setSpotify] = useState<Spotify>();
   const [vsc, setVsc] = useState<Activity>();
-  const [status, setStatus] = useState<boolean>();
+  const [rn, setRn] = useState(
+    new Date(new Date().toLocaleString("en", { timeZone: "Asia/Calcutta" }))
+  );
 
   useEffect(() => {
     void fetch("https://api.lanyard.rest/v1/users/626461325744275464", {
@@ -17,115 +22,218 @@ const Home: NextPage = () => {
         if (data.data.spotify) {
           setSpotify(data.data.spotify);
         }
-        setStatus(
-          data.data.active_on_discord_desktop ||
-            data.data.active_on_discord_mobile ||
-            data.data.active_on_discord_web
+        setVsc(
+          data.data.activities.filter(
+            (activity) => activity.application_id == "383226320970055681"
+          )[0]
         );
-        data.data.activities.forEach((activity, ind) => {
-          if (activity.application_id == "383226320970055681") {
-            setVsc(data.data.activities[ind]);
-          }
-        });
       })
     );
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(
+      () =>
+        setRn(
+          new Date(
+            new Date().toLocaleString("en", { timeZone: "Asia/Calcutta" })
+          )
+        ),
+      1000
+    );
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <main
-      className={`flex min-h-screen flex-col gap-2 bg-black bg-cover bg-center px-3 text-white selection:bg-white selection:text-black md:px-0 ${otBrutMono.className}`}
+      className={`flex min-h-screen flex-col bg-[#18181A] px-8 py-2 text-[#E4E2DD] ${matter.className}`}
     >
-      <nav className="flex items-center justify-between gap-6 px-12 py-12 uppercase md:px-24">
-        <Link href="/craft">Craft</Link>
-        &bull;
-        <Link href="https://parchments.pybash.xyz">Writing</Link>
-      </nav>
-      <div
-        className={`flex w-full flex-col items-center justify-center pb-12 pt-10 text-7xl uppercase md:pb-36 md:pt-24 md:text-[10rem] ${otBrut.className}`}
-      >
-        <span className="text-sm md:leading-10">完璧主義者</span>
-        pybash
-        <span
-          className={`text-center text-base uppercase md:leading-5 ${dmSans.className}`}
-        >
-          &bull;&nbsp;Crafting perfection&nbsp;&bull;
-          <br />
-          {spotify ? (
-            <>
-              &bull;&nbsp;{spotify?.song} - {spotify?.artist.split(";")[0]}
-              &nbsp;&bull;
-            </>
-          ) : null}
-          {spotify ? <br /> : null}
-          {vsc ? (
-            <>
-              &bull;&nbsp;
-              {vsc?.details} {vsc?.state}&nbsp;&bull;
-            </>
-          ) : null}
-        </span>
-      </div>
-      <div className="flex w-full flex-col items-center gap-6">
-        <div className="text-center text-lg md:w-[45%] md:text-2xl">
-          I&apos;m an avid builder. I try to create things that help people and
-          the world. I strive to make beauty a standard for the web. I&apos;ve
-          worked at leading startups including{" "}
+      <div className="fixed left-8 right-8 top-0 flex items-center justify-between py-2 backdrop-blur-[2px]">
+        <div className="group -mx-6 flex items-center">
+          <Image
+            src="/p-transparent.png"
+            width={256}
+            height={256}
+            alt="logo"
+            className="h-16 w-16"
+          />
+          <span className="overflow-hidden opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
+            pybash
+          </span>
+        </div>
+        <nav className="flex items-center gap-2 text-sm text-[#E4E2DD]/80 underline decoration-[#E4E2DD]/80 underline-offset-[3px]">
           <Link
-            href="https://deva.me"
-            className=" text-blue-300 underline decoration-wavy decoration-1"
+            className="transition duration-300 ease-in-out outline-none hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
+            href="https://twitter.com/py_bash1"
+            target="_blank"
           >
-            10Planet
-          </Link>{" "}
-          and Authdeck.
+            Tweetybird
+          </Link>
+          <Link
+            className="transition duration-300 ease-in-out outline-none hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
+            href="https://github.com/pybash1"
+            target="_blank"
+          >
+            Octocat
+          </Link>
+          <Link
+            className="transition duration-300 ease-in-out outline-none hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
+            href="mailto:hi@pybash.xyz"
+            target="_blank"
+          >
+            hi@pybash.xyz
+          </Link>
+        </nav>
+      </div>
+      <div className="flex grow flex-col gap-6 px-96 pb-8 pt-36">
+        <div className={`text-xl text-[#E4E2DD]/60 ${newsreader.className}`}>
+          About
         </div>
-        <span>&bull;×&bull;</span>
-        <div className="text-center text-lg md:w-[45%] md:text-2xl">
-          2024 <span className="text-gray-300">/</span> I decided to take a
-          break from working and work on myself. This year, I want to focus on
-          building more quality products and upskilling myself.
+        <div>
+          Hey, there! Thanks for stopping by. I{" "}
+          <span className={`${newsreader.className}`}>craft interfaces</span>{" "}
+          for the digital world. I too, obsess over details. As of today, I am
+          manipulating designs and code at{" "}
+          <Link
+            href="https://onrift.xyz"
+            className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
+          >
+            Rift
+          </Link>
+          .
         </div>
-        <span>&bull;×&bull;</span>
-        <div className="text-center text-lg md:w-[45%] md:text-2xl">
-          2023 <span className="text-gray-300">/</span> Spent most of my time
-          juggling between school, and{" "}
+        <div>
+          Earlier, I&apos;ve worked at growing startups such as{" "}
+          <span className={newsreader.className}>10Planet</span>, and{" "}
+          <span className={newsreader.className}>Authdeck</span>. I have also
+          won a couple hackathons and awards here and there.
+        </div>
+        <div>
+          In my leisure, I often build unsuccessful software, or read books.
+          Listening to music and watching movies are too, my interests. Some of
+          my craft lives on a{" "}
           <Link
             href="/craft"
-            className=" text-blue-300 underline decoration-wavy decoration-1"
+            className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
           >
-            work
+            different page
           </Link>
-          . Out of the spare time I got, I competed in hackathons, and built
-          mini-projects.
+          . I seldom write, but nevertheless read it on{" "}
+          <Link
+            href="https://parchments.pybash.xyz"
+            className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
+          >
+            Parchments
+          </Link>
+          .
+        </div>
+        <div className={`text-xl text-[#E4E2DD]/60 ${newsreader.className}`}>
+          Now
+        </div>
+        <div>
+          To be very precise,{" "}
+          {spotify ? (
+            <>
+              I am listening to{" "}
+              <Link
+                href={`https://open.spotify.com/track/${spotify.track_id}`}
+                target="_blank"
+                className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
+              >
+                {spotify.song}
+              </Link>{" "}
+              by{" "}
+              <span className={`${newsreader.className}`}>
+                {spotify?.artist?.split(";")?.[0] as string}
+              </span>
+              .
+            </>
+          ) : null}{" "}
+          {vsc
+            ? spotify
+              ? `I am also, ${vsc.details
+                  ?.replace("editing", "crafting")
+                  .replace("Idling", "thinking")} ${
+                  vsc.state?.replace("in", "for") ?? ""
+                }.`
+              : `I am ${vsc.details
+                  ?.replace("editing", "crafting")
+                  .replace("Idling", "thinking")}${
+                  vsc.state?.replace("in", " for") ?? ""
+                }.`
+            : !spotify
+            ? "absolutely nothing productive."
+            : null}
+        </div>
+        <div>
+          On a less precise note, this year, I&apos;m juggling between high
+          school and my passion. I&apos;m excited to see how the rest of the
+          year plays out. You can find a part of my unfiltered thoughts over on
+          my{" "}
+          <Link
+            href="https://streams.place/pybash"
+            className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
+          >
+            stream
+          </Link>
+          .
+        </div>
+        <div className={`text-lg text-[#E4E2DD]/60 ${newsreader.className}`}>
+          Chief associates
+        </div>
+        <div className="flex flex-wrap gap-x-4 gap-y-0">
+          <ContactCard
+            name="Aadhithyan Suresh"
+            avatar="https://pbs.twimg.com/profile_images/1756057216195735552/jpmsQtbW_400x400.jpg"
+            link="https://twitter.com/_soulninja"
+          />
+          <ContactCard
+            name="Shubhaankar Sharma"
+            avatar="https://pbs.twimg.com/profile_images/1713836316209868800/nKNnpRy4_400x400.jpg"
+            link="https://spongeboi.com"
+          />
+          <ContactCard
+            name="Milind Madhukar"
+            avatar="https://pbs.twimg.com/profile_images/1549608791209316352/yKljoNHe_400x400.jpg"
+            link="https://github.com/milindmadhukar"
+          />
+          <ContactCard
+            name="Arnav Mehta"
+            avatar="https://pbs.twimg.com/profile_images/1542376457233584128/D5X_Qf0t_400x400.jpg"
+            link="https://twitter.com/devnull03"
+          />
+          <ContactCard
+            name="Nicole"
+            avatar="https://pbs.twimg.com/profile_images/1615412983005421568/yrWiGfZV_400x400.jpg"
+            link="https://sofa.sh"
+          />
+          <ContactCard
+            name="Kumar Abhirup"
+            avatar="https://pbs.twimg.com/profile_images/1769871138761662464/7Xnquhcf_400x400.jpg"
+            link="https://kumareth.com"
+          />
+          <ContactCard
+            name="Milan Muhammed"
+            avatar="https://pbs.twimg.com/profile_images/1517105300649955328/hIfJFOyU_400x400.jpg"
+            link="https://milan090.me"
+          />
+          <ContactCard
+            name="Vasu"
+            avatar="https://cdn.discordapp.com/attachments/883044092030890014/1230507644146552952/c25d20e6020e040bd1394bb1c4c71337.png?ex=6633928c&is=66211d8c&hm=64fd5635e1062cc61d1fc0cefbd57627f63e109a13f317043141c05be94210f2&"
+            link="https://github.com/vg08"
+          />
+          <ContactCard
+            name="Saptarshi Basu"
+            avatar="https://pbs.twimg.com/profile_images/1777828016988520448/bt5-zI1y_400x400.jpg"
+            link="https://saptarshi.vercel.app"
+          />
         </div>
       </div>
-      <div
-        className={`flex h-screen w-full flex-col items-center justify-center text-center text-6xl uppercase md:text-9xl ${otBrut.className}`}
-      >
-        <span className="pb-2 text-sm">接触</span>
-        hi@
-        <br />
-        pybash
-        <br />
-        .xyz
-        <span className={`text-base uppercase ${dmSans.className}`}>
-          &bull;&nbsp;20.5937° 78.9629°&nbsp;&bull;
-          <br />
-          &bull;&nbsp;
-          <Link
-            href="https://twitter.com/py_bash1"
-            className="text-blue-300 underline decoration-wavy decoration-1 underline-offset-2"
-          >
-            Twitter
-          </Link>
-          &nbsp;&bull;
-          <br />
-          &bull;&nbsp; Discord:{" "}
-          <span className={status ? "text-green-300" : "text-red-300"}>
-            {status ? "Online" : "Offline"}
-          </span>
-          &nbsp;&bull;
-        </span>
-      </div>
+      <footer className="-mx-8 flex items-center justify-between border-t border-[#313136] px-72 pt-2 text-sm text-[#E4E2DD]/50">
+        <div>Never settle.</div>
+        <div>{formatTime(rn)}</div>
+      </footer>
     </main>
   );
 };

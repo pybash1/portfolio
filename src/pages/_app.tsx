@@ -1,5 +1,4 @@
 import { type AppType } from "next/app";
-import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import Head from "next/head";
 
@@ -7,19 +6,42 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
       <Head>
-        <title>home of pybash</title>
+        <title>PyBash</title>
         <meta
           name="description"
-          content={`i strive to create perfection on the web. currently crafting things for the internet. previously @10planet. sometimes i dabble into design and writing, while juggling high school.`}
+          content={`I craft and manipulate interfaces on the internet. Currently crafting things over at Rift. Previously @10planet. Sometimes I dabble into design and writing, all while juggling high school.`}
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/apple-touch-icon.png"
         />
         <link
           rel="icon"
-          href="https://cdn.discordapp.com/avatars/626461325744275464/9b8baa867dcbb45519996adb9397d7f4.png?size=4096"
+          type="image/png"
+          sizes="32x32"
+          href="/favicon-32x32.png"
         />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="192x192"
+          href="/android-chrome-192x192.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicon-16x16.png"
+        />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#18181a" />
+        <meta name="msapplication-TileColor" content="#18181a" />
+        <meta name="msapplication-TileImage" content="/mstile-144x144.png" />
+        <meta name="theme-color" content="#18181a" />
       </Head>
       <Component {...pageProps} />
     </>
   );
 };
 
-export default api.withTRPC(MyApp);
+export default MyApp;

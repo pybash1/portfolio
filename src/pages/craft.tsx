@@ -1,166 +1,154 @@
+import type { NextPage } from "next";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { dmSans, otBrutMono, otBrut } from "~/components/fonts";
-import type { Lanyard } from "~/types/lanyard";
-import { IMAGES } from "~/utils/utils";
+import { useEffect, useState } from "react";
+import { ProjectCard } from "~/components/card";
+import { matter } from "~/components/fonts";
+import { formatTime } from "~/utils/time";
 
-const Craft = () => {
-  const [status, setStatus] = useState<boolean>();
-  const [hovering, setHovering] = useState(-1);
+const Craft: NextPage = () => {
+  const [rn, setRn] = useState(
+    new Date(new Date().toLocaleString("en", { timeZone: "Asia/Calcutta" }))
+  );
 
   useEffect(() => {
-    void fetch("https://api.lanyard.rest/v1/users/626461325744275464", {
-      method: "GET",
-    }).then((res) =>
-      res
-        .json()
-        .then((data: Lanyard) =>
-          setStatus(
-            data.data.active_on_discord_desktop ||
-              data.data.active_on_discord_mobile ||
-              data.data.active_on_discord_web
+    const interval = setInterval(
+      () =>
+        setRn(
+          new Date(
+            new Date().toLocaleString("en", { timeZone: "Asia/Calcutta" })
           )
-        )
+        ),
+      1000
     );
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
     <main
-      className={`flex min-h-screen flex-col gap-2 bg-black bg-cover bg-center text-white selection:bg-white selection:text-black ${otBrutMono.className}`}
+      className={`flex min-h-screen flex-col bg-[#18181A] px-8 py-2 text-[#E4E2DD] ${matter.className}`}
     >
-      <nav className="flex items-center justify-between gap-6 px-12 py-12 uppercase md:px-24">
-        <Link href="/">Home</Link>
-        &bull;
-        <Link href="https://parchments.pybash.xyz">Writing</Link>
-      </nav>
-      <div
-        className={`flex w-full flex-col items-center justify-center pb-12 pt-10 text-7xl uppercase md:pb-36 md:pt-24 md:text-[10rem] ${otBrut.className}`}
-      >
-        <span className="text-sm md:leading-10">仕事とプロジェクト</span>
-        Craft
-        <span
-          className={`text-center text-base uppercase md:leading-5 ${dmSans.className}`}
-        >
-          &bull;&nbsp;My Work&nbsp;&bull;
-          <br />
-          &bull;&nbsp;Projects&nbsp;&bull;
-          <br />
-          &bull;&nbsp;Selected Work&nbsp;&bull;
-        </span>
-      </div>
-      <div className="flex w-full flex-col items-center gap-6">
-        <div className="px-3 text-center text-lg md:w-[45%] md:px-0 md:text-2xl">
-          A selection of my work across startups, clients, personal projects,
-          and more, organised randomly, in no specific order.
-        </div>
-        <span>&bull;×&bull;</span>
-      </div>
-      <div className={`uppercase ${dmSans.className} px-8`}>Selected Work</div>
-      <div className="relative flex flex-col divide-y divide-white border-y border-white text-2xl uppercase md:text-5xl [&>div]:px-8 [&>div]:pt-2">
-        <div
-          onMouseEnter={() => setHovering(0)}
-          onMouseLeave={() => setHovering(-1)}
-          className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
-        >
-          {/* this has to be here to avoid a double divide/border on the top visual bug */}
-          {hovering > -1 && IMAGES[hovering] ? (
-            <Image
-              src={IMAGES[hovering] as string}
-              width={550}
-              height={200}
-              alt="project image"
-              className="absolute bottom-14 right-28 hidden w-1/3 shadow-2xl md:block"
-            />
-          ) : null}
-          <Link href="https://deva.me">Deva.me</Link>
-          <div>2023-24</div>
-        </div>
-        <div
-          onMouseEnter={() => setHovering(1)}
-          onMouseLeave={() => setHovering(-1)}
-          className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
-        >
-          <Link href="https://authdeck.xyz">Authdeck</Link>
-          <div>2022-23</div>
-        </div>
-        <div
-          onMouseEnter={() => setHovering(2)}
-          onMouseLeave={() => setHovering(-1)}
-          className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
-        >
-          <Link href="https://purp.game">Purp.game</Link>
-          <div>2023</div>
-        </div>
-        <div
-          onMouseEnter={() => setHovering(3)}
-          onMouseLeave={() => setHovering(-1)}
-          className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
-        >
-          <Link href="https://parchments.pybash.xyz">Parchments</Link>
-          <div>2023</div>
-        </div>
-        <div
-          onMouseEnter={() => setHovering(4)}
-          onMouseLeave={() => setHovering(-1)}
-          className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
-        >
-          <Link href="https://github.com/pybash1/today">Today</Link>
-          <div>2023</div>
-        </div>
-        <div
-          onMouseEnter={() => setHovering(5)}
-          onMouseLeave={() => setHovering(-1)}
-          className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
-        >
-          <Link href="https://solo.pybash.xyz">Solo</Link>
-          <div>2022</div>
-        </div>
-        <div
-          onMouseEnter={() => setHovering(6)}
-          onMouseLeave={() => setHovering(-1)}
-          className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
-        >
-          <Link href="https://n0.pybash.xyz">n0</Link>
-          <div>2023</div>
-        </div>
-        <div
-          onMouseEnter={() => setHovering(7)}
-          onMouseLeave={() => setHovering(-1)}
-          className="flex items-center justify-between transition duration-500 ease-in-out hover:text-blue-300"
-        >
-          <Link href="https://supertable.fun">Supertable</Link>
-          <div>2023</div>
-        </div>
-      </div>
-      <div
-        className={`flex h-screen w-full flex-col items-center justify-center text-center text-6xl uppercase md:text-9xl ${otBrut.className}`}
-      >
-        <span className="pb-2 text-sm">接触</span>
-        hi@
-        <br />
-        pybash
-        <br />
-        .xyz
-        <span className={`text-base uppercase ${dmSans.className}`}>
-          &bull;&nbsp;20.5937° 78.9629°&nbsp;&bull;
-          <br />
-          &bull;&nbsp;
-          <Link
-            href="https://twitter.com/py_bash1"
-            className="text-blue-300 underline decoration-wavy decoration-1 underline-offset-2"
-          >
-            Twitter
-          </Link>
-          &nbsp;&bull;
-          <br />
-          &bull;&nbsp; Discord:{" "}
-          <span className={status ? "text-green-300" : "text-red-300"}>
-            {status ? "Online" : "Offline"}
+      <Head>
+        <title>Craft | PyBash</title>
+      </Head>
+      <div className="flex items-center justify-between">
+        <Link href="/" className="group -mx-6 flex items-center outline-none">
+          <Image
+            src="/p-transparent.png"
+            width={256}
+            height={256}
+            alt="logo"
+            className="h-16 w-16"
+          />
+          <span className="overflow-hidden opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
+            pybash
           </span>
-          &nbsp;&bull;
-        </span>
+        </Link>
+        <nav className="flex items-center gap-2 text-sm text-[#E4E2DD]/80 underline decoration-[#E4E2DD]/80 underline-offset-[3px]">
+          <Link
+            className="outline-none transition duration-300 ease-in-out hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
+            href="https://twitter.com/py_bash1"
+            target="_blank"
+          >
+            Tweetybird
+          </Link>
+          <Link
+            className="outline-none transition duration-300 ease-in-out hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
+            href="https://github.com/pybash1"
+            target="_blank"
+          >
+            Octocat
+          </Link>
+          <Link
+            className="outline-none transition duration-300 ease-in-out hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
+            href="mailto:hi@pybash.xyz"
+            target="_blank"
+          >
+            hi@pybash.xyz
+          </Link>
+        </nav>
       </div>
+      <div className="flex grow flex-col gap-6 px-96 pb-8 pt-36">
+        <div className={`text-lg`}>
+          Craft
+          <br />
+          <div className="text-base text-[#E4E2DD]/60">
+            Selected work and experiments.
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-6">
+          <div className="flex flex-col gap-6">
+            <div className="text-sm text-[#E4E2DD]/60">Professional</div>
+            <ProjectCard
+              title="Rift"
+              description="Established the foundations of a magical new creator economy."
+              link="https://onrift.xyz"
+            />
+            <ProjectCard
+              title="Deva.me"
+              description="I crafted and put together several key pieces to the puzzle."
+              link="https://deva.me"
+            />
+            <ProjectCard
+              title="Authdeck"
+              description="Single handedly built and shipped the entire frontend."
+              link="https://authdeck.xyz"
+            />
+            <ProjectCard
+              title="purp.game"
+              description="Built a gamified leaderboard for a crypto social app."
+              link="https://authdeck.xyz"
+            />
+            <ProjectCard
+              title="Supertable"
+              description="Improved forms on top of the Airtable API for Superteam."
+              link="https://authdeck.xyz"
+            />
+          </div>
+          <div className="flex flex-col gap-6">
+            <div className="text-sm text-[#E4E2DD]/60">Personal</div>
+            <ProjectCard
+              title="Palet"
+              description="Generate color palettes from words. Also has a figma plugin."
+              link="https://github.com/pybash1/today"
+            />
+            <ProjectCard
+              title="Solo"
+              description="Connecting music artists and their fans with signed albums."
+              link="https://solo.pybash.xyz"
+            />
+            <ProjectCard
+              title="n0"
+              description="Habit tracker for a friend. Demo link will not persist data."
+              link="https://n0.pybash.xyz"
+            />
+          </div>
+          <div className="flex flex-col gap-6">
+            <div className="text-sm text-[#E4E2DD]/60">Experiments</div>
+            <ProjectCard
+              title="WinNF"
+              description="Nerdfetch for windows, with 2 dependencies for learning Rust."
+              link="https://n0.pybash.xyz"
+            />
+            <ProjectCard
+              title="Parchments"
+              description="A sort of blog, which I'm still building."
+              link="https://n0.pybash.xyz"
+            />
+            <ProjectCard
+              title="Today"
+              description="Self-hostable todo app that forgets the past and future."
+              link="https://github.com/pybash1/today"
+            />
+          </div>
+        </div>
+      </div>
+      <footer className="-mx-8 flex items-center justify-between border-t border-[#313136] px-72 pt-2 text-sm text-[#E4E2DD]/50">
+        <div>Never settle.</div>
+        <div>{formatTime(rn)}</div>
+      </footer>
     </main>
   );
 };
