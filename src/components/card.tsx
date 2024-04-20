@@ -32,7 +32,7 @@ export const ContactCard = ({ name, avatar, link }: ContactProps) => {
   return (
     <Link
       href={link}
-      className={`flex items-center gap-2 py-1 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] focus:outline-none ${newsreader.className}`}
+      className={`text-sm md:text-base flex items-center gap-2 py-1 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] focus:outline-none ${newsreader.className}`}
     >
       <Image
         src={avatar}

@@ -49,7 +49,7 @@ const Home: NextPage = () => {
     <main
       className={`flex min-h-screen flex-col bg-[#18181A] px-8 py-2 text-[#E4E2DD] ${matter.className}`}
     >
-      <div className="fixed left-8 right-8 top-0 flex items-center justify-between py-2 backdrop-blur-[2px]">
+      <div className="fixed left-8 right-8 top-0 flex items-center justify-between bg-inherit py-2 md:bg-transparent md:backdrop-blur-[2px]">
         <div className="group -mx-6 flex items-center">
           <Image
             src="/p-transparent.png"
@@ -58,27 +58,27 @@ const Home: NextPage = () => {
             alt="logo"
             className="h-16 w-16"
           />
-          <span className="overflow-hidden opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100">
+          <span className="hidden overflow-hidden opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 md:block">
             pybash
           </span>
         </div>
         <nav className="flex items-center gap-2 text-sm text-[#E4E2DD]/80 underline decoration-[#E4E2DD]/80 underline-offset-[3px]">
           <Link
-            className="transition duration-300 ease-in-out outline-none hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
+            className="outline-none transition duration-300 ease-in-out hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
             href="https://twitter.com/py_bash1"
             target="_blank"
           >
             Tweetybird
           </Link>
           <Link
-            className="transition duration-300 ease-in-out outline-none hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
+            className="outline-none transition duration-300 ease-in-out hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
             href="https://github.com/pybash1"
             target="_blank"
           >
             Octocat
           </Link>
           <Link
-            className="transition duration-300 ease-in-out outline-none hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
+            className="outline-none transition duration-300 ease-in-out hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
             href="mailto:hi@pybash.xyz"
             target="_blank"
           >
@@ -86,7 +86,7 @@ const Home: NextPage = () => {
           </Link>
         </nav>
       </div>
-      <div className="flex grow flex-col gap-6 px-96 pb-8 pt-36">
+      <div className="flex grow flex-col gap-6 pb-8 pt-36 md:px-96">
         <div className={`text-xl text-[#E4E2DD]/60 ${newsreader.className}`}>
           About
         </div>
@@ -230,7 +230,7 @@ const Home: NextPage = () => {
           />
         </div>
       </div>
-      <footer className="-mx-8 flex items-center justify-between border-t border-[#313136] px-72 pt-2 text-sm text-[#E4E2DD]/50">
+      <footer className="-mx-8 flex items-center justify-between border-t border-[#313136] px-4 pt-2 text-sm text-[#E4E2DD]/50 md:px-72">
         <div>Never settle.</div>
         <div>{formatTime(rn)}</div>
       </footer>
