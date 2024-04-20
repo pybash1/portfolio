@@ -18,5 +18,23 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+
+  // Images (next/image)
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "pbs.twimg.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.discordapp.com",
+        port: "",
+        pathname: "/**",
+      },
+    ],
+  },
 };
 export default config;
