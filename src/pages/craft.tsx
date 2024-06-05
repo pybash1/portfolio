@@ -78,7 +78,7 @@ const Craft: NextPage = () => {
             Selected work and experiments.
           </div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="flex flex-col gap-6">
             <div className="text-sm text-[#E4E2DD]/60">Professional</div>
             <ProjectCard
@@ -127,6 +127,11 @@ const Craft: NextPage = () => {
           </div>
           <div className="flex flex-col gap-6">
             <div className="text-sm text-[#E4E2DD]/60">Experiments</div>
+            <ProjectCard
+              title="besafe"
+              description="A simple git pre-commit hook to keep your secrets safe."
+              link="https://github.com/pybash1/winnf"
+            />
             <ProjectCard
               title="WinNF"
               description="Nerdfetch for windows, with 2 dependencies for learning Rust."
