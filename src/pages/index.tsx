@@ -107,7 +107,15 @@ const Home: NextPage = () => {
           Earlier, I&apos;ve worked at growing startups such as{" "}
           <span className={newsreader.className}>10Planet</span>, and{" "}
           <span className={newsreader.className}>Authdeck</span>. I have also
-          won a couple hackathons and awards here and there.
+          won a couple hackathons and awards here and there. At times, I also
+          indulge in{" "}
+          <Link
+            href="https://labs.pybash.xyz"
+            className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
+          >
+            wizardry
+          </Link>
+          .
         </div>
         <div>
           In my leisure, I often build unsuccessful software, or read books.
