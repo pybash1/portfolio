@@ -1,18 +1,17 @@
 import { type NextPage } from "next";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { matter, newsreader } from "~/components/fonts";
+import { dmSans } from "~/components/fonts";
 import type { Lanyard, Spotify, Activity } from "~/types/lanyard";
 import Image from "next/image";
-import { formatTime } from "~/utils/time";
-import { ContactCard } from "~/components/card";
+import { type Month, ProjectCard } from "~/components/card";
+import { type GitHubCommitsResponse, getLastModified } from "~/utils/github";
+import { Email, Twitter } from "~/components/icons";
 
 const Home: NextPage = () => {
   const [spotify, setSpotify] = useState<Spotify>();
   const [vsc, setVsc] = useState<Activity>();
-  const [rn, setRn] = useState(
-    new Date(new Date().toLocaleString("en", { timeZone: "Asia/Calcutta" }))
-  );
+  const [githubCommits, setGitHubCommits] = useState<GitHubCommitsResponse>([]);
 
   useEffect(() => {
     void fetch("https://api.lanyard.rest/v1/users/626461325744275464", {
@@ -29,219 +28,215 @@ const Home: NextPage = () => {
         );
       })
     );
-  }, []);
 
-  useEffect(() => {
-    const interval = setInterval(
-      () =>
-        setRn(
-          new Date(
-            new Date().toLocaleString("en", { timeZone: "Asia/Calcutta" })
-          )
-        ),
-      1000
-    );
-
-    return () => clearInterval(interval);
+    void fetch("https://api.github.com/repos/pybash1/portfolio/commits", {
+      method: "GET",
+    }).then((res) => {
+      void res
+        .json()
+        .then((data: GitHubCommitsResponse) => setGitHubCommits(data));
+    });
   }, []);
 
   return (
     <main
-      className={`flex min-h-screen flex-col bg-[#18181A] px-8 py-2 text-[#E4E2DD] ${matter.className}`}
+      className={`${dmSans.className} flex min-h-screen flex-col items-center bg-[#18181A] px-8 py-10 text-sm text-white selection:bg-white selection:text-[#18181A]`}
     >
-      <div className="fixed left-8 right-8 top-0 flex items-center justify-between bg-inherit py-2 md:bg-transparent md:backdrop-blur-[2px]">
-        <div className="group -mx-6 flex items-center">
-          <Image
-            src="/p-transparent.png"
-            width={256}
-            height={256}
-            alt="logo"
-            className="h-16 w-16"
-          />
-          <span className="hidden overflow-hidden opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100 md:block">
-            pybash
-          </span>
+      <div className="flex w-96 flex-col gap-6">
+        <Image
+          src="/pfp.png"
+          width={128}
+          height={128}
+          alt="logo"
+          className="h-12 w-12 rounded-full"
+        />
+        <div>
+          <div>PyBash</div>
+          <div className="text-white/55">Builder</div>
         </div>
-        <nav className="flex items-center gap-2 text-sm text-[#E4E2DD]/80 underline decoration-[#E4E2DD]/80 underline-offset-[3px]">
+        <div className="flex flex-col gap-2">
+          <div>Building cool stuff since 2021.</div>
+          <div>
+            Crafting and building things to innovate the web while juggling high
+            school.
+          </div>
+          <div>Never settle.</div>
+        </div>
+        <div className="flex gap-4">
           <Link
-            className="outline-none transition duration-300 ease-in-out hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
-            href="https://twitter.com/py_bash1"
-            target="_blank"
-          >
-            Tweetybird
-          </Link>
-          <Link
-            className="outline-none transition duration-300 ease-in-out hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
-            href="https://github.com/pybash1"
-            target="_blank"
-          >
-            Octocat
-          </Link>
-          <Link
-            className="outline-none transition duration-300 ease-in-out hover:text-[#E4E2DD] hover:decoration-[#E4E2DD] focus:text-[#E4E2DD] focus:decoration-[#E4E2DD]"
             href="mailto:hi@pybash.xyz"
-            target="_blank"
+            className="text-white/55 hover:text-white"
           >
-            hi@pybash.xyz
+            <Email />
           </Link>
-        </nav>
+          <Link
+            href="https://twitter.com/py_bash1"
+            className="text-white/55 hover:text-white"
+          >
+            <Twitter />
+          </Link>
+        </div>
       </div>
-      <div className="flex grow flex-col gap-6 pb-8 pt-36 md:px-36 lg:px-96">
-        <div className={`text-xl text-[#E4E2DD]/60 ${newsreader.className}`}>
-          About
+      <div className="flex flex-wrap justify-center gap-2 py-12">
+        <ProjectCard
+          link="https://peersafe.xyz"
+          title="Peersafe"
+          description="A decentralized file storage system from the future."
+          start="May '24"
+          end="Coming soon"
+          screenshot="peersafe"
+        />
+        <ProjectCard
+          link="https://github.com/pybash1/today"
+          title="Moni"
+          description="Yet another expense tracker built with React Native."
+          start="May '24"
+          end="Jun '24"
+          screenshot="moni"
+          type="mobile"
+        />
+        <ProjectCard
+          link="https://onrift.xyz"
+          title="Rift"
+          description="Established the foundations of a magical new creator economy."
+          start="Feb '24"
+          end="May '24"
+          screenshot="rift"
+        />
+        <ProjectCard
+          link="https://labs.pybash.xyz"
+          title="Playground"
+          description="Building fun tools, components and more since 2021."
+          start="Jan '21"
+          end={`${
+            new Date().toLocaleDateString(undefined, {
+              month: "short",
+            }) as Month
+          } '${Number(
+            new Date().toLocaleDateString(undefined, {
+              year: "2-digit",
+            })
+          )}`}
+          screenshot="playground"
+          type="other"
+        />
+        <ProjectCard
+          link="https://deva.me"
+          title="Deva.me"
+          description="I crafted and put together several key pieces to the puzzle."
+          start="Apr '23"
+          end="Jan '24"
+          screenshot="deva"
+        />
+        <ProjectCard
+          link="https://supertable.fun"
+          title="Supertable"
+          description="Improved forms on top of the Airtable API for Superteam."
+          start="Mar '23"
+          end="Aug '23"
+          screenshot="superteam"
+        />
+        <ProjectCard
+          link="https://purp.game"
+          title="Purp.game"
+          description="Built a gamified leaderboard for a crypto social app."
+          start="Sep '23"
+          end="Oct '23"
+          screenshot="purp"
+        />
+      </div>
+      <div className="flex w-96 flex-col gap-6">
+        <div className="flex flex-col gap-1">
+          <div className="text-white/55">Me</div>
+          <div>
+            I&apos;ve loved to build things since I was quite young. This has
+            led me to work at places such as 10Planet and Authdeck. I try to new
+            learn new things and do cool stuff while juggling high school on the
+            side. I also enjoy reading books and watching unique
+            films(esspecially Chistopher Nolan). I&apos;ve also won a few
+            hackathons here and there.
+          </div>
         </div>
-        <div>
-          Hey, there! Thanks for stopping by. I{" "}
-          <span className={`${newsreader.className}`}>craft interfaces</span>{" "}
-          for the digital world. I too, obsess over details. As of today, I am
-          manipulating designs and code at{" "}
-          <Link
-            href="https://onrift.xyz"
-            className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
-          >
-            Rift
-          </Link>
-          .
-        </div>
-        <div>
-          Earlier, I&apos;ve worked at growing startups such as{" "}
-          <span className={newsreader.className}>10Planet</span>, and{" "}
-          <span className={newsreader.className}>Authdeck</span>. I have also
-          won a couple hackathons and awards here and there. At times, I also
-          indulge in{" "}
-          <Link
-            href="https://labs.pybash.xyz"
-            className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
-          >
-            wizardry
-          </Link>
-          .
-        </div>
-        <div>
-          In my leisure, I often build unsuccessful software, or read books.
-          Listening to music and watching movies are too, my interests. Some of
-          my craft lives on a{" "}
-          <Link
-            href="/craft"
-            className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
-          >
-            different page
-          </Link>
-          . I seldom write, but nevertheless read it on{" "}
-          <Link
-            href="https://parchments.pybash.xyz"
-            className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
-          >
-            Parchments
-          </Link>
-          .
-        </div>
-        <div className={`text-xl text-[#E4E2DD]/60 ${newsreader.className}`}>
-          Now
-        </div>
-        <div>
-          To be very precise,{" "}
-          {spotify ? (
-            <>
-              I am listening to{" "}
+        <div className="flex flex-col gap-1">
+          <div className="text-white/55">Social-ish</div>
+          <ul className="flex flex-col gap-2">
+            {vsc ? (
+              <li>
+                {vsc.details
+                  ?.replace("editing", "Building")
+                  .replace("Idling", "Thinking")}{" "}
+                /{" "}
+                <span className="text-white/55">
+                  {vsc.state?.replace("in", "") || "life choices"}
+                </span>
+              </li>
+            ) : null}
+            {spotify ? (
+              <li>
+                Listening to &quot;{spotify.song}&quot; by{" "}
+                {spotify.artist?.split(";")?.[0] as string} /{" "}
+                <Link
+                  href={`https://open.spotify.com/track/${spotify.track_id}`}
+                  className="text-white/55 underline underline-offset-2 hover:text-white"
+                >
+                  spotify
+                </Link>
+              </li>
+            ) : null}
+            <li>
+              Writing code /{" "}
               <Link
-                href={`https://open.spotify.com/track/${spotify.track_id}`}
-                target="_blank"
-                className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
+                href="https://github.com/pybash1"
+                className="text-white/55 underline underline-offset-2 hover:text-white"
               >
-                {spotify.song}
-              </Link>{" "}
-              by{" "}
-              <span className={`${newsreader.className}`}>
-                {spotify?.artist?.split(";")?.[0] as string}
-              </span>
-              .
-            </>
-          ) : null}{" "}
-          {vsc
-            ? spotify
-              ? `I am also, ${vsc.details
-                  ?.replace("editing", "crafting")
-                  .replace("Idling", "thinking")} ${
-                  vsc.state?.replace("in", "for") ?? ""
-                }.`
-              : `I am ${vsc.details
-                  ?.replace("editing", "crafting")
-                  .replace("Idling", "thinking")}${
-                  vsc.state?.replace("in", " for") ?? ""
-                }.`
-            : !spotify
-            ? "absolutely nothing productive."
-            : null}
+                github
+              </Link>
+            </li>
+            <li>
+              Reading books /{" "}
+              <Link
+                href="https://oku.club/user/pybash"
+                className="text-white/55 underline underline-offset-2 hover:text-white"
+              >
+                oku
+              </Link>
+            </li>
+            <li>
+              Writing stuff /{" "}
+              <Link
+                href="https://parchments.pybash.xyz"
+                className="text-white/55 underline underline-offset-2 hover:text-white"
+              >
+                parchments
+              </Link>
+            </li>
+            <li>
+              Unfiltered thoughts /{" "}
+              <Link
+                href="https://streams.place/pybash"
+                className="text-white/55 underline underline-offset-2 hover:text-white"
+              >
+                streams place
+              </Link>
+            </li>
+            <li>
+              Watching films and shows /{" "}
+              <Link
+                href="https://www.themoviedb.org/u/pybash"
+                className="text-white/55 underline underline-offset-2 hover:text-white"
+              >
+                tmdb
+              </Link>
+            </li>
+            <li>Balanching high school / 📚</li>
+          </ul>
         </div>
-        <div>
-          On a less precise note, this year, I&apos;m juggling between high
-          school and my passion. I&apos;m excited to see how the rest of the
-          year plays out. You can find a part of my unfiltered thoughts over on
-          my{" "}
-          <Link
-            href="https://streams.place/pybash"
-            className={`underline decoration-1 underline-offset-2 outline-none transition-all duration-500 ease-in-out hover:bg-[#E4E2DD] hover:px-2 hover:py-1 hover:text-[#18181A] focus:bg-[#E4E2DD] focus:px-2 focus:py-1 focus:text-[#18181A] ${newsreader.className}`}
-          >
-            stream
-          </Link>
-          .
-        </div>
-        <div className={`text-lg text-[#E4E2DD]/60 ${newsreader.className}`}>
-          Chief associates
-        </div>
-        <div className="flex flex-wrap gap-x-4 gap-y-0">
-          <ContactCard
-            name="Aadhithyan Suresh"
-            avatar="https://pbs.twimg.com/profile_images/1756057216195735552/jpmsQtbW_400x400.jpg"
-            link="https://twitter.com/_soulninja"
-          />
-          <ContactCard
-            name="Shubhaankar Sharma"
-            avatar="https://pbs.twimg.com/profile_images/1713836316209868800/nKNnpRy4_400x400.jpg"
-            link="https://spongeboi.com"
-          />
-          <ContactCard
-            name="Milind Madhukar"
-            avatar="https://pbs.twimg.com/profile_images/1549608791209316352/yKljoNHe_400x400.jpg"
-            link="https://github.com/milindmadhukar"
-          />
-          <ContactCard
-            name="Arnav Mehta"
-            avatar="https://pbs.twimg.com/profile_images/1542376457233584128/D5X_Qf0t_400x400.jpg"
-            link="https://twitter.com/devnull03"
-          />
-          <ContactCard
-            name="Nicole"
-            avatar="https://pbs.twimg.com/profile_images/1615412983005421568/yrWiGfZV_400x400.jpg"
-            link="https://sofa.sh"
-          />
-          <ContactCard
-            name="Kumar Abhirup"
-            avatar="https://pbs.twimg.com/profile_images/1769871138761662464/7Xnquhcf_400x400.jpg"
-            link="https://kumareth.com"
-          />
-          <ContactCard
-            name="Milan Muhammed"
-            avatar="https://pbs.twimg.com/profile_images/1517105300649955328/hIfJFOyU_400x400.jpg"
-            link="https://milan090.me"
-          />
-          <ContactCard
-            name="Vasu"
-            avatar="https://cdn.discordapp.com/attachments/883044092030890014/1230507644146552952/c25d20e6020e040bd1394bb1c4c71337.png?ex=6633928c&is=66211d8c&hm=64fd5635e1062cc61d1fc0cefbd57627f63e109a13f317043141c05be94210f2&"
-            link="https://github.com/vg08"
-          />
-          <ContactCard
-            name="Saptarshi Basu"
-            avatar="https://pbs.twimg.com/profile_images/1777828016988520448/bt5-zI1y_400x400.jpg"
-            link="https://saptarshi.vercel.app"
-          />
-        </div>
+        <footer className="pt-10 text-white/55">
+          <div>&copy; {new Date().getFullYear()}, PyBash</div>
+          <div>Updated {getLastModified(githubCommits)}</div>
+          <div>Built in Calcutta, IN</div>
+        </footer>
       </div>
-      <footer className="-mx-8 flex items-center justify-between border-t border-[#313136] px-4 pt-2 text-sm text-[#E4E2DD]/50 md:px-24 lg:px-72">
-        <div>Never settle.</div>
-        <div>{formatTime(rn)}</div>
-      </footer>
     </main>
   );
 };

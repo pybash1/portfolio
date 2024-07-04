@@ -1,13 +1,6 @@
-import { Newsreader } from "next/font/google";
-import localFont from "next/font/local";
+import { DM_Sans } from "next/font/google";
 
-export const matter = localFont({
-  src: "./fonts/Matter-Regular.otf",
-  weight: "400",
-});
-
-export const newsreader = Newsreader({
+export const dmSans = DM_Sans({
   subsets: ["latin"],
-  weight: "500",
-  style: "italic",
+  weight: "400",
 });
