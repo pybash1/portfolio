@@ -1,0 +1,24 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+    href?: string;
+    image?: ImageMetadata;
+    imageLink?: string;
+}
+
+const { href, image, imageLink } = Astro.props;
+
+const decider = Math.random() >= Math.random();
+---
+
+<div class={`relative inline-block`}>
+    <div class={`peer transition ease-in-out ${decider ? "hover:rotate-12" : "hover:-rotate-12"}`}>
+        {href ? <a href={href} class="rounded-md whitespace-nowrap bg-white bg-opacity-40 px-1.5 py-0.5"><slot /></a> : <span class={`rounded-md whitespace-nowrap bg-white bg-opacity-40 px-1.5 py-0.5`}><slot /></span>}
+    </div>
+    {image || imageLink ?
+        // @ts-expect-error -- idk wtf is wrong with this
+        <Image src={image || (imageLink ?? "")} alt="" class={`transition ease-in-out pointer-events-none opacity-0 peer-hover:opacity-100 shadow-2xl drop-shadow-2xl absolute bottom-[150%] left-1/2 -translate-x-1/2 min-w-80 max-w-96 rounded-lg ring-4 ring-white object-cover object-center bg-black  ${decider ? "peer-hover:rotate-12" : "peer-hover:-rotate-12"}`} inferSize loading={"eager"} />
+    : null}
+</div>

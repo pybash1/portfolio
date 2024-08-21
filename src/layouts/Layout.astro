@@ -1,0 +1,46 @@
+---
+import { AstroFont } from 'astro-font';
+
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content="Just a lil boy with dreams" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<AstroFont 
+		  	config={[
+				{
+					src: [],
+					name: "Playwrite Peru",
+					googleFontsURL: 'https://fonts.googleapis.com/css2?family=Playwrite+PE:wght@100..400&display=swap',
+					preload: true,
+					display: "swap",
+					cssVariable: "font-playwrite-peru",
+					fallback: "serif",
+				},
+				{
+					src: [],
+					name: "DM Sans",
+					googleFontsURL: 'https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap',
+					preload: true,
+					display: "swap",
+					cssVariable: "font-dm-sans",
+					fallback: "sans-serif",
+				},
+			]}
+		/>
+		<title>{title}</title>
+	</head>
+	<body class="font-dm-sans bg-black text-white min-h-screen selection:bg-white selection:text-black">
+		<slot />
+	</body>
+</html>

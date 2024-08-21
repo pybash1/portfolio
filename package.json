@@ -1,42 +1,26 @@
 {
-  "name": "portfolio",
-  "version": "0.1.0",
-  "private": true,
+  "name": "",
+  "type": "module",
+  "version": "0.0.1",
   "scripts": {
-    "build": "next build",
-    "dev": "next dev",
-    "lint": "next lint",
-    "start": "next start"
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
-    "@t3-oss/env-nextjs": "^0.3.1",
-    "class-variance-authority": "^0.6.1",
-    "clsx": "^1.2.1",
-    "next": "^14.2.2",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "superjson": "1.12.2",
-    "tailwind-merge": "^1.13.2",
-    "zod": "^3.22.5"
-  },
-  "devDependencies": {
-    "@types/eslint": "^8.56.10",
-    "@types/node": "^18.16.0",
-    "@types/prettier": "^2.7.2",
-    "@types/react": "^18.2.79",
-    "@types/react-dom": "^18.2.4",
-    "@typescript-eslint/eslint-plugin": "^5.59.6",
-    "@typescript-eslint/parser": "^5.59.6",
-    "autoprefixer": "^10.4.14",
-    "eslint": "^8.40.0",
-    "eslint-config-next": "^13.4.2",
-    "postcss": "^8.4.21",
-    "prettier": "^2.8.8",
-    "prettier-plugin-tailwindcss": "^0.2.8",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5.0.4"
-  },
-  "ct3aMetadata": {
-    "initVersion": "7.13.1"
+    "@astrojs/check": "^0.9.3",
+    "@astrojs/react": "^3.6.2",
+    "@astrojs/tailwind": "^5.1.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "astro": "^4.14.2",
+    "astro-font": "^0.1.81",
+    "lucide-react": "^0.428.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.10",
+    "typescript": "^5.5.4"
   }
 }

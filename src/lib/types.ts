@@ -1,7 +1,7 @@
 export interface Lanyard {
   success: boolean;
   data: {
-    spotify: Spotify;
+    spotify?: Spotify;
     listening_to_spotify: boolean;
     kv: {
       [key: string]: string;
