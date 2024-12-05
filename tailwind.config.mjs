@@ -6,8 +6,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        "dm-sans": ["'DM Sans'", ...defaultTheme.fontFamily.sans],
-        playwrite: ["'Playwrite Peru'", ...defaultTheme.fontFamily.serif],
+        "dm-sans": ["'DM Sans Variable'", ...defaultTheme.fontFamily.sans],
+        mono: ["'Berkeley Mono'", ...defaultTheme.fontFamily.mono],
       },
     },
   },

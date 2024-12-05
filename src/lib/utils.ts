@@ -17,7 +17,7 @@ export const getSong = async () => {
 export const getArtist = async () => {
   const data = await getLanyardData();
 
-  return data?.spotify?.album;
+  return data?.spotify?.artist;
 };
 
 export const getSongImage = async () => {

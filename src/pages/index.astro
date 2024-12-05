@@ -1,36 +1,76 @@
 ---
-import Link from '../components/Link.astro';
-import Layout from '../layouts/Layout.astro';
-import { Twitter } from "lucide-react";
-import { getSong, getSongImage, getSongUrl } from "../lib/utils";
-import bigDreams from "../components/images/big-dreams.jpg";
-import builder from "../components/images/builder.webp";
-import devame from "../components/images/devame.png";
-import authdeck from "../components/images/authdeck.png";
-import reading from "../components/images/reading.jpg";
-import writing from "../components/images/writing.png";
-
-const song = await getSong();
-const image = await getSongImage();
-const songUrl = await getSongUrl();
+import Layout from "../layouts/Layout.astro";
+import Footer from "../components/Footer.astro";
+import FeaturedWork from "../components/FeaturedWork.astro";
+import OpenSource from "../components/OpenSource.astro";
 ---
 
 <Layout title="pybash">
-  <main class="flex items-center justify-center flex-col min-h-screen">
-    <div class="flex flex-col gap-10 max-w-[90%] md:max-w-[41%]">
-      <div class="font-playwrite text-4xl md:text-3xl pt-10 md:pt-0">pybash</div>
-      <div class="text-xl leading-9">
-        I am a little boy with <Link image={bigDreams}>big dreams</Link>. High schooler by day,
-        <Link href="https://github.com/pybash1" image={builder}>builder by night</Link>. Built a few cool things over at <Link href="https://deva.me" image={devame}>10Planet</Link>,
-        and <Link href="https://authdeck.xyz" image={authdeck}>Authdeck</Link>.
+  <main class="flex items-center justify-center min-h-screen py-10">
+    <div class="flex flex-col items-start max-w-[40%] w-[40%] gap-14">
+      <h3 class="font-medium text-xl">PyBash</h3>
+      <div class="text-white/70 -mt-12">
+        A little kid with big dreams.
+        <br />
+        I talk about technology, design, and life.
       </div>
-      <div class="text-xl leading-9">
-        Sometimes, you'll find me&nbsp;<Link href="https://oku.club/user/pybash" image={reading}>reading</Link>, or
-		    listening{song ? <> to&nbsp;<Link href={songUrl} imageLink={image as string}>{song}</Link>&nbsp;</> : ", "}and rarely,&nbsp;<Link href="https://parchments.pybash.xyz" image={writing}>writing</Link>.
+      <div class="flex flex-col gap-4 w-full">
+        <h5 class="font-medium text-white/80">Featured Work</h5>
+        <FeaturedWork
+          works={[
+            {
+              name: "Harvence",
+              description: "Live a better life, eat better food.",
+              type: "APP",
+              link: "https://harvence.pybash.xyz",
+            },
+            {
+              name: "Deva.me",
+              description: "A blend of AI people with crypto.",
+              type: "STARTUP",
+              link: "https://deva.me",
+            },
+            {
+              name: "Purp.game",
+              description: "Distributed rewards for your followers.",
+              type: "WEBSITE",
+            },
+            {
+              name: "Rift",
+              description: "Sell stuff on the internet with crypto.",
+              type: "STARTUP",
+            },
+            {
+              name: "Elusidate",
+              description: "Analyze data at the speed of thought using AI.",
+              type: "STARTUP",
+            },
+          ]}
+        />
       </div>
-      <div class="w-fit">
-        <a href="https://twitter.com/py_bash1" aria-label="twitter"><Twitter /></a>
+      <div class="flex flex-col gap-6 w-full">
+        <h5 class="font-medium text-white/80">Giving Back</h5>
+        <OpenSource
+          works={[
+            {
+              name: "Besafe - Protect your environment variables",
+              type: "GITHUB",
+              link: "https://github.com/pybash1/besafe",
+            },
+            {
+              name: "Winnf - For the Unixporn guys",
+              type: "GITHUB",
+              link: "https://github.com/pybash1/winnf",
+            },
+            {
+              name: "Today - Simplest task manager",
+              type: "GITHUB",
+              link: "https://github.com/pybash1/today",
+            },
+          ]}
+        />
       </div>
+      <Footer />
     </div>
   </main>
 </Layout>

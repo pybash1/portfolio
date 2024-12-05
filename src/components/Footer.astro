@@ -1,0 +1,34 @@
+---
+import { Image } from "astro:assets";
+import { getArtist, getSong, getSongImage, getSongUrl } from "../lib/utils";
+
+const song = await getSong();
+const artist = await getArtist();
+const image = await getSongImage();
+const songUrl = await getSongUrl();
+---
+
+<footer class="font-mono text-sm text-white/40 font-thin">
+  &copy; {new Date().getFullYear()} PyBash. All Rights Reserved.
+  <br />
+  {
+    song ? (
+      <>
+        Listening to{" "}
+        <Image
+          src={image!}
+          alt=""
+          width={16}
+          height={16}
+          loading={"lazy"}
+          class="rounded-full inline-block animate-[spin_4s_linear_infinite]"
+        />
+        <a href={songUrl} target="_blank">
+          {song}
+        </a>{" "}
+        - {artist?.split("; ").slice(0, 2).join(", ")}
+        {artist?.split("; ").length! > 2 && ", others"}
+      </>
+    ) : null
+  }
+</footer>

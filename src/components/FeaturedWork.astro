@@ -1,0 +1,34 @@
+---
+interface Props {
+  works: {
+    name: string;
+    description: string;
+    type: "STARTUP" | "APP" | "WEBSITE";
+    link?: string;
+  }[];
+}
+
+const { works } = Astro.props;
+---
+
+<div
+  class="bg-[#2e2a2a] rounded-xl flex flex-col divide-y-2 divide-black w-full"
+>
+  {
+    works.map((work) => (
+      <a
+        class={`flex items-center justify-between px-3 py-2 ${work.link ? "cursor-ne-resize" : ""}`}
+        href={work.link}
+        target="_blank"
+      >
+        <div class="flex flex-col">
+          <div class="text-sm">{work.name}</div>
+          <div class="text-xs text-white/50">{work.description}</div>
+        </div>
+        <span class="uppercase font-mono text-white/50 font-thin text-xs">
+          {work.type}
+        </span>
+      </a>
+    ))
+  }
+</div>
