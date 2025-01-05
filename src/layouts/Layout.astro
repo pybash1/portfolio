@@ -1,6 +1,4 @@
 ---
-import "@fontsource-variable/dm-sans";
-
 interface Props {
   title: string;
 }
@@ -19,7 +17,7 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body
-    class="font-dm-sans bg-[#1a1a1a] text-white min-h-screen selection:bg-white selection:text-black"
+    class="font-dm-sans bg-[#000310] text-white min-h-screen selection:bg-white selection:text-black"
   >
     <slot />
   </body>
@@ -27,8 +25,22 @@ const { title } = Astro.props;
 
 <style is:global>
   @font-face {
-    font-family: "Berkeley Mono";
-    src: url("/fonts/BerkeleyMono.woff2") format("woff2");
+    font-family: "LDD";
+    src: url("/fonts/LDD.woff2") format("woff2");
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Mondwest";
+    src: url("/fonts/Mondwest.woff2") format("woff2");
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "NeueMontreal";
+    src: url("/fonts/NeueMontreal.woff2") format("woff2");
     font-style: normal;
     font-display: swap;
   }

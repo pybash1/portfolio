@@ -1,0 +1,52 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
+
+interface Props {
+  image: ImageMetadata;
+  name: string;
+  description: string;
+  link?: string;
+}
+
+const { image, name, description, link } = Astro.props;
+---
+
+<div class="flex flex-col gap-3 w-fit max-w-96">
+  <div
+    class="relative flex gap-2 w-full overflow-x-scroll [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+  >
+    <Image
+      src={image}
+      alt={name}
+      class="w-96 h-full lg:grayscale hover:grayscale-0 transition-[filter] duration-700 ease-in-out"
+      loading={"eager"}
+    />
+  </div>
+  <a href={link} class="text-2xl flex items-center justify-between w-full">
+    <div>{name}</div>
+    {
+      link ? (
+        <div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width={1.5}
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"
+            />
+          </svg>
+        </div>
+      ) : null
+    }
+  </a>
+  <div class="text-2xl text-white/80 w-full">
+    {description}
+  </div>
+</div>

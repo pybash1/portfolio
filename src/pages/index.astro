@@ -1,76 +1,134 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Bookshelf from "../components/Bookshelf.astro";
+import Underline from "../components/fancy/Underline";
 import Footer from "../components/Footer.astro";
-import FeaturedWork from "../components/FeaturedWork.astro";
-import OpenSource from "../components/OpenSource.astro";
+import Project from "../components/Project.astro";
+import ProjectLink from "../components/ProjectLink.astro";
+import Layout from "../layouts/Layout.astro";
+import riftImage from "../assets/rift.png";
+import harvenceImage from "../assets/harvence.png";
+import devaImage from "../assets/deva.png";
 ---
 
 <Layout title="pybash">
-  <main class="flex items-center justify-center min-h-screen py-10">
-    <div class="flex flex-col items-start max-w-[40%] w-[40%] gap-14">
-      <h3 class="font-medium text-xl">PyBash</h3>
-      <div class="text-white/70 -mt-12">
-        A little kid with big dreams.
-        <br />
-        I talk about technology, design, and life.
+  <main class="flex flex-col gap-10 min-h-screen py-10 px-10">
+    <div class="flex justify-between items-start">
+      <div class="font-mondwest text-7xl">PyBash</div>
+      <div class="font-neue flex flex-col md:flex-row gap-4">
+        <a href="https://twitter.com/py_bash1">
+          <Underline label="Twitter" direction="right" client:load />
+        </a>
+        <a href="https://github.com/pybash1">
+          <Underline label="GitHub" direction="right" client:load />
+        </a>
       </div>
-      <div class="flex flex-col gap-4 w-full">
-        <h5 class="font-medium text-white/80">Featured Work</h5>
-        <FeaturedWork
-          works={[
-            {
-              name: "Harvence",
-              description: "Live a better life, eat better food.",
-              type: "APP",
-              link: "https://harvence.pybash.xyz",
-            },
-            {
-              name: "Deva.me",
-              description: "A blend of AI people with crypto.",
-              type: "STARTUP",
-              link: "https://deva.me",
-            },
-            {
-              name: "Purp.game",
-              description: "Distributed rewards for your followers.",
-              type: "WEBSITE",
-            },
-            {
-              name: "Rift",
-              description: "Sell stuff on the internet with crypto.",
-              type: "STARTUP",
-            },
-            {
-              name: "Elusidate",
-              description: "Analyze data at the speed of thought using AI.",
-              type: "STARTUP",
-            },
-          ]}
-        />
+    </div>
+    <div class="flex">
+      <div class="flex flex-col gap-10 w-fit">
+        <div class="text-2xl">Multidisciplinary builder from India.</div>
+        <div class="flex flex-wrap gap-16">
+          <Project
+            image={devaImage}
+            name="Deva.me"
+            description="Worked with a close knit team to build a majoirty of the web app."
+            link="https://deva.me"
+          />
+          <Project
+            image={riftImage}
+            name="Rift"
+            description="Built a digital marketplace based on the Solana network."
+          />
+          <Project
+            image={harvenceImage}
+            name="Harvence"
+            description="Track your calories and your food. An app that helps you live a healthier life."
+            link="https://harvence.pybash.xyz"
+          />
+          <div class="flex flex-col gap-2 text-2xl w-full md:hidden">
+            <ProjectLink
+              name="Dripcraft"
+              client="DripHaus"
+              link="https://dripcraft.xyz"
+            />
+            <ProjectLink
+              name="purp.game"
+              client="purp"
+              link="https://purp.game"
+            />
+            <ProjectLink name="ElusidateAI" label="discontinued" />
+            <ProjectLink
+              name="Today"
+              label="featured on read.cv"
+              link="https://github.com/pybash1/today"
+            />
+            <ProjectLink
+              name="Parchments"
+              label="blog"
+              link="https://parchments.pybash.xyz"
+            />
+          </div>
+        </div>
+        <div class="text-2xl">
+          I love making custom projects, so feel free to contact me.
+        </div>
+        <a
+          href="mailto:hi@pybash.xyz"
+          class="text-2xl font-mondwest flex items-center gap-10"
+        >
+          hi@pybash.xyz <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width={1.5}
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"></path>
+          </svg>
+        </a>
+        <Footer />
       </div>
-      <div class="flex flex-col gap-6 w-full">
-        <h5 class="font-medium text-white/80">Giving Back</h5>
-        <OpenSource
-          works={[
-            {
-              name: "Besafe - Protect your environment variables",
-              type: "GITHUB",
-              link: "https://github.com/pybash1/besafe",
-            },
-            {
-              name: "Winnf - For the Unixporn guys",
-              type: "GITHUB",
-              link: "https://github.com/pybash1/winnf",
-            },
-            {
-              name: "Today - Simplest task manager",
-              type: "GITHUB",
-              link: "https://github.com/pybash1/today",
-            },
-          ]}
-        />
-      </div>
-      <Footer />
+      <aside class="text-2xl w-80 lg:w-[32rem] hidden md:flex flex-col gap-10">
+        <div class="pl-24 hidden lg:block">Bookshelf</div>
+        <div class="lg:block hidden">
+          <Bookshelf />
+        </div>
+        <div class="lg:pl-24">Other Projects</div>
+        <div class="flex flex-col gap-2 lg:pl-24">
+          <ProjectLink
+            name="Dripcraft"
+            client="DripHaus"
+            link="https://dripcraft.xyz"
+          />
+          <ProjectLink
+            name="purp.game"
+            client="purp"
+            link="https://purp.game"
+          />
+          <ProjectLink name="ElusidateAI" label="discontinued" />
+          <ProjectLink
+            name="Today"
+            label="featured on read.cv"
+            link="https://github.com/pybash1/today"
+          />
+          <ProjectLink
+            name="Parchments"
+            label="blog"
+            link="https://parchments.pybash.xyz"
+          />
+        </div>
+        <div class="lg:pl-24">
+          <div class="font-mondwest text-2xl lg:text-4xl pt-24">
+            Stay hungry, stay foolish
+          </div>
+          <div class="text-right font-mondwest text-xl lg:text-3xl">
+            &mdash;&nbsp;&nbsp;Steve Jobs
+          </div>
+        </div>
+      </aside>
     </div>
   </main>
 </Layout>

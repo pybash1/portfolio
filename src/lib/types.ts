@@ -61,3 +61,52 @@ export interface DiscordUser {
   avatar_decoration: null;
   avatar: string;
 }
+
+export interface OkuResult {
+  id: string;
+  listId: string;
+  books: Book[];
+  createdAt: string;
+  key: "read";
+  slug: "read";
+  blurb: string;
+  name: string;
+  visibility: "public" | "private";
+}
+
+export interface Book {
+  id: string;
+  title: string;
+  subtitle: string;
+  publishedDate: string;
+  isbn10: string;
+  isbn13: string;
+  description: string;
+  descriptionMd: string;
+  pageCount: number;
+  language: string;
+  imageLinks: {
+    thumbnail: string;
+  };
+  purchaseLinks: never[];
+  authors: Author[];
+  ratings: Rating[];
+  thumbnail: string;
+  slug: string;
+  workId: string;
+  addedAt: string;
+}
+
+interface Author {
+  id: string;
+  name: string;
+  image_url: string;
+}
+
+interface Rating {
+  source: string;
+  score: number;
+  max_score: null;
+  count: number;
+  updated: string;
+}

@@ -1,4 +1,4 @@
-import type { Lanyard } from "./types";
+import type { Lanyard, OkuResult } from "./types";
 
 const getLanyardData = async () => {
   const lanyard: Lanyard = await (
@@ -6,6 +6,30 @@ const getLanyardData = async () => {
   ).json();
 
   return lanyard?.data;
+};
+
+const getOkuReadData = async () => {
+  const oku: OkuResult = await (
+    await fetch("https://oku.club/api/collections/user/pybash/read")
+  ).json();
+
+  return oku;
+};
+
+const getOkuReadingData = async () => {
+  const oku: OkuResult = await (
+    await fetch("https://oku.club/api/collections/user/pybash/reading")
+  ).json();
+
+  return oku;
+};
+
+export const getReadBooks = async () => {
+  return (await getOkuReadData()).books;
+};
+
+export const getReadingBooks = async () => {
+  return (await getOkuReadingData()).books;
 };
 
 export const getSong = async () => {

@@ -6,8 +6,19 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        "dm-sans": ["'DM Sans Variable'", ...defaultTheme.fontFamily.sans],
-        mono: ["'Berkeley Mono'", ...defaultTheme.fontFamily.mono],
+        neue: ["NeueMontreal", ...defaultTheme.fontFamily.sans],
+        sans: [
+          "LDD",
+          "Mondwest",
+          "NeueMontreal",
+          ...defaultTheme.fontFamily.sans,
+        ],
+        mondwest: [
+          "Mondwest",
+          "LDD",
+          "NeueMontreal",
+          ...defaultTheme.fontFamily.sans,
+        ],
       },
     },
   },

@@ -8,8 +8,8 @@ const image = await getSongImage();
 const songUrl = await getSongUrl();
 ---
 
-<footer class="font-mono text-sm text-white/40 font-thin">
-  &copy; {new Date().getFullYear()} PyBash. All Rights Reserved.
+<footer class="text-xl font-thin">
+  &copy; {new Date().getFullYear()} PyBash. Made with love.
   <br />
   {
     song ? (
@@ -18,10 +18,10 @@ const songUrl = await getSongUrl();
         <Image
           src={image!}
           alt=""
-          width={16}
-          height={16}
+          width={28}
+          height={28}
           loading={"lazy"}
-          class="rounded-full inline-block animate-[spin_4s_linear_infinite]"
+          class="rounded-full inline-block animate-[spin_4s_linear_infinite] ml-2 mr-1 lg:grayscale hover:grayscale-0 transition-[filter] duration-700 ease-in-out"
         />
         <a href={songUrl} target="_blank">
           {song}
