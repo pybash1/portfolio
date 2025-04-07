@@ -5,19 +5,17 @@ export default {
   content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
   theme: {
     extend: {
+      colors: {
+        paper: "#c2bab1",
+        writing: "#1c1c1a",
+      },
       fontFamily: {
-        neue: ["NeueMontreal", ...defaultTheme.fontFamily.sans],
-        sans: [
-          "LDD",
-          "Mondwest",
-          "NeueMontreal",
-          ...defaultTheme.fontFamily.sans,
-        ],
-        mondwest: [
-          "Mondwest",
-          "LDD",
-          "NeueMontreal",
-          ...defaultTheme.fontFamily.sans,
+        blackletter: ["'Pirata One'", ...defaultTheme.fontFamily.serif],
+        serif: ["'Libre Caslon Text'", ...defaultTheme.fontFamily.serif],
+        sans: ["Ramabhadra", ...defaultTheme.fontFamily.serif],
+        condensed: [
+          "'Libre Caslon Condensed'",
+          ...defaultTheme.fontFamily.serif,
         ],
       },
     },

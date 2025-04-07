@@ -1,0 +1,34 @@
+---
+import { Image } from "astro:assets";
+import { getArtist, getSong, getSongImage, getSongUrl } from "../lib/utils";
+
+const song = await getSong();
+const artist = await getArtist();
+const image = await getSongImage();
+const songUrl = await getSongUrl();
+---
+
+<div>
+  {
+    song ? (
+      <>
+        Listening to{" "}
+        <Image
+          src={image!}
+          alt=""
+          width={28}
+          height={28}
+          loading={"eager"}
+          class="rounded-full inline-block animate-[spin_4s_linear_infinite] ml-2 mr-1 lg:grayscale hover:grayscale-0 transition-[filter] duration-700 ease-in-out"
+        />
+        <a href={songUrl} target="_blank">
+          {song}
+        </a>{" "}
+        - {artist?.split("; ").slice(0, 2).join(", ")}
+        {artist?.split("; ").length! > 2 && ", others"}
+      </>
+    ) : (
+      "Thinking, probably?"
+    )
+  }
+</div>

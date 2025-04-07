@@ -1,34 +1,12 @@
 ---
 import { Image } from "astro:assets";
-import { getArtist, getSong, getSongImage, getSongUrl } from "../lib/utils";
-
-const song = await getSong();
-const artist = await getArtist();
-const image = await getSongImage();
-const songUrl = await getSongUrl();
+import seal from "../assets/seal.png";
 ---
 
-<footer class="text-xl font-thin">
-  &copy; {new Date().getFullYear()} PyBash. Made with love.
-  <br />
-  {
-    song ? (
-      <>
-        Listening to{" "}
-        <Image
-          src={image!}
-          alt=""
-          width={28}
-          height={28}
-          loading={"lazy"}
-          class="rounded-full inline-block animate-[spin_4s_linear_infinite] ml-2 mr-1 lg:grayscale hover:grayscale-0 transition-[filter] duration-700 ease-in-out"
-        />
-        <a href={songUrl} target="_blank">
-          {song}
-        </a>{" "}
-        - {artist?.split("; ").slice(0, 2).join(", ")}
-        {artist?.split("; ").length! > 2 && ", others"}
-      </>
-    ) : null
-  }
-</footer>
+<div
+  class="mt-2 flex items-center justify-between border-t border-writing px-12 py-6"
+>
+  <Image src={seal} alt="seal" class="w-24" />
+  <div class="italic">Printing good news for everyone.</div>
+  <div class="font-blackletter text-3xl">&copy; Est. 2021</div>
+</div>

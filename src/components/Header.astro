@@ -1,0 +1,21 @@
+---
+import LiveFeed from "../components/LiveFeed.astro";
+import { getCurrentCommitCount } from "../lib/utils";
+
+const issue = getCurrentCommitCount();
+---
+
+<header
+  class="mb-2 grid w-full select-none grid-cols-3 border-b border-b-writing px-12 py-6"
+>
+  <div class="w-full"><span class="font-bold">Now: </span><LiveFeed /></div>
+  <div
+    class="flex w-full items-center justify-center font-blackletter text-4xl"
+  >
+    The Journal
+  </div>
+  <div class="flex flex-col justify-end text-right">
+    <div>Calcutta, IN</div>
+    <div>Vol I Issue {issue}</div>
+  </div>
+</header>

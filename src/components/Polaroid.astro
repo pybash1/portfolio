@@ -1,0 +1,24 @@
+---
+import { Image } from "astro:assets";
+import "@fontsource/caveat/600.css";
+
+interface Props {
+  image: ImageMetadata;
+  title?: string;
+  rotate?: number;
+}
+
+const { image, title, rotate } = Astro.props;
+---
+
+<div
+  class="group h-44 rounded-2xl border border-gray-400 bg-[#dbd2c8] p-1 pb-0 text-writing transition duration-200 ease-in-out hover:scale-[1.15] focus:scale-[1.15]"
+  style={{ rotate: `${rotate}deg` }}
+>
+  <Image
+    class="bg-background h-[80%] w-full rounded-xl object-cover grayscale transition-[filter] duration-200 ease-in-out group-hover:grayscale-0"
+    src={image}
+    alt="stamp"
+  />
+  <div class="pt-1.5 text-center font-[Caveat]">{title}</div>
+</div>

@@ -1,0 +1,32 @@
+---
+import { Image } from "astro:assets";
+
+interface Props {
+  title: string;
+  subtitle: string;
+  desc: string;
+  link: string;
+  badge?: string;
+  image?: ImageMetadata;
+}
+
+const { title, subtitle, desc, link, image, badge } = Astro.props;
+const prob = Math.random();
+---
+
+<div class="relative flex flex-col gap-2 border-2 border-writing p-2">
+  <div class="font-sans text-2xl font-bold uppercase">{title}</div>
+  <a class="underline underline-offset-4" href={link}>{subtitle}</a>
+  {
+    image ? (
+      <Image src={image} alt="decorative" class="grayscale hover:grayscale-0 transition-[filter] duration-300 ease-in-out" />
+    ) : null
+  }
+  <div class="font-condensed text-justify">{desc}</div>
+  <div
+    class={`absolute rounded-full bg-writing text-paper text-xs px-2 py-2 flex items-center justify-center top-10 right-1 text-center`}
+    style={{ rotate: `${(prob / 2) * 100}deg` }}
+  >
+    {badge}
+  </div>
+</div>

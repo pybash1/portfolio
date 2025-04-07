@@ -1,0 +1,19 @@
+---
+import { Picture } from "astro:assets";
+
+interface Props {
+  image: ImageMetadata;
+  caption?: string;
+}
+
+const { image, caption } = Astro.props;
+---
+
+<figure class="flex flex-col gap-1 border border-writing p-2 italic">
+  <Picture
+    src={image}
+    alt="decorative"
+    class="grayscale transition-[filter] duration-300 ease-in-out hover:grayscale-0"
+  />
+  {caption ? <figcaption class="-mb-1.5 text-xs">{caption}</figcaption> : null}
+</figure>

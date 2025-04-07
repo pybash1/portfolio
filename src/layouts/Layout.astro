@@ -1,4 +1,9 @@
 ---
+import "@fontsource/libre-caslon-text";
+import "@fontsource/libre-caslon-condensed";
+import "@fontsource/pirata-one";
+import "@fontsource/ramabhadra";
+
 interface Props {
   title: string;
 }
@@ -17,31 +22,12 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body
-    class="font-dm-sans bg-[#000310] text-white min-h-screen selection:bg-white selection:text-black"
+    class="bg-paper text-writing min-h-screen selection:bg-writing selection:text-paper font-serif"
   >
     <slot />
   </body>
 </html>
 
 <style is:global>
-  @font-face {
-    font-family: "LDD";
-    src: url("/fonts/LDD.woff2") format("woff2");
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "Mondwest";
-    src: url("/fonts/Mondwest.woff2") format("woff2");
-    font-style: normal;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "NeueMontreal";
-    src: url("/fonts/NeueMontreal.woff2") format("woff2");
-    font-style: normal;
-    font-display: swap;
-  }
+  
 </style>
