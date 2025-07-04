@@ -23,6 +23,7 @@
     "@types/react-dom": "^18.3.6",
     "astro": "5.11.0",
     "caniuse-lite": "^1.0.30001712",
+    "jotai": "^2.12.5",
     "lucide-react": "^0.428.0",
     "motion": "^11.18.2",
     "react": "^18.3.1",

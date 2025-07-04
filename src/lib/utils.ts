@@ -93,3 +93,81 @@ export const getCurrentCommitCount = async () => {
 
   return toRoman(gh.length - 1);
 };
+
+export const ITEMS = {
+  mail: {
+    role: "Email",
+    year: "0000",
+    description: "",
+  },
+  twitter: {
+    role: "Tweets",
+    year: "0000",
+    description: "",
+  },
+  github: {
+    role: "Code",
+    year: "0000",
+    description: "",
+  },
+  merin: {
+    role: "Intern",
+    year: "2025",
+    description: "",
+  },
+  deva: {
+    role: "Frontend Engineer",
+    year: "2025",
+    description: "",
+  },
+  harvence: {
+    role: "Creator",
+    year: "2024",
+    description: "",
+  },
+  dripcraft: {
+    role: "Frontend Engineer",
+    year: "2024",
+    description: "",
+  },
+  rift: {
+    role: "Founding Engineer",
+    year: "2024",
+    description: "",
+  },
+  purp: {
+    role: "Frontend Engineer",
+    year: "2024",
+    description: "",
+  },
+  today: {
+    role: "Creator",
+    year: "2024",
+    description: "",
+  },
+  solo: {
+    role: "Developer",
+    year: "2024",
+    description: "",
+  },
+  authdeck: {
+    role: "Frontend Engineer",
+    year: "2024",
+    description: "",
+  },
+  supertable: {
+    role: "Frontend Engineer",
+    year: "2024",
+    description: "",
+  },
+  wildcraft: {
+    role: "Advisor",
+    year: "2024",
+    description: "",
+  },
+  classify: {
+    role: "Intern",
+    year: "2024",
+    description: "",
+  },
+};

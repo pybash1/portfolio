@@ -1,114 +1,80 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Footer from "../components/Footer.astro";
+import Link from "../components/Link.tsx";
+import Info from "../components/Info";
 ---
 
 <Layout title="Work">
-  <div class="flex w-full flex-col gap-16 px-4 py-2">
-    <div class="flex flex-col gap-4">
-      <h1 class="text-justify text-3xl font-medium">
-        Engineer with over half a decade of experience<br />in building products
-        that delight users.
-      </h1>
-      <h1 class="text-justify text-3xl font-medium">
-        Now with <a
-          href="https://merin.ai"
-          class="transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Merin</a
-        >.
-      </h1>
-    </div>
-    <div class="flex flex-col gap-2 text-sm font-medium">
-      <h2 class="text-xs text-white/80">Talk</h2>
-      <div class="flex flex-col gap-1">
-        <a
-          href="mailto:hi@pybash.xyz"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >hi@pybash.xyz</a
-        >
-        <a
-          href="https://twitter.com/py_bash1"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >@py_bash1</a
-        >
-        <a
-          href="https://github.com/pybash1"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >@pybash1</a
-        >
-        <span class="w-fit">@pybash on Discord</span>
+  <div class="flex w-full items-center justify-between">
+    <div class="flex flex-col gap-16 px-4 py-2">
+      <div class="flex flex-col gap-4">
+        <h1 class="text-justify text-3xl font-medium">
+          Engineer with over half a decade of experience<br />in building
+          products that delight users.
+        </h1>
+        <h1 class="text-justify text-3xl font-medium">
+          Now with <Link href="https://merin.ai" item="merin" client:load
+            >Merin</Link
+          >.
+        </h1>
+      </div>
+      <div class="flex flex-col gap-2 text-sm font-medium">
+        <h2 class="text-xs text-white/80">Talk</h2>
+        <div class="flex flex-col gap-1">
+          <Link href="mailto:hi@pybash.xyz" item="mail" client:load
+            >hi@pybash.xyz</Link
+          >
+          <Link href="https://twitter.com/py_bash1" item="twitter" client:load
+            >@py_bash1</Link
+          >
+          <Link href="https://github.com/pybash1" item="github" client:load
+            >@pybash1</Link
+          >
+          <span class="w-fit">@pybash on Discord</span>
+        </div>
+      </div>
+      <div class="flex flex-col gap-2 text-sm font-medium">
+        <h2 class="text-xs text-white/80">Work</h2>
+        <div class="flex flex-col gap-1">
+          <Link href="https://merin.ai" item="merin" client:load>Merin</Link>
+          <Link href="https://deva.me" item="deva" client:load>10Planet</Link>
+          <Link href="https://harvence.pybash.xyz" item="harvence" client:load
+            >Harvence</Link
+          >
+          <Link href="https://dripcraft.xyz" item="dripcraft" client:load
+            >Dripcraft</Link
+          >
+          <Link href="https://onrift.xyz" item="rift" client:load>Rift</Link>
+          <Link href="https://purp.game" item="purp" client:load>purp.game</Link
+          >
+          <Link href="https://github.com/pybash1/today" item="today" client:load
+            >Today</Link
+          >
+          <Link href="https://solo.pybash.xyz" item="solo" client:load
+            >Solo</Link
+          >
+          <Link href="https://authdeck.xyz" item="authdeck" client:load
+            >Authdeck</Link
+          >
+          <Link href="https://supertable.fun" item="supertable" client:load
+            >Supertable</Link
+          >
+        </div>
+      </div>
+      <div class="flex flex-col gap-2 text-sm font-medium">
+        <h2 class="text-xs text-white/80">Volunteering</h2>
+        <div class="flex flex-col gap-1">
+          <Link href="https://wildcard.lol" item="wildcard" client:load
+            >Wildcard</Link
+          >
+          <Link href="https://classify.org.uk" item="classify" client:load
+            >Classify</Link
+          >
+        </div>
       </div>
     </div>
-    <div class="flex flex-col gap-2 text-sm font-medium">
-      <h2 class="text-xs text-white/80">Work</h2>
-      <div class="flex flex-col gap-1">
-        <a
-          href="https://merin.ai"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Merin</a
-        >
-        <a
-          href="https://deva.me"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >10Planet</a
-        >
-        <a
-          href="https://harvence.pybash.xyz"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Harvence</a
-        >
-        <a
-          href="https://dripcraft.xyz"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Dripcraft</a
-        >
-        <a
-          href="https://onrift.xyz"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Rift</a
-        >
-        <a
-          href="https://purp.game"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >purp.game</a
-        >
-        <a
-          href="https://github.com/pybash1/today"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Today</a
-        >
-        <a
-          href="https://solo.pybash.xyz"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Solo</a
-        >
-        <a
-          href="https://authdeck.xyz"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Authdeck</a
-        >
-        <a
-          href="https://supertable.fun"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Supertable</a
-        >
-      </div>
-    </div>
-    <div class="flex flex-col gap-2 text-sm font-medium">
-      <h2 class="text-xs text-white/80">Volunteering</h2>
-      <div class="flex flex-col gap-1">
-        <a
-          href="https://wildcard.lol"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Wildcard</a
-        >
-        <a
-          href="https://classify.org.uk"
-          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
-          >Classify</a
-        >
-      </div>
-    </div>
+    <Info client:load />
   </div>
   <Footer />
 </Layout>
