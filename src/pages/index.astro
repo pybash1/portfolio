@@ -1,335 +1,112 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import Box from "../components/Box.astro";
-import Figure from "../components/Figure.astro";
-import Polaroid from "../components/Polaroid.astro";
-import EditorialPost from "../components/EditorialPost.astro";
-import harvenceImage from "../assets/harvence-mobile.jpg";
-import builderImage from "../assets/builder.webp";
-import cameraImage from "../assets/esp32cam.jpg";
-import andamanImage from "../assets/andaman.jpg";
-import puriImage from "../assets/puri.jpg";
-import riftImage from "../assets/rift.png";
-import todayImage from "../assets/today.png";
-import devaImage from "../assets/deva.png";
-import soloImage from "../assets/solo.png";
 ---
 
-<Layout title="The Journal">
-  <Header />
-  <div class="grid grid-cols-5 divide-x divide-writing">
-    <div class="col-span-4 flex flex-col gap-4">
-      <div class="pt-2 text-center font-serif text-[5.75rem] uppercase italic">
-        PyBash Strikes Again
-      </div>
-      <div
-        class="-mt-4 mb-2 mr-2 border-b border-writing px-6 pb-4 text-justify font-condensed text-2xl first-letter:float-left first-letter:font-blackletter first-letter:text-7xl"
-      >
-        Yep, I rewrote my portfolio <span class="italic">again</span>. I just
-        want that perfect design for my site which just clicks, but I suppose
-        thats pretty hard to find. Also, yes, the title is <span
-          class="line-through">stolen</span
-        > borrowed from <a
-          href="https://www.imdb.com/title/tt6921996/"
-          class="italic underline underline-offset-4">Johnny English</a
+<Layout title="Work">
+  <div class="flex w-full flex-col gap-16 px-4 py-2">
+    <div class="flex flex-col gap-4">
+      <h1 class="text-justify text-3xl font-medium">
+        Engineer with over half a decade of experience<br />in building products
+        that delight users.
+      </h1>
+      <h1 class="text-justify text-3xl font-medium">
+        Now with <a
+          href="https://merin.ai"
+          class="transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Merin</a
         >.
-        <br />
-        <br />
-        Now, back to the basics. I'm PyBash. I build sites, apps(hardware projects
-        too now, I guess?). I got into this stuff from trying to build a <a
-          href="https://www.youtube.com/watch?v=j_sD9udZnCk"
-          class="italic underline underline-offset-4">Discord bot</a
-        >
-        <div class="float-right mx-2 max-w-96">
-          <Figure image={builderImage} caption="A fictional pybash" />
-        </div>
-        a long time ago, soon after my "Gamer" phase. Introduced to <a
-          href="https://scratch.mit.edu"
-          class="italic underline underline-offset-4">Scratch</a
-        > in middle school. Soon after, I built projects(I now find cringy) like
-        UnHackable. This was followed by a "backend" phase, which didn't stick and
-        I eventually learnt and liked working with frontend technologies.
-        <br />
-        <br />
-        Something else that played a key role in this journey was the <a
-          href="https://www.youtube.com/c/TechWithTim"
-          class="italic underline underline-offset-4">Tech with Tim</a
-        > channel and community :). From the content, to the people, it was the stepping
-        stone. During this free time(courtesy of COVID-19), I participated in hackathons(and
-        won a couple), and found a whole new world of opportunities.
-        <br />
-        <br />
-        And that brings us to today. I've had the opportunity to work at several
-        <a href="https://deva.me" class="italic underline underline-offset-4"
-          >startups</a
-        >, meet cool <a
-          href="https://x.com/py_bash1"
-          class="italic underline underline-offset-4">people</a
-        >, take wrong decisions, build <a
-          href="https://elusidate.app"
-          class="italic underline underline-offset-4">failed startups</a
-        >, and do things I could never imagine. I've worked on tons of cool <a
-          href="https://github.com/pybash1"
-          class="italic underline underline-offset-4">projects</a
-        > like Supertable, Rift, and Palet. Recently, I've also started to enjoy
-        working with electronics, and stuff. Built a cool little CCTV prototype using
-        just an ESP32-Cam.
-        <br />
-        <br />
-        Do I sound interesting? <a
+      </h1>
+    </div>
+    <div class="flex flex-col gap-2 text-sm font-medium">
+      <h2 class="text-xs text-white/80">Talk</h2>
+      <div class="flex flex-col gap-1">
+        <a
           href="mailto:hi@pybash.xyz"
-          class="italic underline underline-offset-4">Hire me</a
-        > or just have a <a
-          href="https://lanyard-visualizer.netlify.app/626461325744275464"
-          class="italic underline underline-offset-4">friendly conversation</a
-        >.
-      </div>
-      <div class="-mt-4 grid grid-cols-3 divide-x divide-writing">
-        <div class="flex flex-col gap-4">
-          <div class="px-6 pt-2 font-sans text-3xl">
-            Builder hacks on home security
-          </div>
-          <div class="px-6">
-            <Figure image={cameraImage} caption="Camera prototype" />
-          </div>
-          <div class="px-6 text-justify font-condensed text-lg">
-            Started out as a mini project for school but eventually I went on to
-            build a cool little prototype of CCTV. It's super cheap - all you
-            need to get it up and running is an ESP32-Cam and a VPS. My
-            prototype uses an UDP server along with WebSockets to transmit
-            frames from the ESP32 to the website. The website uses a password
-            based authentication on a model-by-model basis to keep the streams
-            secure. As far as current statistics go, I was able to achieve a
-            stable frame rate of 10-15fps with an average latency &lt;300ms. I
-            have plans to improve it further by adding motion detection and
-            better visibility in the dark using PIR sensors and Infrared
-            cameras.
-          </div>
-        </div>
-        <div class="col-span-2 flex flex-col gap-4">
-          <div class="mx-2 border-b border-writing pb-4">
-            <div class="flex items-center gap-6 px-6 py-2">
-              <div class="flex w-full p-4">
-                <Polaroid image={puriImage} title="Puri" rotate={-15} />
-                <Polaroid image={andamanImage} title="Andaman" rotate={15} />
-              </div>
-              <div class="flex w-fit flex-col gap-2">
-                <div class="text-3xl">Retro is the New Trendy</div>
-                <div class="text-justify font-condensed text-xl">
-                  I like to take photos of pretty things. Here is a glimpse of
-                  shots I've taken on vacations. The polaroid style frames are
-                  also built by me, originally to fill up my "labs" or
-                  "experiments" site.
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="flex flex-col gap-2 px-2">
-            <div
-              class="select-none bg-writing px-4 py-2 text-center font-blackletter text-6xl text-paper"
-            >
-              Crypto for the Mass?
-            </div>
-            <div class="text-justify font-condensed text-xl">
-              <div class="float-right mx-2 max-w-96">
-                <Figure
-                  image={riftImage}
-                  caption="A glimpse of what we built"
-                />
-              </div>
-              Or so we thought. I worked at Rift where we tried to build a marketplace
-              for selling things on the internet except the payments would be through
-              crypto. Originally planned for the <i>Colloseum</i> hackathon. We envisioned
-              a creator platform which empowers creators with micropayments, token-gating,
-              and reward systems. A platform that also helps with increasing community
-              engagement in the new creator economy. We were 3 people working closely
-              together, and we had managed to get grants for the development from
-              Superteam.
-              <br />
-              <br />
-              We developed the original prototype over the course of multiple weeks
-              but eventually discontinued it after talking to several investors,
-              potential creators, and the general audience.
-            </div>
-          </div>
-        </div>
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >hi@pybash.xyz</a
+        >
+        <a
+          href="https://twitter.com/py_bash1"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >@py_bash1</a
+        >
+        <a
+          href="https://github.com/pybash1"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >@pybash1</a
+        >
+        <span class="w-fit">@pybash on Discord</span>
       </div>
     </div>
-    <div class="flex flex-col gap-2 p-2">
-      <Box
-        title="New Article"
-        subtitle="Giving AI Another Chance"
-        desc="Well, I didn't like AI editors, and stuff like GitHub Copilot when they came out, but times change, huh? Read all about it on my blog!"
-        link="https://parchments.pybash.xyz/cursor"
-        badge="FREE"
-      />
-      <Box
-        title="Live Healthier"
-        subtitle="Harvence"
-        desc="I recently built an android app(iOS too expensive) which lets you scan the barcodes of food items or even search for them and can tell you what is healthy and what isn't. So, are you ready to live a healthier life?"
-        link="https://harvence.pybash.xyz"
-        image={harvenceImage}
-        badge="TRY NOW"
-      />
-      <div class="flex flex-col gap-4">
-        <div class="pt-4 font-blackletter text-4xl">The Editorial</div>
-        <EditorialPost
-          title="Advisor"
-          subtitle="Wildcard.LOL"
-          content="I volunteered as an advisor at Wildcard to help migrate their React PWA to a more modern and better NextJS codebase."
-        />
-        <EditorialPost
-          title="Intern"
-          subtitle="Classify"
-          content="I volunteered as an intern to help speedup the development of their web app using Flutter."
-        />
-        <div class="font-condensed">
-          Send over your thoughts(or testimonials) about me to <a
-            href="mailto:hi@pybash.xyz"
-            class="italic underline underline-offset-4">hi@pybash.xyz</a
-          > to see them here!
-        </div>
+    <div class="flex flex-col gap-2 text-sm font-medium">
+      <h2 class="text-xs text-white/80">Work</h2>
+      <div class="flex flex-col gap-1">
+        <a
+          href="https://merin.ai"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Merin</a
+        >
+        <a
+          href="https://deva.me"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >10Planet</a
+        >
+        <a
+          href="https://harvence.pybash.xyz"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Harvence</a
+        >
+        <a
+          href="https://dripcraft.xyz"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Dripcraft</a
+        >
+        <a
+          href="https://onrift.xyz"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Rift</a
+        >
+        <a
+          href="https://purp.game"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >purp.game</a
+        >
+        <a
+          href="https://github.com/pybash1/today"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Today</a
+        >
+        <a
+          href="https://solo.pybash.xyz"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Solo</a
+        >
+        <a
+          href="https://authdeck.xyz"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Authdeck</a
+        >
+        <a
+          href="https://supertable.fun"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Supertable</a
+        >
       </div>
     </div>
-  </div>
-  <div
-    class="mt-2 grid grid-cols-2 divide-x divide-writing border-t border-writing pt-2"
-  >
-    <div class="px-6">
-      <Figure
-        image={todayImage}
-        caption="Today - A simple self-accountability website that was featured on read.cv"
-      />
-    </div>
-    <div class="flex flex-col gap-4">
-      <div class="px-6 pt-2 font-sans text-3xl">
-        AI vs Humans: Will the new economy survive?
-      </div>
-      <div class="px-6 text-justify font-condensed text-xl">
-        <div class="float-right mx-2 max-w-96">
-          <Figure image={devaImage} caption="My work at Deva.me" />
-        </div>
-        At Deva.me, I worked on their core platform to aid the development of a new
-        economy of AI <i>"devas"</i> which can help you earn. I helped develop many
-        of the core functionality including the notification systems, profile pages,
-        and settings. I also built a robust and versatile multi-level autocomplete
-        system along with paginated results that is used throught the platform. Other
-        than that, I worked on the new landing page, parts of the backend systems,
-        helped with core infrastructure decisions(such as the pygration), worked
-        on improvement of the overall user experience. We envisioned a place where
-        you learn, teach and earn at the same time through a new layer 1 token from
-        10Planet.
-      </div>
-    </div>
-  </div>
-  <div
-    class="mt-2 grid grid-cols-4 divide-x divide-writing border-t border-writing pt-2"
-  >
-    <div class="flex flex-col gap-4">
-      <div class="px-6 pt-2 font-sans text-3xl">4-in-1: Hobby Projects</div>
-      <div class="px-6 text-justify font-condensed text-lg">
-        In 2022, I was just transitioning from hardcore backend to frontend, I
-        worked on a bunch of small hobby projects such as BeFit, and RRPM, all
-        of which are now abandoned and probably broken. I also won some prize at
-        a hackathon building BeFit. This year was filled with experiments,
-        learning about emerging technologies, and stuff like that.
-      </div>
-    </div>
-    <div class="flex flex-col gap-4">
-      <div class="px-6 pt-2 font-sans text-3xl">
-        Connecting artists and their fans
-      </div>
-      <div class="px-6 text-justify font-condensed text-lg">
-        Solo - a marketplace we built to allow artists to launch limited edition
-        pre-releases of their upcoming songs signed by themselves. We used
-        crypto as the underlying technology to facilitate the selling/purchasing
-        aspect of the marketplace. We built this primarily for Buildspace N&W
-        S2.
-      </div>
-    </div>
-    <div class="flex flex-col gap-4">
-      <div class="px-6 pt-2 font-sans text-3xl">
-        Distributed social reward system
-      </div>
-      <div class="px-6 text-justify font-condensed text-lg">
-        At purp.game, I helped develop a leaderboard to view and share rewards
-        over a distributed social network aka Farcaster. Both creators and their
-        followers were rewarded for interactions with the post.
-      </div>
-    </div>
-    <div class="flex flex-col gap-4">
-      <div class="px-6 pt-2 font-sans text-3xl">Airtable on Steroids</div>
-      <div class="px-6 text-justify font-condensed text-lg">
-        One of my first gigs. We were a team of 3 who worked hard to create a
-        custom typeform alternative backed by Airtable for Superteam India. We
-        received a grant from Superteam for the same. We built a fully featured
-        form client and admin interface with themes, custom fields, and even
-        support for custom domains.
-      </div>
-    </div>
-  </div>
-  <div
-    class="mt-2 grid grid-cols-2 divide-x divide-writing border-t border-writing pt-2"
-  >
-    <div class="flex flex-col gap-4">
-      <div class="px-6 pt-2 font-sans text-3xl">
-        Yet another failure: OpenAI crushes ElusidateAI
-      </div>
-      <div class="px-6 text-justify font-condensed text-xl">
-        I co-founded an unsuccessful startup in 2023 before the AI hype. A place
-        to convert all your satistical data into beautiful graphs, charts, and
-        presentations with detailed analysis in seconds, and completely
-        automatic using the original GPT-3. But to our disappointment, a couple
-        days after our launch, OpenAI launched Code Interpreter, which
-        essentially could do exactly what our app promised to do, so we ended up
-        shutting down. We had managed to get a few users, and a few demo
-        requests from business users in that short time frame but ultimately it
-        did not work out and I get to brag about that here now, so I get it
-        wasn't a complete failure. The old web app still <a
-          href="https://elusidate.app"
-          class="italic underline underline-offset-4">lives here</a
-        >.
-      </div>
-      <div class="px-6 text-justify font-condensed text-xl">
-        The startup was also featued on SaasProjects the same year.
-      </div>
-    </div>
-    <div class="px-6">
-      <Figure
-        image={soloImage}
-        caption="Solo - The marketplace for musicians and their die-hard fans"
-      />
-    </div>
-  </div>
-  <div
-    class="mt-2 grid grid-cols-2 divide-x divide-writing border-t border-writing pt-2"
-  >
-    <div class="flex flex-col gap-4">
-      <div class="px-6 pt-2 text-center font-sans text-3xl">
-        Colors in Figma: A Solved Problem
-      </div>
-      <div class="px-6 text-justify font-condensed text-xl">
-        Palet was a small project of mine - an adventure of sorts. I built a
-        site and a figma plugin which could create a color palette out of thin
-        air from any text prompt. The plugin and the site were in sync so any
-        palette you generated on the site could be used in your Figma designs,
-        or you could generate new palettes directly in Figma too.
-      </div>
-    </div>
-    <div class="flex flex-col gap-4">
-      <div class="px-6 pt-2 text-center font-sans text-3xl">
-        Authdeck: How it all Began
-      </div>
-      <div class="px-6 text-justify font-condensed text-xl">
-        Authdeck was my very first professional project and job. I remember
-        asking my friend to hire me and buy me Discord Nitro as salary. The
-        project was part of the original buildspace nights and weekends program
-        where we demoed to over 50 people including Farza. I was fairly knew to
-        frontend at the time, and that adrenaline rush of finishing tasks
-        minutes before the demo were fun noneteless. We were also able to raise
-        grants from Devfolio, ETHIndia, and Superteam.
+    <div class="flex flex-col gap-2 text-sm font-medium">
+      <h2 class="text-xs text-white/80">Volunteering</h2>
+      <div class="flex flex-col gap-1">
+        <a
+          href="https://wildcard.lol"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Wildcard</a
+        >
+        <a
+          href="https://classify.org.uk"
+          class="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
+          >Classify</a
+        >
       </div>
     </div>
   </div>

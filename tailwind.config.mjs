@@ -10,13 +10,7 @@ export default {
         writing: "#1c1c1a",
       },
       fontFamily: {
-        blackletter: ["'Pirata One'", ...defaultTheme.fontFamily.serif],
-        serif: ["'Libre Caslon Text'", ...defaultTheme.fontFamily.serif],
-        sans: ["Ramabhadra", ...defaultTheme.fontFamily.serif],
-        condensed: [
-          "'Libre Caslon Condensed'",
-          ...defaultTheme.fontFamily.serif,
-        ],
+        matter: ["'Matter'", ...defaultTheme.fontFamily.sans],
       },
     },
   },

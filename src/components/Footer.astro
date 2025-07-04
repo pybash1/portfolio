@@ -1,12 +1,20 @@
 ---
-import { Image } from "astro:assets";
-import seal from "../assets/seal.png";
+import LiveFeed from "./LiveFeed.astro";
 ---
 
 <div
-  class="mt-2 flex items-center justify-between border-t border-writing px-12 py-6"
+  class="fixed bottom-0 flex w-full items-center justify-between bg-white px-3 py-2 text-xs dark:bg-black"
 >
-  <Image src={seal} alt="seal" class="w-24" />
-  <div class="italic">Printing good news for everyone.</div>
-  <div class="font-blackletter text-3xl">&copy; Est. 2021</div>
+  <div>
+    PyBash &copy; {new Date().getFullYear()}
+  </div>
+  <div>
+    India &bull; {
+      new Date().toLocaleTimeString(undefined, {
+        timeZone: "Asia/Calcutta",
+        timeStyle: "short",
+        hour12: false,
+      })
+    } &bull; <LiveFeed />
+  </div>
 </div>
