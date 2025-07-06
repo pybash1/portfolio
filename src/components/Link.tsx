@@ -17,6 +17,7 @@ const Link = ({ href, item, children }: Props) => {
       className="w-fit transition-colors duration-500 ease-in-out hover:bg-white hover:text-black"
       onMouseEnter={() => setSelectedItem(item)}
       onMouseLeave={() => setSelectedItem("")}
+      target="_blank"
     >
       {children}
     </a>
