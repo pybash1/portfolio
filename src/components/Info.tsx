@@ -8,12 +8,12 @@ const Info = () => {
   if (!selectedItem) return null;
 
   return (
-    <div className="flex w-full max-w-md flex-col gap-3 pr-20 text-justify text-xs">
-      <div className="flex items-center justify-between">
+    <div className="text-justify text-xs sm:flex sm:w-full sm:max-w-md sm:flex-col sm:gap-3 sm:pr-20">
+      <div className="hidden items-center justify-between sm:flex">
         <span className="text-white/60">Role</span>{" "}
         {ITEMS[selectedItem as keyof typeof ITEMS].role}
       </div>
-      <div className="flex items-center justify-between">
+      <div className="hidden items-center justify-between sm:flex">
         <span className="text-white/60">Year</span>{" "}
         {ITEMS[selectedItem as keyof typeof ITEMS].year}
       </div>
