@@ -25,7 +25,7 @@ export const projects: Project[] = [
     name: "dripcraft",
     description: "crypto nft marketplace kinda",
     status: "shipped & live",
-    link: "https://journal.pybash.xyz",
+    link: "https://dripcraft.xyz",
   },
 
   // Ongoing Projects
