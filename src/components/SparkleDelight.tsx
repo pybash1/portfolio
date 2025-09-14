@@ -16,7 +16,7 @@ export default function SparkleDelight() {
       className="delight-group inline-flex items-center gap-2 text-blue-400 transition-all duration-300 ease-in-out hover:drop-shadow-[0_0_10px_rgba(96,165,250,0.7)]"
       onMouseEnter={handleMouseEnter}
     >
-      delight{" "}
+      delights{" "}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
