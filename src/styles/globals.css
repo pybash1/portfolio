@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-primary: oklch(0.211 0.005 67.6);
+  --color-white: oklch(1.000 0.000 0);
+  --color-accent: oklch(0.65 0.15 270);
+  
+  /* Font Family */
+  --font-serif: "JetBrains Mono", ui-serif, system-ui, serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: "JetBrains Mono", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: "JetBrains Mono", ui-monospace, system-ui, monospace, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}

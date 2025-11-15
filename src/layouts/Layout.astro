@@ -1,4 +1,6 @@
 ---
+import "../styles/globals.css";
+
 interface Props {
   title: string;
 }
@@ -18,44 +20,11 @@ const { title } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200..900;1,200..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
       rel="stylesheet"
     />
-    <style>
-      /* Font face declarations for Ellograph CF */
-      @font-face {
-        font-family: "Ellograph CF";
-        src: url("/fonts/EllographCF-Light.woff2") format("woff2");
-        font-weight: 300;
-        font-style: normal;
-        font-display: swap;
-      }
-
-      @font-face {
-        font-family: "Ellograph CF";
-        src: url("/fonts/EllographCF-DemiBold.woff2") format("woff2");
-        font-weight: 600;
-        font-style: normal;
-        font-display: swap;
-      }
-
-      /* Font face declaration for Quincy CF Text Italic */
-      @font-face {
-        font-family: "Quincy CF Text Italic";
-        src: url("/fonts/QuincyCF-Italic.woff2") format("woff2");
-        font-weight: normal;
-        font-style: italic;
-        font-display: swap;
-      }
-
-      /* Selection color matching bradley's site */
-      ::selection {
-        background-color: #95e78e;
-        color: #062c02;
-      }
-    </style>
   </head>
-  <body class="min-h-screen font-serif leading-relaxed antialiased">
+  <body class="min-h-screen font-mono leading-relaxed antialiased text-white bg-primary">
     <slot />
   </body>
 </html>

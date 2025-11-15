@@ -1,210 +1,89 @@
 ---
+import ScrambleText from "../components/ScrambleText";
 import Layout from "../layouts/Layout.astro";
-import SparkleDelight from "../components/SparkleDelight";
 ---
 
-<Layout title="pybash">
-  <main
-    class="min-h-screen px-4 py-8 sm:px-8 sm:py-12 md:px-16 md:py-16 lg:px-24"
-  >
-    <div class="flex flex-col gap-10">
-      <nav class="flex flex-row items-center justify-between gap-4">
-        <div class="font-sans text-lg sm:text-base">pybash.</div>
-        <a
-          href="mailto:hi@pybash.xyz?subject=Let's%20Talk"
-          class="animate-gradient-shift rounded-full bg-[length:200%_200%] px-3 py-2 font-sans text-base text-white sm:px-4 sm:text-lg"
-          >Let's talk &#x2197;</a
-        >
-      </nav>
-      <div
-        class="text-2xl font-light leading-tight sm:text-3xl md:text-4xl lg:text-5xl"
+<Layout title="ananjan mitra">
+  <main class="flex flex-col gap-6 p-4">
+    <div>
+      ananjan mitra <span class="text-xs text-muted">aka pybash</span
       >
-        Engineer with over half a decade<br />of experience in <span
-          class="rounded-lg bg-green-300 px-1 pb-1 transition-all duration-300 ease-in-out hover:bg-transparent hover:px-0 hover:text-green-500 sm:px-2"
-          >shaping products</span
-        ><br />
-        that &nbsp;<SparkleDelight client:load />&nbsp; users.
-      </div>
-      <div class="font-sans text-sm sm:text-base">
-        I worked with teams to design experiences that feel effortless,<br
-          class="hidden sm:block"
-        />and built systems that push ideas into reality.
-      </div>
-      <div
-        class="mt-12 w-fit rounded-full px-3 py-2 font-sans text-base ring-1 ring-black sm:mt-16 sm:px-4 sm:text-lg md:mt-20 lg:mt-24"
+    </div>
+    <div>Wandering &bull; prev <a href="https://grasslabs.dev" class="hover:text-accent">grass labs</a>; <a href="https://deva.me" class="hover:text-accent">10Planet</a></div>
+    <div>
+      <a
+      href="https://github.com/pybash1"
+      class="hover:text-accent"
+      >Twitter</a
+      > &bull;
+      <a
+      href="mailto:hi@pybash.xyz?subject=Let's%20Talk"
+      class="hover:text-accent">Mail</a
+      > &bull;
+      <a
+      href="https://instagram.com/ananjan_"
+      class="hover:text-accent">Pics</a
+      > &bull;
+      <a
+      href="https://open.spotify.com/user/rt8p12krtiu6swjyzuvxv9ok4"
+      class="hover:text-accent">Music</a
+      > &bull;
+      <a
+      href="https://github.com/pybash1"
+      class="hover:text-accent">Github</a
       >
-        Selected work
+    </div>
+    <div class="font-mono text-3xl uppercase font-semibold flex flex-wrap gap-x-10">
+      <div>
+        <a href="https://harvence.pybash.xyz" class="hover:text-accent">Harvence</a> 2025  
       </div>
-      <div class="flex flex-col gap-8 sm:gap-10 md:gap-14">
-        <div>
-          <div class="font-italic text-2xl sm:text-3xl md:text-4xl">
-            messing around at <span class="text-green-500">grass labs</span>
-          </div>
-          <div class="pb-4 font-ellograph">2024 &rarr; 20▒▒</div>
-          <div
-            class="min-w-screen -mx-4 divide-y divide-black border border-x-transparent border-y-black px-4 font-ellograph text-lg font-semibold sm:-mx-8 sm:px-8 sm:text-xl md:-mx-16 md:px-16 lg:-mx-24 lg:px-24"
-          >
-            <a
-              href="https://grasslabs.dev"
-              class="-mx-4 block py-4 underline underline-offset-4 transition duration-300 ease-in-out hover:cursor-external hover:bg-black/10 sm:-mx-8 md:-mx-16 lg:-mx-24"
-            >
-              <div class="px-4 sm:px-8 md:px-16 lg:px-24">puppetmaster</div>
-            </a>
-            <a
-              href="https://dripcraft.xyz"
-              class="-mx-4 block py-4 underline underline-offset-4 transition duration-300 ease-in-out hover:cursor-external hover:bg-black/10 sm:-mx-8 md:-mx-16 lg:-mx-24"
-            >
-              <div class="px-4 sm:px-8 md:px-16 lg:px-24">dripcraft</div>
-            </a>
-            <div
-              class="group -mx-4 py-4 transition duration-300 ease-in-out hover:cursor-custom hover:bg-black/10 sm:-mx-8 md:-mx-16 lg:-mx-24"
-            >
-              <div
-                class="flex items-center justify-between px-4 sm:px-8 md:px-16 lg:px-24"
-              >
-                <span class="underline underline-offset-4">rift</span>
-                <span
-                  class="font-sans text-sm opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
-                >
-                  A crypto-first marketplace for the creator economy
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="font-italic text-2xl sm:text-3xl md:text-4xl">
-            engineer at <span class="text-blue-500">10Planet</span>
-          </div>
-          <div class="pb-4 font-ellograph">2023 &rarr; 2024</div>
-          <div
-            class="min-w-screen -mx-4 divide-y divide-black border border-x-transparent border-y-black px-4 font-ellograph text-lg font-semibold sm:-mx-8 sm:px-8 sm:text-xl md:-mx-16 md:px-16 lg:-mx-24 lg:px-24"
-          >
-            <a
-              href="https://deva.me"
-              class="-mx-4 block py-4 underline underline-offset-4 transition duration-300 ease-in-out hover:cursor-external hover:bg-black/10 sm:-mx-8 md:-mx-16 lg:-mx-24"
-            >
-              <div class="px-4 sm:px-8 md:px-16 lg:px-24">deva.me</div>
-            </a>
-            <div
-              class="group -mx-4 py-4 transition duration-300 ease-in-out hover:cursor-custom hover:bg-black/10 sm:-mx-8 md:-mx-16 lg:-mx-24"
-            >
-              <div
-                class="flex items-center justify-between px-4 sm:px-8 md:px-16 lg:px-24"
-              >
-                <span class="underline underline-offset-4">genie</span>
-                <span
-                  class="font-sans text-sm opacity-0 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
-                >
-                  Sitewide AI helper for Deva.me
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div class="font-italic text-2xl sm:text-3xl md:text-4xl">
-            creator of <span class="text-red-500">harvence</span>
-          </div>
-          <div class="pb-4 font-ellograph">2024 &rarr; 2025</div>
-          <div
-            class="min-w-screen -mx-4 divide-y divide-black border border-x-transparent border-y-black px-4 font-ellograph text-lg font-semibold underline underline-offset-4 sm:-mx-8 sm:px-8 sm:text-xl md:-mx-16 md:px-16 lg:-mx-24 lg:px-24"
-          >
-            <a
-              href="https://harvence.pybash.xyz"
-              class="-mx-4 block py-4 transition duration-300 ease-in-out hover:cursor-external hover:bg-black/10 sm:-mx-8 md:-mx-16 lg:-mx-24"
-            >
-              <div class="px-4 sm:px-8 md:px-16 lg:px-24">mobile app</div>
-            </a>
-          </div>
-        </div>
-        <div>
-          <div class="font-italic text-2xl sm:text-3xl md:text-4xl">
-            i <span class="text-amber-500">write</span>
-            <span class="text-sm sm:text-base">(sometimes)</span>
-          </div>
-          <div class="pb-4 font-ellograph">2022 &rarr; 20▒▒</div>
-          <div
-            class="min-w-screen -mx-4 divide-y divide-black border border-x-transparent border-y-black px-4 font-ellograph text-lg font-semibold underline underline-offset-4 sm:-mx-8 sm:px-8 sm:text-xl md:-mx-16 md:px-16 lg:-mx-24 lg:px-24"
-          >
-            <a
-              href="https://journal.pybash.xyz/writing/cursor"
-              class="-mx-4 block py-4 transition duration-300 ease-in-out hover:cursor-external hover:bg-black/10 sm:-mx-8 md:-mx-16 lg:-mx-24"
-            >
-              <div class="px-4 sm:px-8 md:px-16 lg:px-24">
-                giving ai another chance
-              </div>
-            </a>
-            <a
-              href="https://journal.pybash.xyz/writing/4s-13ms"
-              class="-mx-4 block py-4 transition duration-300 ease-in-out hover:cursor-external hover:bg-black/10 sm:-mx-8 md:-mx-16 lg:-mx-24"
-            >
-              <div class="px-4 sm:px-8 md:px-16 lg:px-24">4s &rarr; 13 ms</div>
-            </a>
-            <a
-              href="https://journal.pybash.xyz/writing/turning-the-tables"
-              class="-mx-4 block py-4 transition duration-300 ease-in-out hover:cursor-external hover:bg-black/10 sm:-mx-8 md:-mx-16 lg:-mx-24"
-            >
-              <div class="px-4 sm:px-8 md:px-16 lg:px-24">
-                turning the tables
-              </div>
-            </a>
-            <a
-              href="https://journal.pybash.xyz/writing/the-devils-workshop"
-              class="-mx-4 block py-4 transition duration-300 ease-in-out hover:cursor-external hover:bg-black/10 sm:-mx-8 md:-mx-16 lg:-mx-24"
-            >
-              <div class="px-4 sm:px-8 md:px-16 lg:px-24">
-                the devil's workshop
-              </div>
-            </a>
-          </div>
-        </div>
-        <div
-          class="flex flex-col items-start gap-8 pt-12 sm:gap-12 sm:pt-16 md:gap-24 md:pt-20 lg:flex-row lg:gap-36"
-        >
-          <div class="font-italic text-2xl sm:text-3xl md:text-4xl">
-            history
-          </div>
-          <div
-            class="columns-1 gap-6 text-justify font-sans text-sm sm:text-base lg:columns-2 lg:gap-8"
-          >
-            Let's cut to the chase, this isn't a rags to riches story. I am just
-            a teenager who wants to make a difference.<br /><br />
-            I started out programming in Scratch, and eventually moved on to other
-            languages and finally landed on TypeScript. I have been in love with
-            building cool and weird stuff ever since.<br /><br />
-            The internet opened me up to an insane number of opportunities and ideas
-            but while the world is lost in hype, I care about the small things -
-            the visuals that tell a story, interfaces that are intuitive, and systems
-            that <i>just work</i>.<br /><br />
-            My mission is to change the world or at least try to because why not?
-            Oh and for some context, I'm from Calcutta, IN and a high school student.<br
-            /><br />
-            If I was able to intrigue you, here's a list of <a
-              href="/everything"
-              class="text-green-500 underline underline-offset-2 transition-colors duration-300 ease-in-out hover:text-green-600"
-              >everything I've ever built, tried, thought of, or failed at</a
-            >.
-          </div>
-        </div>
+      <div>
+        <span><ScrambleText text="Coming Soon" speed={100} client:load/></span> 2026
       </div>
-      <div
-        class="-mx-4 mt-12 border-t border-black sm:-mx-8 sm:mt-16 md:-mx-16 md:mt-20 lg:-mx-24 lg:mt-24"
-      >
-        <div
-          class="flex flex-row items-center justify-between gap-4 px-4 py-4 sm:px-8 md:px-16 lg:px-24"
-        >
-          <div
-            class="flex items-center gap-4 font-ellograph text-sm font-semibold sm:gap-6 sm:text-base"
-          >
-            <a href="https://x.com/py_bash1">Twitter</a>
-            <a href="https://github.com/pybash1">GitHub</a>
-          </div>
-          <div class="font-ellograph text-sm font-semibold sm:text-base">
-            &copy; 2025, PyBash
-          </div>
-        </div>
+      <div>
+        <span><ScrambleText text="Coming Soon" speed={100} client:load/></span> 2026
+      </div>
+      <div>
+        <a href="https://journal.pybash.xyz" class="hover:text-accent">Journal</a> 2025
+      </div>
+      <div>
+        <a href="https://dripcraft.xyz" class="hover:text-accent">Dripcraft</a> 2024
+      </div>
+      <div>
+        <a href="https://deva.me" class="hover:text-accent">Deva.me</a> 2024
+      </div>
+      <div>
+        <a href="https://github.com/pybash1/winnf" class="hover:text-accent">Winnf</a> 2024
+      </div>
+      <div>
+        <a href="https://github.com/pybash1/today" class="hover:text-accent">Today</a> 2023
+      </div>
+      <div>
+        <a href="https://merin.ai" class="hover:text-accent">Me<ScrambleText text="rin" speed={100} client:load/></a> <ScrambleText text="20XX" speed={100} client:load/>
+      </div>
+      <div>
+        <span>Rift</span> 2024
+      </div>
+      <div>
+        <span>XIRL</span> 2024
+      </div>
+      <div>
+        <span>Supertable</span> 20XX
+      </div>
+      <div>
+        <span>Authdeck</span> 2023
+      </div>
+      <div>
+        <span>Solo</span> 2023
+      </div>
+      <div>
+        <a href="https://quokka-corner.vercel.app" class="hover:text-accent">Quokka</a> 2025
+      </div>
+      <div>
+        <span>Classify</span> 2022
       </div>
     </div>
+    <div class="text-sm">Based in Calcutta, India.</div>
+    <footer class="text-muted">&copy; 2025 ananjan mitra</footer>
   </main>
 </Layout>
