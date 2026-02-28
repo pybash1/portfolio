@@ -29,6 +29,11 @@ import Layout from "../layouts/Layout.astro";
     <span class="font-mono text-[10px] tracking-[0.2em] uppercase text-black dark:text-white">click anywhere</span>
   </button>
 
+  <!-- Side Progress Bar -->
+  <div id="progress-bar-container" class="fixed right-12 top-1/2 -translate-y-1/2 h-[15vh] w-[1px] bg-black/10 dark:bg-white/10 z-40 transition-opacity duration-700">
+    <div id="progress-bar-fill" class="w-full bg-black dark:bg-white transition-all duration-700 ease-out" style="height: 0%"></div>
+  </div>
+
   <div id="showreel-wrapper" class="transition-transform duration-700 ease-in-out" style="will-change: transform;">
   <main id="showreel-main" class="bg-white dark:bg-black relative overflow-hidden h-screen flex items-center justify-center pointer-events-none">
 
@@ -206,6 +211,10 @@ import Layout from "../layouts/Layout.astro";
   }
 
   let current = 0;
+  let locked = false;
+  let contactVisible = false;
+  let currentSubStep = 0;
+  let totalSubSteps = 1;
 
   const textEl = document.getElementById('showreel-text') as HTMLHeadingElement;
   const imageLayer = document.getElementById('image-layer') as HTMLDivElement;
@@ -558,6 +567,28 @@ import Layout from "../layouts/Layout.astro";
       document.body.classList.remove('video-mode');
       bgVideo.pause();
     }
+    updateProgress();
+  }
+
+  const progressBarFill = document.getElementById('progress-bar-fill') as HTMLDivElement;
+  const progressBarContainer = document.getElementById('progress-bar-container') as HTMLDivElement;
+
+  function updateProgress() {
+    const baseProgress = current / slides.length;
+    const subProgress = (totalSubSteps > 0 ? (currentSubStep / totalSubSteps) : 0) * (1 / slides.length);
+    const progress = (baseProgress + subProgress) * 100;
+    
+    if (progressBarFill) progressBarFill.style.height = `${progress}%`;
+    
+    if (progressBarContainer) {
+      if (contactVisible) {
+        progressBarContainer.style.opacity = '0';
+        progressBarContainer.style.pointerEvents = 'none';
+      } else {
+        progressBarContainer.style.opacity = '1';
+        progressBarContainer.style.pointerEvents = 'auto';
+      }
+    }
   }
 
   // Show first slide immediately
@@ -569,11 +600,14 @@ import Layout from "../layouts/Layout.astro";
   const STEP_THRESHOLD = 100;  // scroll px to trigger any step
   const STEP_COOLDOWN = 400;   // ms cooldown after any step
 
-  let locked = false;
   let scrollDelta = 0;
 
   // Build a queue of steps for the next slide
   let stepQueue: (() => void)[] = [];
+
+  // Initial state for first slide
+  currentSubStep = 1;
+  totalSubSteps = 1;
 
   function buildSteps(direction: number) {
     const nextIndex = current + direction;
@@ -669,14 +703,19 @@ import Layout from "../layouts/Layout.astro";
         applySlideState(nextIndex);
       });
     }
+
+    totalSubSteps = stepQueue.length;
+    currentSubStep = 0;
   }
 
   function executeNextStep() {
     if (stepQueue.length === 0) return;
 
+    currentSubStep++;
     const step = stepQueue.shift();
     if (step) step();
 
+    updateProgress();
     scrollDelta = 0;
     locked = true;
 
@@ -688,7 +727,6 @@ import Layout from "../layouts/Layout.astro";
 
   // --- Contact section reveal ---
   const showreelWrapper = document.getElementById('showreel-wrapper') as HTMLDivElement;
-  let contactVisible = false;
 
   function showContact() {
     if (contactVisible) return;
@@ -699,6 +737,7 @@ import Layout from "../layouts/Layout.astro";
     videoWrapper.classList.add('opacity-0');
     videoWrapper.classList.remove('opacity-100');
     locked = true;
+    updateProgress();
     setTimeout(() => {
       locked = false;
       scrollDelta = 0;
@@ -716,6 +755,7 @@ import Layout from "../layouts/Layout.astro";
       videoWrapper.classList.add('opacity-100');
       bgVideo.play().catch(() => {});
     }
+    updateProgress();
     locked = true;
     setTimeout(() => {
       locked = false;
