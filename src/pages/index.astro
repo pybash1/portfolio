@@ -113,7 +113,6 @@ import Layout from "../layouts/Layout.astro";
     gallery?: GalleryItem[];
     video?: boolean;
     videoStart?: boolean;
-    videoEnd?: number;
     size: string;
   }
 
@@ -149,7 +148,7 @@ import Layout from "../layouts/Layout.astro";
     },
     { text: 'why?', images: false, video: false, size: 'text-4xl' },
     {
-      text: 'to', images: true, video: true, videoStart: true, videoEnd: 5.5, size: 'text-4xl',
+      text: 'to', images: true, video: true, videoStart: true, size: 'text-4xl',
       gallery: [
         { url: '/desk.jpg', caption: 'Desk' },
         { urls: ['/electronics.jpg', '/electronics2.jpg'], caption: 'Electronics' },
@@ -157,7 +156,7 @@ import Layout from "../layouts/Layout.astro";
       ]
     },
     {
-      text: 'make', images: false, video: true, videoEnd: 5.9, size: 'text-4xl',
+      text: 'make', images: false, video: true, size: 'text-4xl',
       gallery: [
         { urls: ['/today.png', '/today2.png'], caption: 'Today [Featured on Read.cv]', link: 'https://github.com/pybash1/today' },
         { text: 'Clipboard sync without doubts. E2EE. Self hostable. Cross platform. Open source. Pretty cool but I haven\'t launched yet. Coming soon.', caption: 'Board', link: 'https://board.pybash.xyz' },
@@ -168,7 +167,7 @@ import Layout from "../layouts/Layout.astro";
       ]
     },
     {
-      text: 'something', images: false, video: true, videoEnd: 6.3, size: 'text-4xl',
+      text: 'something', images: false, video: true, size: 'text-4xl',
       gallery: [
         { url: '/merin.png', caption: 'Merin' },
         { text: 'A modified version of Jordan JD\'s "bin" for Board. Added end-to-end encryption, syncing capabilities and simplified self hosting. Pretty proud of this one. It is barely anything like the original api, and has barely any of the original routes, but it was the foundation.', caption: 'bin', link: 'https://github.com/pybash1/bin' },
@@ -177,7 +176,7 @@ import Layout from "../layouts/Layout.astro";
       ]
     },
     {
-      text: 'wonderful.', images: true, video: true, videoEnd: 14.0, size: 'text-6xl', gallery: [
+      text: 'wonderful.', images: true, video: true, size: 'text-6xl', gallery: [
         { url: '/esp32cam.jpg', caption: '$10 ring doorbell' },
         { text: 'Started as a school project, but eventually I built something pretty cool out of a tiny ESP32Cam. Connect it to your home wifi, and then you can access the stream from anywhere, anytime using a web interface without any port forwarding or networking.', caption: 'Esp32cam tldr' },
         { urls: ['/winnf2.jpg', '/winnf.png'], caption: 'Nerdfetch for Windows', link: 'https://journal.pybash.xyz/writing/4s-13ms' },
@@ -221,16 +220,6 @@ import Layout from "../layouts/Layout.astro";
   const imageLayer = document.getElementById('image-layer') as HTMLDivElement;
   const bgVideo = document.getElementById('bg-video') as HTMLVideoElement;
   const videoWrapper = document.getElementById('video-container') as HTMLDivElement;
-
-  // Video segment control
-  bgVideo.addEventListener('timeupdate', () => {
-    const slide = slides[current];
-    if (slide && slide.video && slide.videoEnd) {
-      if (!bgVideo.paused && bgVideo.currentTime >= slide.videoEnd) {
-        bgVideo.pause();
-      }
-    }
-  });
 
   // Unlock audio on first real user interaction (click/touch/key)
   let audioUnlocked = false;
