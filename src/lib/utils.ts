@@ -6,271 +6,53 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-  // Live/Active Projects
+  // --- active ---
   // @ts-expect-error -- exceptional case
-  { name: "portfolio", description: "this site", status: "live", link: "/" },
-  {
-    name: "harvence-web",
-    description: "website for harvence",
-    status: "shipped & live",
-    link: "https://harvence.pybash.xyz",
-  },
-  {
-    name: "journal",
-    description: "my blog / place where i write",
-    status: "shipped & live",
-    link: "https://journal.pybash.xyz",
-  },
-  {
-    name: "dripcraft",
-    description: "crypto nft marketplace kinda",
-    status: "shipped & live",
-    link: "https://dripcraft.xyz",
-  },
-
-  // Ongoing Projects
-  {
-    name: "board",
-    description: "cross platform simple clipboard sync",
-    status: "ongoing",
-  },
-  {
-    name: "halo",
-    description: "an app to keep you safe",
-    status: "ongoing",
-    link: "https://halo.pybash.xyz",
-  },
-  {
-    name: "halo-waitlist",
-    description: "waitlist site for halo",
-    status: "ongoing",
-    link: "https://halo.pybash.xyz",
-  },
-  {
-    name: "halo-web",
-    description: "website for halo",
-    status: "ongoing",
-    link: "https://halo.pybash.xyz",
-  },
-  {
-    name: "puppetmaster",
-    description: "something we're working on",
-    status: "ongoing",
-    link: "https://grasslabs.dev",
-  },
-  {
-    name: "bin",
-    description: "the simplest pastebin ever",
-    status: "forked & ongoing",
-    link: "https://bin.grasslabs.dev",
-  },
-  {
-    name: "harvence",
-    description:
-      "an app that shows you human-readable nutrition info for any food item barcode you scan",
-    status: "shipped & ongoing",
-    link: "https://harvence.pybash.xyz",
-  },
-
-  // Shipped Projects
-  {
-    name: "quokka",
-    description: "a static site for a hack club ysws",
-    status: "shipped",
-    link: "https://quokka-corner.vercel.app",
-  },
-  {
-    name: "ritankar planner",
-    description: "a study planner / to do list for my friend",
-    status: "shipped",
-  },
-  {
-    name: "supertable",
-    description: "better forms ui built on top of airtable",
-    status: "shipped",
-  },
-  {
-    name: "today",
-    description: "a weird kinda type of new to do list",
-    status: "shipped & oss",
-    link: "https://github.com/pybash1/today",
-  },
-  {
-    name: "winnf",
-    description: "nerdfetch but for windows only",
-    status: "shipped & oss",
-    link: "https://github.com/pybash1/winnf",
-  },
-
-  // Dead/Shipped but Dead Projects
-  {
-    name: "frontend lead @ authdeck",
-    description: "built the frontend for authdeck",
-    status: "shipped & dead",
-  },
-  {
-    name: "frontend lead @ solo",
-    description: "build the frontend for solo",
-    status: "shipped & dead",
-  },
-  {
-    name: "purp.game",
-    description: "a leaderboard for a crypto based social media",
-    status: "shipped & dead",
-  },
-  {
-    name: "homecenter",
-    description: "a homepage for my homelab",
-    status: "dead",
-  },
-  {
-    name: "rift",
-    description: "a crypto-first marketplace for the creator economy",
-    status: "dead",
-  },
-
-  // Paused Projects
-  {
-    name: "merin",
-    description: "better email with ai",
-    status: "paused",
-    link: "https://merin.ai",
-  },
-  {
-    name: "merin-sync",
-    description: "syncing software for merin and gmail",
-    status: "paused",
-  },
-  { name: "merin-web", description: "merin's web ui", status: "paused" },
-
-  // Successful Experiments
-  {
-    name: "brobot",
-    description: "telegram based llm bot that spoke like gen z",
-    status: "experiment successful",
-  },
-  {
-    name: "xirl",
-    description:
-      "a cctv you can monitor from anywhere in the world, from any network using just an esp32-cam module",
-    status: "experiment successful",
-  },
-
-  // Advised/Consulted
-  {
-    name: "advisor @ wildcraft",
-    description: "helped migrate from react pwa to nextjs pwa",
-    status: "advised",
-  },
-
-  // Moved/Merged Projects
-  {
-    name: "diet-better",
-    description: "renamed to harvence",
-    status: "moved",
-    link: "https://echo.pybash.xyz",
-  },
-  {
-    name: "echo",
-    description: "renamed to board",
-    status: "moved",
-    link: "https://echo.pybash.xyz",
-  },
-  {
-    name: "parchments",
-    description: "renamed and updated to journal",
-    status: "moved",
-    link: "https://parchments.pybash.xyz",
-  },
-  {
-    name: "echo-proxy",
-    description: "merged with board",
-    status: "merged",
-    link: "https://echo.pybash.xyz",
-  },
-  {
-    name: "echo-web",
-    description: "will be renamed to board-web",
-    status: "to be moved",
-    link: "https://echo.pybash.xyz",
-  },
-
-  // Abandoned Projects
-  { name: "bullish", description: "demo stocks app", status: "abandoned" },
-  {
-    name: "grass-labs",
-    description:
-      "tried to build a website for grass labs but it turned out a weed marketplace design instead",
-    status: "abandoned",
-    link: "https://grasslabs.dev",
-  },
-
-  // Didn't Finish
-  {
-    name: "arctic",
-    description: "an unofficial api for the arc browser on mac and windows",
-    status: "didn't finish",
-  },
-  {
-    name: "beautiful.engineering",
-    description: "curated.design but for engineering",
-    status: "didn't finish",
-  },
-  {
-    name: "life",
-    description: "an attempt at a life tracker kinda portfolio site",
-    status: "didn't finish",
-  },
-  { name: "life-tracker", description: "attempt v2", status: "didn't finish" },
-  {
-    name: "pgit",
-    description: "prettier git - yea that's it",
-    status: "didn't finish",
-  },
-  {
-    name: "wrds",
-    description:
-      "a search engine but for high quality written content only - still thiink its a super cool idea",
-    status: "didn't finish",
-  },
-
-  // Didn't Start
-  {
-    name: "ltrbx",
-    description: "a better movie/tv show tracking platform",
-    status: "didn't start",
-  },
-  {
-    name: "mindful",
-    description: "i forgot what i wanted to do with this",
-    status: "didn't start",
-  },
-  {
-    name: "news",
-    description: "an attempt at a news site for my school",
-    status: "didn't start",
-  },
-  {
-    name: "passport",
-    description:
-      "wanted to build a single global oauth platform inspired by the flighty passport",
-    status: "didn't start",
-  },
-  {
-    name: "timelapse",
-    description: "wanted to build an ios highlight reel app for android",
-    status: "didn't start",
-  },
-
-  // Unknown Status
-  {
-    name: "volunteer @ classify",
-    description: "wanted to speed up the development of their web app",
-    status: "unknown",
-  },
-  {
-    name: "frontend engineer @ 10planet",
-    description: "an ai x crypto mixture startup",
-    status: "unknown",
-  },
+  { name: "Portfolio", description: "This site", status: "active", link: "/" },
+  { name: "Journal", description: "My blog / The place where I write.", status: "active", link: "https://journal.pybash.xyz" },
+  { name: "Harvence", description: "An app that shows you human-readable nutrition info for any food item barcode you scan.", status: "active" },
+  { name: "Harvence Website", description: "Website for harvence", status: "active", link: "https://harvence.pybash.xyz" },
+  { name: "Halo", description: "An SOS app for providing help to people in distress by utilising crowdsourcing", status: "active" },
+  { name: "Halo Waitlist", description: "Waitlist site for Halo", status: "active", link: "https://halo.pybash.xyz" },
+  { name: "Board", description: "Cross platform clipboard syncing app", status: "active", link: "https://board.pybash.xyz" },
+  { name: "bin", description: "The simplest pastebin ever", status: "active", link: "https://board-api.pybash.xyz" },
+  
+  // --- shipped ---
+  { name: "Dripcraft", description: "Crypto NFT marketplace", status: "shipped", link: "https://dripcraft.xyz" },
+  { name: "Rift", description: "A crypto-first marketplace for the creator economy", status: "shipped" },
+  { name: "purp.game", description: "A leaderboard for a crypto based social media", status: "shipped" },
+  { name: "Today", description: "A weird kinda type of new to do list", status: "shipped", link: "https://github.com/pybash1/today" },
+  { name: "winnf", description: "nerdfetch but for windows only", status: "shipped", link: "https://github.com/pybash1/winnf" },
+  { name: "Quokka Corner", description: "A static site for a hack club YSWS", status: "shipped", link: "https://quokka-corner.vercel.app" },
+  { name: "Supertable", description: "Better forms UI built on top of Airtable", status: "shipped" },
+  { name: "Ritankar Planner", description: "A study planner / to do list for my friend", status: "shipped" },
+  { name: "XIRL-Cam", description: "A CCTV you can monitor from anywhere in the world, from any network using just an ESP32Cam module", status: "shipped" },
+  { name: "BroBot", description: "Telegram based LLM bot that speaks like Gen Z", status: "shipped" },
+  
+  // --- roles ---
+  { name: "Frontend Engineer @ 10Planet", description: "An AI x crypto mixture startup", status: "roles" },
+  { name: "Frontend Lead @ Authdeck", description: "Built the frontend for Authdeck", status: "roles" },
+  { name: "Frontend Lead @ Solo", description: "Built the frontend for Solo", status: "roles" },
+  { name: "Advisor @ Wildcraft", description: "Helped migrate from React PWA to NextJS PWA", status: "roles" },
+  { name: "Volunteer @ Classify", description: "Wanted to speed up the development of their web app", status: "roles" },
+  
+  // --- abandoned ---
+  { name: "Puppetmaster", description: "Something we were working on", status: "abandoned" },
+  { name: "Grass Labs", description: "Tried to build a website for Grass Labs but it turned out a weed marketplace design instead", status: "abandoned", link: "https://grasslabs.dev" },
+  { name: "Merin", description: "Better email with AI", status: "abandoned", link: "https://merin.ai" },
+  { name: "Merin Web", description: "Merin's web UI", status: "abandoned" },
+  { name: "Merin Sync", description: "Syncing software for Merin and Gmail", status: "abandoned" },
+  { name: "Homecenter", description: "A homepage for my homelab", status: "abandoned" },
+  { name: "wrds", description: "A search engine but for high quality written content only - still think its a super cool idea", status: "abandoned" },
+  { name: "beautiful.engineering", description: "curated.design but for engineering", status: "abandoned" },
+  { name: "ltrbx", description: "A better movie/TV show tracking platform", status: "abandoned" },
+  { name: "Passport", description: "Wanted to build a single global OAuth platform inspired by the flighty passport", status: "abandoned" },
+  { name: "Timelapse", description: "Wanted to build an ios highlight reel app for android", status: "abandoned" },
+  { name: "Life", description: "An attempt at a life tracker kinda portfolio site", status: "abandoned" },
+  { name: "Life Tracker", description: "Attempt v2", status: "abandoned" },
+  { name: "Arctic", description: "An unofficial API for the Arc browser on macOS and windows", status: "abandoned" },
+  { name: "pgit", description: "Prettier git - that's it", status: "abandoned" },
+  { name: "Mindful", description: "I forgot what I wanted to do with this", status: "abandoned" },
+  { name: "news", description: "An attempt at a news site for my school", status: "abandoned" },
+  { name: "Bullish", description: "Demo stocks app", status: "abandoned" },
 ];

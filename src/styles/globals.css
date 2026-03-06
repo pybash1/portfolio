@@ -1,56 +1,107 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'LF Serif';
-  src: url('/LF-Serif-Roman-Var.woff2') format('woff2-variations');
+  font-family: 'PP Locomotive New';
+  src: url('/fonts/PPLocomotiveNew-Light.woff2') format('woff2');
+  font-weight: 300;
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Helvetica Now Display';
+  src: url('/fonts/HelveticaNowDisplay-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Helvetica Now Display';
+  src: url('/fonts/HelveticaNowDisplay-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Helvetica Now Display';
+  src: url('/fonts/HelveticaNowDisplay-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Helvetica Now Display';
+  src: url('/fonts/HelveticaNowDisplay-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'HW Cigars';
+  src: url('/fonts/HW-Cigars.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
 
 @theme {
-  /* Colors */
-  --color-primary: oklch(0.211 0.005 67.6);
-  --color-white: oklch(1.000 0.000 0);
-  --color-accent: oklch(0.65 0.15 270);
-  --color-muted: oklch(0.92 0.005 270);
+  /* Colors in OKLCH */
+  --color-primary: oklch(18.67% 0.005 60.1);
+  /* Obsidian Ink */
+  --color-accent: oklch(0.684 0.212 40.592);
+  --color-bg: oklch(96.1% 0.012 85.1);
+  /* Warm Editorial Cream */
+  --color-white: #ffffff;
 
   /* Font Family */
-  --font-serif: "LF Serif", ui-serif, system-ui, serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-sans: "LF Serif", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "PP Locomotive New", Georgia, serif;
+  --font-sans: "Helvetica Now Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-fancy: "HW Cigars", "PP Locomotive New", Georgia, serif;
+  --font-mono: "JetBrains Mono", monospace;
 
-  /* Animations */
-  --animate-fade-in: fadeIn 1.2s ease-out forwards;
-
+  --ease-editorial: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate(var(--from-x, 0px), var(--from-y, 0px)) scale(0.9);
+@layer base {
+  html {
+    background-color: #000;
+    color: var(--color-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  to {
-    opacity: 1;
-    transform: translate(0, 0) scale(1);
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    background: transparent !important;
   }
 }
 
-/* Video Mode Styling */
-.video-mode #showreel-main {
-  background-color: transparent !important;
-}
+@layer components {
+  .grid-line-h {
+    @apply border-t border-[--color-primary] w-full;
+  }
 
-#video-container .relative {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
+  .grid-line-v {
+    @apply border-l border-[--color-primary] h-full;
+  }
 
-:where(.dark) #video-container .relative {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
+  .editorial-container {
+    @apply px-4 md:px-8 max-w-[1800px] mx-auto;
+  }
 
-#video-container .relative {
-  border-radius: 4px;
+  .lenis.lenis-smooth {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
 }

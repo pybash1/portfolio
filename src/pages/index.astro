@@ -1,825 +1,576 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { Image } from "astro:assets";
+import siteBg from "../../public/site-bg.webp";
+import harvenceImg from "../../public/harvence.webp";
+import provokeImg from "../../public/provoke.webp";
+import curiusImg from "../../public/curius.webp";
+
+
+
+const rssResponse = await fetch("https://journal.pybash.xyz/rss.xml");
+const rssText = await rssResponse.text();
+
+const articleMatches = [...rssText.matchAll(/<item>([\s\S]*?)<\/item>/g)];
+const allArticles = articleMatches.map(match => {
+  const content = match[1];
+  const title = content?.match(/<title>([\s\S]*?)<\/title>/)?.[1] || "";
+  const link = content?.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.replace("/blog/", "/writing/") || "";
+  const pubDate = content?.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1] || "";
+  
+  // Clean up title (unescape common entities)
+  const cleanTitle = title.replace(/&apos;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+  
+  return {
+    title: cleanTitle, 
+    link, 
+    date: new Date(pubDate),
+    displayDate: new Date(pubDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+  };
+}).sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 3);
 ---
 
-<Layout title="Portfolio">
-  <div id="video-container"
-    class="fixed inset-0 flex items-center justify-center pointer-events-none z-0 opacity-0 transition-opacity duration-700">
-    <div class="flex flex-col gap-2 ">
-      <div class="relative w-[60vw] aspect-video md:w-[40vw] overflow-hidden">
-        <video id="bg-video" class="w-full h-full object-cover" src="/sja-make-something-wonderful.mp4" playsinline
-          preload="auto"></video>
-        <div class="absolute inset-0 bg-black/5 dark:bg-black/20"></div>
-      </div>
-      <a href="https://www.youtube.com/watch?v=0pP3ZjMDzF4" target="_blank" rel="noopener noreferrer"
-        class="group flex items-center gap-1 font-mono text-xs tracking-[0.2em] uppercase text-black dark:text-white transition-colors pointer-events-auto">
-        SJA
-        <svg
-          class="w-2.5 h-2.5 transform transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-          fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </a>
-    </div>
-  </div>
-  
-  <!-- Unmute nudge (hidden by default) -->
-  <button id="unmute-btn"
-    class="fixed bottom-8 right-8 z-50 hidden opacity-50 hover:opacity-100 transition-opacity cursor-default pointer-events-none">
-    <span class="font-mono text-[10px] tracking-[0.2em] uppercase text-black dark:text-white">click anywhere</span>
-  </button>
+<Layout title="Portfolio — Ananjan Mitra">
+  <link rel="preload" as="image" href="/site-bg.webp" slot="head" />
+  <main class="relative">
+    <!-- Global Header -->
+    <header id="main-header" class="fixed top-0 left-0 w-full z-50 p-6 md:p-10 transition-colors duration-500">
+      <nav class="grid grid-cols-2 md:grid-cols-5 font-sans text-white font-medium text-sm tracking-[0.1em] items-center  ">
+        <div class="">Ananjan Mitra</div>
+        <div class="hidden md:block text-center">
+          <a href="https://github.com/pybash1" target="_blank" class="nav-link">GitHub <span class="nav-arrow">↗</span></a>
+        </div>
+        <div class="hidden md:block text-center">
+          <a href="https://instagram.com/ananjan_" target="_blank" class="nav-link">Instagram <span class="nav-arrow">↗</span></a>
+        </div>
+        <div class="hidden md:block text-center">
+          <a href="https://x.com/py_bash1" class="nav-link">Twitter <span class="nav-arrow">↗</span></a>
+        </div>
+        <div class="text-right">&copy; 2026</div>
+      </nav>
+    </header>
 
-  <!-- Side Progress Bar -->
-  <div id="progress-bar-container" class="fixed right-12 top-1/2 -translate-y-1/2 h-[15vh] w-[1px] bg-black/10 dark:bg-white/10 z-40 transition-opacity duration-700">
-    <div id="progress-bar-fill" class="w-full bg-black dark:bg-white transition-all duration-700 ease-out" style="height: 0%"></div>
-  </div>
-
-  <div id="showreel-wrapper" class="transition-transform duration-700 ease-in-out" style="will-change: transform;">
-  <main id="showreel-main" class="bg-white dark:bg-black relative overflow-hidden h-screen flex items-center justify-center pointer-events-none">
-
-    <div id="image-layer" class="absolute inset-0 image-container pointer-events-none"></div>
-
-    <h1 id="showreel-text" class="text-4xl font-black text-black dark:text-white relative z-10"></h1>
-  </main>
-
-  <!-- Contact / Footer section revealed after last slide -->
-  <section id="contact-section" class="h-screen bg-black dark:bg-white relative flex flex-col justify-between overflow-hidden">
-    <!-- Top Padding for balance -->
-    <div class="h-24"></div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 px-12 md:px-24">
-      <div class="flex flex-col justify-center items-start md:items-end md:text-right md:pr-12 border-b md:border-b-0 md:border-r border-white/10 dark:border-black/10 pb-12 md:pb-0">
-        <h3 class="font-inter text-xl font-medium text-white/80 dark:text-black/80 max-w-[240px]">Wanna build something together?</h3>
+    <!-- Hero Section -->
+    <section class="h-screen flex flex-col justify-center editorial-container relative overflow-hidden">
+      <!-- Background Image scoped only to this section -->
+      <div class="absolute inset-0 -z-10 pointer-events-none">
+        <div class="fixed inset-0 bg-[url('/site-bg.webp')] bg-cover bg-center"></div>
       </div>
 
-      <div class="flex flex-col justify-center items-start md:pl-12">
-        <h2 class="font-inter text-5xl md:text-7xl font-black text-white dark:text-black leading-[1.3] mb-12 tracking-tight">You have the job.<br />I have the skills.</h2>
-        <a href="mailto:hi@pybash.xyz"
-          class="group font-inter relative inline-flex items-center justify-center bg-white text-black dark:bg-black dark:text-white text-xl tracking-[0.1em] font-bold px-20 py-7 rounded-full transition-all duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] hover:tracking-[0.25em] hover:scale-[1.02] hover:bg-transparent hover:text-white dark:hover:text-black ring-1 ring-white/10 dark:ring-black/10 hover:ring-white dark:hover:ring-black">
-          <span class="relative z-10">Talk to me</span>
-          <div class="absolute inset-0 rounded-full opacity-0 group-hover:opacity-10 dark:group-hover:opacity-5 transition-opacity duration-700 blur-2xl bg-white dark:bg-black -z-10 scale-150"></div>
-        </a>
+      <div class="relative z-10 text-white flex items-end w-full justify-end">
+        <div class="flex flex-col leading-[1.1] font-medium">
+          <h1 class="text-9xl">
+            Making
+          </h1>
+          <h1 class="text-9xl">
+            Things
+          </h1>
+          <h1 class="text-9xl">
+            Happen.
+          </h1>
+        </div>
       </div>
-    </div>
 
-    <div class="w-full">
-      <footer class="w-full px-12 md:px-24 pb-8">
-        <div class="font-inter flex flex-col md:flex-row items-center justify-between gap-4 font-semibold text-[10px] tracking-widest uppercase text-white/70 dark:text-black/70">
-          <div class="text-white dark:text-black">pybash / 2026</div>
-          <div class="flex items-center gap-8">
-            <a href="https://github.com/pybash1" target="_blank" rel="noopener noreferrer" class="hover:text-white dark:hover:text-black transition-colors">GitHub</a>
-            <a href="https://x.com/py_bash1" target="_blank" rel="noopener noreferrer" class="hover:text-white dark:hover:text-black transition-colors">Twitter</a>
-            <a href="https://instagram.com/ananjan_" target="_blank" rel="noopener noreferrer" class="hover:text-white dark:hover:text-black transition-colors">Instagram</a>
-            <a href="https://linkedin.com/in/ananjanmitra" target="_blank" rel="noopener noreferrer" class="hover:text-white dark:hover:text-black transition-colors">LinkedIn</a>
+      <div class="absolute bottom-10 left-6 md:left-10 right-6 md:right-10 flex flex-col md:flex-row justify-between items-end gap-12 text-white">
+        <div class="max-w-[440px] hidden md:block">
+          <p class="text-[21px] font-medium leading-[1.3] opacity-90">
+            I try to build things. Some work, some don't but that's never really been the point. Engineering because why not? I want to change the world - delusional but oh well.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content Breakdown (Grid Section) -->
+    <section id="identity-section" class="py-10 bg-bg text-primary min-h-screen relative z-10">
+      <div class="editorial-container">
+        <div class="grid grid-cols-1 md:grid-cols-2">
+          <h2 class="text-4xl md:text-5xl font-serif"><span class="font-fancy text-8xl pr-2">I</span>dentity</h2>
+          <div class="col-span-2 grid grid-cols-1 md:grid-cols-2 md:pt-10 gap-x-20">
+            <div class="flex flex-col">
+              <p class="md:text-xl tracking-tight leading-tight pb-10">
+                A builder who&apos;d rather make something than talk about it. Someone who&apos;s comfortable with failure as long as they&apos;re in the process of making. Ambitious but self-aware enough to laugh at my own ambition.<br /><br />
+                I don&apos;t fit neatly into &quot;student&quot; or &quot;developer&quot; or &quot;engineer.&quot; I&apos;m just someone figuring it out, building along the way, and quietly convinced that it&apos;s all leading somewhere worth going.
+              </p>
+
+              <div class="grid grid-cols-1 gap-10 mt-10 pt-10 border-t border-primary/10">
+                <h3 class="text-xs uppercase tracking-[0.3em] mb-2">Opinions</h3>
+                <p class="text-sm leading-relaxed">
+                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-40">01 /</span>
+                  Simple is hard.
+                </p>
+                <p class="text-sm leading-relaxed">
+                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-40">02 /</span>
+                  Loading screens are cheating with exceptions.
+                </p>
+                <p class="text-sm leading-relaxed">
+                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-40">03 /</span>
+                  Precision before speed.
+                </p>
+                <p class="text-sm leading-relaxed">
+                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-40">04 /</span>
+                  If it needs explanation, it&apos;s bad design.
+                </p>
+                <p class="text-sm leading-relaxed">
+                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-40">05 /</span>
+                  Build things I want to use.
+                </p>
+              </div>
+            </div>
+            <div class="relative w-full md:w-2/3 aspect-[4/5] bg-black/5 overflow-hidden justify-self-center mt-10 md:mt-20 self-start">
+               <Image src={siteBg} alt="Environment" loading="lazy" decoding="async" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+            </div>
           </div>
         </div>
-      </footer>
+      </div>
+    </section>
 
-      <!-- Marquee ticker at bottom -->
-      <div class="w-full overflow-hidden bg-white dark:bg-black py-2 border-t border-black/5 dark:border-white/5">
-        <div class="marquee-track flex whitespace-nowrap">
-          {Array.from({ length: 50 }).map((_) => (
-            <span class="font-mono text-[10px] tracking-[0.3em] uppercase text-black dark:text-white px-8">Copyright &middot; 2026 &middot; Ananjan Mitra</span>
+    <!-- Projects Section (Marquee) -->
+    <section id="projects-section" class="py-10 bg-bg text-accent relative z-10 overflow-hidden border-y-2 border-accent">
+      <div class="marquee-wrapper flex whitespace-nowrap overflow-hidden py-4 group">
+        <div class="marquee-group flex items-center pr-20 flex-shrink-0 gap-20 will-change-transform">
+          {[...Array(6)].map((_) => (
+            <div class="flex items-center gap-20">
+              <h2 class="text-6xl md:text-8xl font-serif tracking-tighter leading-none m-0">
+                Selected Work
+              </h2>
+              <span class="font-fancy text-6xl md:text-8xl leading-none select-none flex items-center justify-center translate-y-[0.05em]">&bull;</span>
+            </div>
+          ))}
+        </div>
+        <div class="marquee-group flex items-center pr-20 flex-shrink-0 gap-20 will-change-transform" aria-hidden="true">
+          {[...Array(6)].map((_) => (
+            <div class="flex items-center gap-20">
+              <h2 class="text-6xl md:text-8xl font-serif tracking-tighter leading-none m-0">
+                Selected Work
+              </h2>
+              <span class="font-fancy text-6xl md:text-8xl leading-none select-none flex items-center justify-center translate-y-[0.05em]">&bull;</span>
+            </div>
           ))}
         </div>
       </div>
-    </div>
-  </section>
-  </div>
+    </section>
+
+    <!-- Featured Project (Orange) -->
+    <section id="featured-project" class="bg-accent text-bg relative z-10 overflow-hidden">
+      <div class="editorial-container py-20">
+        <div class="flex flex-col gap-12">
+
+          <!-- Label -->
+          <span class="text-[10px] uppercase tracking-[0.4em] opacity-60 font-sans">Featured Project</span>
+
+          <!-- Title -->
+          <h2 class="text-6xl md:text-8xl lg:text-9xl font-serif tracking-tighter leading-[0.9]">
+            <span class="font-fancy text-[1.3em] pr-3">H</span>arvence
+          </h2>
+
+          <!-- Screenshot + text side by side -->
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+            <div class="md:col-span-7">
+              <Image
+                src={harvenceImg}
+                alt="Harvence"
+                loading="lazy"
+                decoding="async"
+                class="w-full h-auto rounded-sm"
+              />
+            </div>
+            <div class="md:col-span-5 flex flex-col gap-8 md:pt-2">
+              <p class="text-base md:text-lg font-sans leading-relaxed opacity-100">
+                An app to help you eat healthier simply by keeping track of all your calories and easily allowing user&apos;s to scan any packaged food for nutritional info even before they buy it.
+                <!-- A social bookmarking platform that helps you save, highlight, and share the best content from across the web. Built with real-time collaboration and community-driven discovery. -->
+              </p>
+              <div class="grid grid-cols-3 gap-6 border-t border-bg/20 pt-6">
+                <div class="flex flex-col gap-1">
+                  <span class="text-[10px] uppercase tracking-widest opacity-50 font-sans">Role</span>
+                  <span class="text-sm font-sans">Creator</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="text-[10px] uppercase tracking-widest opacity-50 font-sans">Stack</span>
+                  <span class="text-sm font-sans">React Native</span>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <span class="text-[10px] uppercase tracking-widest opacity-50 font-sans">Year</span>
+                  <span class="text-sm font-sans">2024</span>
+                </div>
+              </div>
+              <a href="#" class="group flex items-center gap-3 text-[10px] uppercase tracking-[0.1em] font-sans opacity-100 hover:opacity-70 transition-opacity duration-500">
+                <span class="border-b border-bg/80 group-hover:border-bg/40 pb-1 transition-colors duration-500">View Project</span>
+                <svg viewBox="0 0 24 24" class="w-5 h-5 border border-bg/80 rounded-full p-1 transition-transform duration-500 group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Project 2: Split Layout -->
+    <section id="project-provoke" class="bg-bg text-primary relative z-10 border-b border-primary/10">
+      <div class="editorial-container py-20 md:py-32">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20 items-center">
+          <!-- Image Side -->
+          <div class="md:col-span-7 relative overflow-hidden rounded-sm order-2 md:order-1">
+            <Image
+              src={provokeImg}
+              alt="Provoke — Intelligent Web Crawler"
+              loading="lazy"
+              decoding="async"
+              class="w-full h-auto object-cover"
+            />
+          </div>
+
+          <!-- Text Side -->
+          <div class="md:col-span-5 flex flex-col gap-8 order-1 md:order-2">
+            <div class="flex flex-col gap-4">
+              <span class="text-[10px] uppercase tracking-[0.15em] opacity-40 font-sans">02 — Open Source</span>
+              <h2 class="text-5xl md:text-7xl font-serif tracking-tighter leading-[0.9]">
+                <span class="font-fancy text-8xl pr-5">P</span>rovoke
+              </h2>
+            </div>
+            <p class="text-base md:text-lg font-sans leading-relaxed opacity-85">
+              A search engine exclusively for great quality writing on the internet. Designing it for asynchronous, large scale, autonomous web crawling and dynamic content detection. Currently using specifically trained classifier but I plan on adding a small language model eventually.
+            </p>
+            <div class="flex flex-col gap-3 border-t border-primary/10 pt-6">
+              <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase tracking-widest opacity-60 font-sans">Stack</span>
+                <span class="text-xs font-sans opacity-85">Python, Redis</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-[10px] uppercase tracking-widest opacity-60 font-sans">Type</span>
+                <span class="text-xs font-sans opacity-85">Web</span>
+              </div>
+            </div>
+            <a href="#" class="group/link flex items-center gap-3 text-[10px] uppercase tracking-[0.1em] font-sans opacity-70 hover:opacity-100 transition-all duration-500 mt-4">
+              <span class="border-b border-primary/20 group-hover/link:border-primary/60 pb-1 transition-colors duration-500">View on GitHub</span>
+              <svg viewBox="0 0 24 24" class="w-5 h-5 border border-primary/20 rounded-full p-1 transition-transform duration-500 group-hover/link:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M7 17L17 7M17 7H7M17 7V17" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Project 3: Full-Width Editorial -->
+    <section id="project-journal" class="bg-bg text-primary relative z-10">
+      <div class="py-20 md:py-32">
+        <!-- Title + Description -->
+        <div class="editorial-container mb-16">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
+            <div class="md:col-span-6">
+              <span class="text-[10px] uppercase tracking-[0.4em] opacity-40 font-sans block mb-4">03 — Open Source</span>
+              <h2 class="text-5xl md:text-7xl font-serif tracking-tighter leading-[0.9]">
+                <span class="font-fancy text-[1.3em] pr-2">C</span>urius
+              </h2>
+            </div>
+            <div class="md:col-span-5 md:col-start-8">
+              <p class="text-base font-sans leading-relaxed opacity-60">
+                A better, open source alternative to <a href="https://curius.app" class="underline underline-offset-2">Curius</a> to simplify and promote peer-based reading habits and exploring deep rabbit holes.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <div class="editorial-container flex justify-center">
+          <Image
+            src={curiusImg}
+            alt="Curius"
+            loading="lazy"
+            decoding="async"
+            class="w-full md:w-3/4 h-auto rounded-sm"
+          />
+        </div>
+
+        <!-- Meta Row -->
+        <div class="editorial-container mt-10">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-t border-primary/10 pt-8">
+            <div class="flex gap-12">
+              <div class="flex flex-col gap-1">
+                <span class="text-[10px] uppercase tracking-widest opacity-40 font-sans">Stack</span>
+                <span class="text-xs font-sans opacity-60">Astro, Go</span>
+              </div>
+              <div class="flex flex-col gap-1">
+                <span class="text-[10px] uppercase tracking-widest opacity-40 font-sans">Year</span>
+                <span class="text-xs font-sans opacity-60">2026</span>
+              </div>
+              <div class="flex flex-col gap-1">
+                <span class="text-[10px] uppercase tracking-widest opacity-40 font-sans">Type</span>
+                <span class="text-xs font-sans opacity-60">Project</span>
+              </div>
+            </div>
+            <a class="group/link flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-sans opacity-40 hover:opacity-100 transition-all duration-500">
+              <span class="border-b border-primary/20 group-hover/link:border-primary/60 pb-1 transition-colors duration-500">Coming Soon</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- View All Projects -->
+    <section class="bg-bg text-primary relative z-10 py-16 flex justify-center">
+      <a href="/projects" class="group flex items-center gap-4 text-xs uppercase tracking-[0.4em] opacity-40 hover:opacity-100 transition-all duration-500">
+        <span class="border-b border-transparent group-hover:border-primary/40 pb-1">View All Projects</span>
+        <svg viewBox="0 0 24 24" class="w-4 h-4 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14m-7-7l7 7-7 7" />
+        </svg>
+      </a>
+    </section>
+    
+    <!-- Writing Section -->
+    <section id="writing-section" class="py-10 bg-bg text-primary relative z-10">
+      <div class="editorial-container">
+        <div class="flex justify-between items-baseline mb-20">
+          <h2 class="text-5xl font-serif">
+            <span class="font-fancy text-8xl pr-2">W</span>riting
+          </h2>
+        </div>
+
+        <div class="flex flex-col border-t border-primary/10">
+          {allArticles.map((article) => (
+            <a href={article.link} target="_blank" class="group border-b border-primary/10 py-10 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-colors duration-500">
+              <div class="flex flex-col gap-2">
+                <span class="text-[10px] uppercase tracking-widest opacity-40 font-sans transition-opacity duration-500 group-hover:opacity-100">Journal / {article.displayDate}</span>
+                <h3 class="text-3xl md:text-6xl font-serif tracking-tight transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] origin-left group-hover:-skew-x-12">{article.title}</h3>
+              </div>
+              <div class="flex items-center gap-4 transition-all duration-500 opacity-20 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0">
+                <span class="text-xs uppercase tracking-widest font-sans">Read Article</span>
+                <svg viewBox="0 0 24 24" class="w-6 h-6 border border-primary/20 rounded-full p-1 transition-transform duration-500 group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M7 17L17 7M17 7H7M17 7V17" />
+                </svg>
+              </div>
+            </a>
+          ))}
+          <div class="mt-20 flex justify-center">
+            <a href="https://journal.pybash.xyz/" target="_blank" class="group flex items-center gap-4 text-xs uppercase tracking-[0.4em] opacity-40 hover:opacity-100 transition-all duration-500">
+              <span class="border-b border-transparent group-hover:border-primary/40 pb-1">View All Articles</span>
+              <svg viewBox="0 0 24 24" class="w-4 h-4 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14m-7-7l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- Footer -->
+    <footer class="pt-40 pb-8 bg-bg editorial-container relative z-10">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-y-20">        
+        <div class="md:col-span-8">
+          <h2 class="text-[clamp(3rem,10vw,12rem)] leading-[1.3] tracking-tighter italic font-serif flex flex-col">
+            <span class="flex items-baseline">
+              <span class="font-fancy text-[clamp(6rem,14vw,16rem)] leading-[0.5]">L&nbsp;</span>et's make
+            </span>
+            <span class="ml-[5vw]">something</span>
+            <span class="ml-[10vw]">wonderful.</span>
+          </h2>
+        </div>
+
+        <div class="md:col-span-4 flex flex-col justify-end font-sans text-xs tracking-widest gap-2">
+          <a href="mailto:hi@pybash.xyz" class="hover:underline flex justify-between items-center border-b border-accent/20 pb-2">
+            <span class="font-medium">Email</span>
+            <span class="font-medium">hi@pybash.xyz</span>
+          </a>
+          <a href="https://github.com/pybash1" target="_blank" class="hover:underline flex justify-between items-center border-b border-accent/20 pb-2">
+            <span class="font-medium">Github</span>
+            <span class="font-medium">@pybash1</span>
+          </a>
+          <a href="https://linkedin.com/in/ananjanmitra" target="_blank" class="hover:underline flex justify-between items-center border-b border-accent/20 pb-2">
+            <span class="font-medium">LinkedIn</span>
+            <span class="font-medium">Ananjan Mitra</span>
+          </a>
+          <a href="https://instagram.com/in/ananjan_" target="_blank" class="hover:underline flex justify-between items-center border-b border-accent/20 pb-2">
+            <span class="font-medium">Instagram</span>
+            <span class="font-medium">@ananjan_</span>
+          </a>
+          <a href="https://x.com/py_bash1" target="_blank" class="hover:underline flex justify-between items-center border-b border-accent/20 pb-2">
+            <span class="font-medium">Twitter</span>
+            <span class="font-medium">@py_bash1</span>
+          </a>
+        </div>
+
+        <div class="md:col-span-12 pt-20 flex justify-between items-end text-[10px] font-sans uppercase tracking-[0.2em] opacity-40">
+          <div>Designed for Impact</div>
+          <div class="text-right">©2026 All Rights Reserved</div>
+        </div>
+      </div>
+    </footer>
+  </main>
 </Layout>
 
-<style>
-  @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Dynamic Header Color
+  const header = document.querySelector('#main-header');
+  const lightSections = ['#identity-section', '#projects-section', '#project-provoke', '#project-journal', '#writing-section', 'footer'];
+
+  lightSections.forEach((selector) => {
+    ScrollTrigger.create({
+      trigger: selector,
+      start: "top 50px",
+      end: "bottom 50px",
+      onEnter: () => header?.setAttribute('data-theme', 'light'),
+      onLeave: () => header?.setAttribute('data-theme', 'dark'),
+      onEnterBack: () => header?.setAttribute('data-theme', 'light'),
+      onLeaveBack: () => header?.setAttribute('data-theme', 'dark'),
+    });
+  });
+
+  // Hide header after hero
+  ScrollTrigger.create({
+    trigger: "#identity-section",
+    start: "top 100px",
+    onEnter: () => gsap.to(header, { yPercent: -100, autoAlpha: 0, duration: 0.5, ease: "power2.inOut" }),
+    onLeaveBack: () => gsap.to(header, { yPercent: 0, autoAlpha: 1, duration: 0.5, ease: "power2.inOut" }),
+  });
+
+
+
+  // Writing Section Reveals
+  if (document.querySelectorAll("#writing-section a").length > 0) {
+    gsap.from("#writing-section a", {
+      y: 30,
+      duration: 1,
+      stagger: 0.1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: "#writing-section",
+        start: "top bottom-=50",
+        toggleActions: "play none none reverse"
+      }
+    });
   }
-  .marquee-track {
-    animation: marquee 20s linear infinite;
+
+  // Project Section Reveals
+  const projectSections = ['#featured-project', '#project-provoke', '#project-journal'];
+  projectSections.forEach((selector) => {
+    const section = document.querySelector(selector);
+    if (!section) return;
+
+    // Reveal images
+    const img = section.querySelector('img');
+    if (img) {
+      gsap.from(img, {
+        scale: 1.1,
+        opacity: 0.6,
+        duration: 1.4,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: img,
+          start: "top bottom-=100",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }
+
+    // Reveal text elements
+    const texts = section.querySelectorAll('h2, p, .flex.flex-col.gap-1');
+    if (texts.length > 0) {
+      gsap.from(texts, {
+        y: 40,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.08,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: section,
+          start: "top bottom-=50",
+          toggleActions: "play none none reverse"
+        }
+      });
+    }
+  });
+
+  // Marquee — manual rAF loop (GSAP repeat:-1 breaks with negative timeScale)
+  const marqueeGroups = document.querySelectorAll('.marquee-group');
+
+  if (marqueeGroups.length > 0) {
+    let xPos = 0;
+    let speed = -1;       // current speed (px per frame)
+    let targetSpeed = -1; // lerp target
+
+    const firstGroup = marqueeGroups[0] as HTMLElement;
+    let groupWidth = firstGroup.offsetWidth;
+
+    // Recalculate on resize
+    window.addEventListener('resize', () => {
+      groupWidth = firstGroup.offsetWidth;
+    });
+
+    function tick() {
+      // Smooth lerp toward target speed
+      speed += (targetSpeed - speed) * 0.05;
+
+      xPos += speed;
+
+      // Seamless wrap in both directions
+      if (xPos <= -groupWidth) xPos += groupWidth;
+      if (xPos >= 0) xPos -= groupWidth;
+
+      marqueeGroups.forEach((g) => {
+        (g as HTMLElement).style.transform = `translateX(${xPos}px)`;
+      });
+
+      requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+
+    // Flip direction based on scroll
+    ScrollTrigger.create({
+      onUpdate: (self) => {
+        if (self.direction !== 0) {
+          // Scroll down → marquee moves right, scroll up → left
+          targetSpeed = self.direction * 1;
+        }
+      }
+    });
+  }
+
+  // Refresh ScrollTrigger to account for pinning height changes
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+</script>
+
+<style>
+  .project-card h3 {
+    text-transform: none; /* Keep titles readable */
+    font-weight: 400;
+  }
+
+  /* Responsive clamp for hero title */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 5rem;
+    }
+  }
+
+  /* Header Theme Styles */
+  #main-header[data-theme="light"] nav {
+    color: var(--color-primary); /* Obsidian Ink / Dark */
+  }
+
+  #main-header[data-theme="dark"] nav {
+    color: white;
+  }
+
+  #main-header nav {
+    transition: color 0.5s ease;
+  }
+
+  .nav-arrow {
+    display: inline-block;
+    transition: transform 0.3s ease;
+  }
+
+  .nav-link:hover .nav-arrow {
+    transform: translate(2px, -2px);
   }
 </style>
-
-<script>
-  interface GalleryItem {
-    url?: string;
-    urls?: string[];
-    text?: string;
-    caption: string;
-    link?: string;
-  }
-
-  interface Slide {
-    text: string;
-    images?: boolean;
-    gallery?: GalleryItem[];
-    video?: boolean;
-    videoStart?: boolean;
-    size: string;
-  }
-
-  const slides: Slide[] = [
-    { text: 'I am Ananjan Mitra.', images: false, video: false, size: 'text-4xl' },
-    {
-      text: 'i build things.',
-      images: true,
-      video: false,
-      size: 'text-4xl',
-      // Custom gallery example — user can edit this
-      gallery: [
-        {
-          urls: ['/harvence.png', '/harvence2.jpg'],
-          caption: 'Harvence',
-          link: 'https://harvence.pybash.xyz'
-        },
-        { url: '/grasslabs.png', caption: 'Grass Labs', link: 'https://grasslabs.dev' },
-        { url: '/dripcraft.png', caption: 'Dripcraft' },
-        { url: '/journal.png', caption: 'Blog', link: 'https://journal.pybash.xyz' },
-        { text: 'I try to build things. Some work, some don\'t but that\'s never really been the point. Engineering because why not? I want to change the world - delusional but oh well.', caption: 'changing the world' },
-      ]
-    },
-    {
-      text: 'and break them.', images: true, video: false, size: 'text-4xl',
-      gallery: [
-        { url: '/purp.png', caption: 'purp.game' },
-        { url: '/authdeck.png', caption: 'Authdeck' },
-        { urls: ['/rift2.png', '/rift3.png'], caption: 'Rift' },
-        { urls: ['/writing1.png', '/writing2.png', '/writing3.png'], caption: 'I first wrote' },
-        { url: '/elusidate.png', caption: 'Failed startup' },
-      ]
-    },
-    { text: 'why?', images: false, video: false, size: 'text-4xl' },
-    {
-      text: 'to', images: true, video: true, videoStart: true, size: 'text-4xl',
-      gallery: [
-        { url: '/desk.jpg', caption: 'Desk' },
-        { urls: ['/electronics.jpg', '/electronics2.jpg'], caption: 'Electronics' },
-        { urls: ['/photography.jpg', '/photography2.jpg', '/photography3.jpg', '/photography4.jpg'], caption: 'I dabble', link: 'https://instagram.com/ananjan_' },
-      ]
-    },
-    {
-      text: 'make', images: false, video: true, size: 'text-4xl',
-      gallery: [
-        { urls: ['/today.png', '/today2.png'], caption: 'Today [Featured on Read.cv]', link: 'https://github.com/pybash1/today' },
-        { text: 'Clipboard sync without doubts. E2EE. Self hostable. Cross platform. Open source. Pretty cool but I haven\'t launched yet. Coming soon.', caption: 'Board', link: 'https://board.pybash.xyz' },
-        { urls: ['/halo1.png', '/halo2.png', '/halo3.png'], caption: 'Halo', link: 'https://github.com/pybash1/halo' },
-        { text: 'Still think Halo is a great idea but I\'m lacking the resources and time to continue working on it. The mission is also not something I can do alone with my friend.', caption: 'Halo' },
-        { url: '/quokka.png', caption: 'Hack Club Event' },
-        { text: 'I volunteered to work on the web app for Classify to speed up development but did not end up continuing after the trial due to school.', caption: 'Classify', link: 'https://classify.org.uk' },
-      ]
-    },
-    {
-      text: 'something', images: false, video: true, size: 'text-4xl',
-      gallery: [
-        { url: '/merin.png', caption: 'Merin' },
-        { text: 'A modified version of Jordan JD\'s "bin" for Board. Added end-to-end encryption, syncing capabilities and simplified self hosting. Pretty proud of this one. It is barely anything like the original api, and has barely any of the original routes, but it was the foundation.', caption: 'bin', link: 'https://github.com/pybash1/bin' },
-        { url: '/solo.png', caption: 'Solo [N&W S2]' },
-        { url: '/n0.png', caption: 'Habit tracker for a friend' },
-      ]
-    },
-    {
-      text: 'wonderful.', images: true, video: true, size: 'text-6xl', gallery: [
-        { url: '/esp32cam.jpg', caption: '$10 ring doorbell' },
-        { text: 'Started as a school project, but eventually I built something pretty cool out of a tiny ESP32Cam. Connect it to your home wifi, and then you can access the stream from anywhere, anytime using a web interface without any port forwarding or networking.', caption: 'Esp32cam tldr' },
-        { urls: ['/winnf2.jpg', '/winnf.png'], caption: 'Nerdfetch for Windows', link: 'https://journal.pybash.xyz/writing/4s-13ms' },
-        { url: '/homelab.png', caption: 'Homelab', link: 'https://journal.pybash.xyz/writing/wsl-homelab' },
-        { url: '/provoke.jpg', caption: 'WIP Content search engine', link: 'https://github.com/pybash1/provoke' }
-      ]
-    },
-  ];
-
-  const imageRatios: Record<string, number> = {};
-  function preLoadRatios() {
-    slides.forEach(slide => {
-      if (slide.gallery) {
-        slide.gallery.forEach(item => {
-          const targetUrls = item.urls || (item.url ? [item.url] : []);
-          targetUrls.forEach(url => {
-            const img = new Image();
-            img.onload = () => imageRatios[url] = img.naturalWidth / img.naturalHeight;
-            img.src = url;
-          });
-        });
-      }
-    });
-  }
-  preLoadRatios();
-
-  function getRatio(url: string) {
-    if (imageRatios[url]) return imageRatios[url];
-    const match = url.match(/\/(\d+)\/(\d+)/);
-    if (match && match[1] && match[2]) return parseInt(match[1]) / parseInt(match[2]);
-    return 1;
-  }
-
-  let current = 0;
-  let locked = false;
-  let contactVisible = false;
-  let currentSubStep = 0;
-  let totalSubSteps = 1;
-
-  const textEl = document.getElementById('showreel-text') as HTMLHeadingElement;
-  const imageLayer = document.getElementById('image-layer') as HTMLDivElement;
-  const bgVideo = document.getElementById('bg-video') as HTMLVideoElement;
-  const videoWrapper = document.getElementById('video-container') as HTMLDivElement;
-
-  // Unlock audio on first real user interaction (click/touch/key)
-  let audioUnlocked = false;
-  function unlockAudio() {
-    if (audioUnlocked) return;
-    audioUnlocked = true;
-    document.removeEventListener('click', unlockAudio);
-    document.removeEventListener('touchstart', unlockAudio);
-    document.removeEventListener('keydown', unlockAudio);
-
-    // If video is already playing (muted fallback), don't interfere
-    if (!bgVideo.paused) return;
-
-    bgVideo.muted = true;
-    bgVideo.play().then(() => {
-      bgVideo.pause();
-      bgVideo.muted = false;
-      bgVideo.currentTime = 0;
-    }).catch(() => { });
-  }
-  document.addEventListener('click', unlockAudio);
-  document.addEventListener('touchstart', unlockAudio);
-  document.addEventListener('keydown', unlockAudio);
-
-  function createTextBlock(item: GalleryItem, containerWidth: number, containerHeight: number, placedRects: any[]) {
-    const captionH = 35;
-    let attempts = 0;
-
-    while (attempts < 1000) {
-      const retryScale = attempts > 250 ? 0.7 : 1.0;
-      const w = (Math.floor(Math.random() * 100) + 250) * retryScale;
-      // Estimate height based on text length — roughly 14px line height, ~35 chars per line
-      const lines = Math.ceil((item.text?.length || 50) / 35);
-      const textH = Math.max(60, lines * 18 + 32); // padding + line height
-      const totalH = textH + captionH + 10;
-
-      if (w > containerWidth * 0.95 || totalH > containerHeight * 0.95) {
-        attempts++; continue;
-      }
-
-      const edgeMargin = 10;
-      const x = edgeMargin + Math.random() * (containerWidth - w - edgeMargin * 2);
-      const y = edgeMargin + Math.random() * (containerHeight - totalH - edgeMargin * 2);
-
-      const textRect = {
-        l: containerWidth * 0.3, r: containerWidth * 0.7,
-        t: containerHeight * 0.3, b: containerHeight * 0.7
-      };
-      const overlapsText = !(x + w < textRect.l || x > textRect.r || y + totalH < textRect.t || y > textRect.b);
-      if (overlapsText) { attempts++; continue; }
-
-      const padding = 20;
-      const newRect = { x, y, w, h: totalH };
-      const overlaps = placedRects.some(r => !(
-        newRect.x + newRect.w < r.x - padding ||
-        r.x + r.w < newRect.x - padding ||
-        newRect.y + newRect.h < r.y - padding ||
-        r.y + r.h < newRect.y - padding
-      ));
-
-      if (!overlaps) {
-        const figure = document.createElement('figure');
-        figure.className = 'absolute m-0 opacity-0 pointer-events-none';
-        figure.style.width = `${w}px`;
-        figure.style.left = `${x}px`;
-        figure.style.top = `${y}px`;
-        figure.style.height = `${totalH}px`;
-
-        const block = document.createElement('div');
-        block.className = 'font-mono text-[11px] leading-relaxed p-4 rounded-sm shadow-2xl pointer-events-auto';
-        block.style.cssText = `
-          background: rgba(20, 20, 20, 0.85);
-          color: rgba(255, 255, 255, 0.85);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(8px);
-          width: ${w}px;
-          white-space: pre-wrap;
-          word-break: break-word;
-        `;
-        block.textContent = item.text || '';
-        figure.appendChild(block);
-
-        const caption = document.createElement(item.link ? 'a' : 'figcaption');
-        caption.textContent = item.caption;
-        caption.className = `relative z-50 font-mono text-[10px] font-bold tracking-widest uppercase py-1 text-black dark:text-white pointer-events-auto ${item.link ? 'group flex items-center gap-1' : ''}`;
-
-        if (item.link) {
-          (caption as HTMLAnchorElement).href = item.link;
-          (caption as HTMLAnchorElement).target = "_blank";
-          (caption as HTMLAnchorElement).rel = "noopener noreferrer";
-          const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-          icon.setAttribute("class", "w-2 h-2 transform transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5");
-          icon.setAttribute("fill", "none");
-          icon.setAttribute("stroke", "currentColor");
-          icon.setAttribute("viewBox", "0 0 24 24");
-          icon.innerHTML = '<path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
-          caption.appendChild(icon);
-        }
-        figure.appendChild(caption);
-
-        const fromX = (Math.random() - 0.5) * 200;
-        const fromY = (Math.random() - 0.5) * 200;
-        figure.style.setProperty('--from-x', `${fromX}px`);
-        figure.style.setProperty('--from-y', `${fromY}px`);
-
-        placedRects.push(newRect);
-        return figure;
-      }
-      attempts++;
-    }
-    return null;
-  }
-
-  function createImageElement(item: GalleryItem, _index: number, containerWidth: number, containerHeight: number, placedRects: any[]) {
-    // Handle text blocks — no image needed
-    if (item.text) {
-      return createTextBlock(item, containerWidth, containerHeight, placedRects);
-    }
-
-    const mainUrl = item.urls ? item.urls[0] : item.url;
-    if (!mainUrl) return null;
-
-    const ratio = getRatio(mainUrl);
-    const captionH = 35; // Buffer for caption text and padding
-    let attempts = 0;
-
-    while (attempts < 1000) {
-      // Clusters: dynamic scaling to ensure they fit
-      const isCluster = !!item.urls;
-      const baseWScale = isCluster ? 0.7 : 1.0;
-      // If we struggle (many attempts), start shrinking the item further
-      const retryScale = attempts > 250 ? 0.7 : 1.0;
-
-      const w = (Math.floor(Math.random() * 200) + 300) * baseWScale * retryScale;
-      // 'h' here is the height of the first image (for base reference)
-      const h = w / ratio;
-
-      const stackOffset = 0.15; // 15% offset = 85% overlap — tight cascade
-
-      // Fit each image into a shared bounding box (w × h) preserving aspect ratio
-      const fitImage = (url: string) => {
-        const r = getRatio(url);
-        let iw = w;
-        let ih = w / r;
-        // If this image is taller than the base, scale down to fit in same box
-        if (ih > h) {
-          ih = h;
-          iw = h * r;
-        }
-        return { iw, ih };
-      };
-
-      let visualW = w;
-      let visualH = h;
-      let captionY = h;
-
-      if (item.urls) {
-        let maxX = 0;
-        let maxY = 0;
-        item.urls.forEach((url, i) => {
-          const { iw, ih } = fitImage(url);
-          const right = (i * stackOffset * w) + iw;
-          const bottom = (i * stackOffset * h) + ih;
-          if (right > maxX) maxX = right;
-          if (bottom > maxY) maxY = bottom;
-          if (item.urls && i === item.urls.length - 1) {
-            captionY = bottom;
-          }
-        });
-        visualW = maxX;
-        visualH = maxY;
-      }
-
-      const totalH = Math.max(visualH, captionY + captionH) + 10;
-
-      // Safety check for small screens
-      if (visualW > containerWidth * 0.95 || totalH > containerHeight * 0.95) {
-        attempts++; continue;
-      }
-
-      // Important: x,y are the top-left corner in pixels
-      const edgeMargin = 10;
-      const x = edgeMargin + Math.random() * (containerWidth - visualW - edgeMargin * 2);
-      const y = edgeMargin + Math.random() * (containerHeight - totalH - edgeMargin * 2);
-
-      // Avoid center area
-      const textRect = {
-        l: containerWidth * 0.3,
-        r: containerWidth * 0.7,
-        t: containerHeight * 0.3,
-        b: containerHeight * 0.7
-      };
-
-      const overlapsText = !(x + visualW < textRect.l || x > textRect.r || y + totalH < textRect.t || y > textRect.b);
-      if (overlapsText) { attempts++; continue; }
-
-      const padding = 20;
-      const newRect = { x, y, w: visualW, h: totalH };
-      const overlaps = placedRects.some(r => !(
-        newRect.x + newRect.w < r.x - padding ||
-        r.x + r.w < newRect.x - padding ||
-        newRect.y + newRect.h < r.y - padding ||
-        r.y + r.h < newRect.y - padding
-      ));
-
-      if (!overlaps) {
-        const figure = document.createElement('figure');
-        // m-0 is crucial to reset default browser figure margins
-        figure.className = 'absolute m-0 opacity-0 pointer-events-none';
-        figure.style.width = `${visualW}px`;
-        figure.style.left = `${x}px`;
-        figure.style.top = `${y}px`;
-        figure.style.height = `${totalH}px`;
-
-        const caption = document.createElement(item.link ? 'a' : 'figcaption');
-        caption.textContent = item.caption;
-        caption.className = `relative z-50 font-mono text-[10px] font-bold tracking-widest uppercase py-1 text-black dark:text-white pointer-events-auto ${item.link ? 'group flex items-center gap-1' : ''}`;
-
-        if (item.link) {
-          (caption as HTMLAnchorElement).href = item.link;
-          (caption as HTMLAnchorElement).target = "_blank";
-          (caption as HTMLAnchorElement).rel = "noopener noreferrer";
-
-          // Add external arrow icon for links
-          const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-          icon.setAttribute("class", "w-2 h-2 transform transition-transform duration-300 ease-in-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5");
-          icon.setAttribute("fill", "none");
-          icon.setAttribute("stroke", "currentColor");
-          icon.setAttribute("viewBox", "0 0 24 24");
-          icon.innerHTML = '<path d="M7 17L17 7M17 7H7M17 7V17" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
-          caption.appendChild(icon);
-        }
-
-        if (item.urls) {
-          item.urls.forEach((url, i) => {
-            const img = document.createElement('img');
-            img.src = url;
-            const { iw, ih } = fitImage(url);
-            img.style.width = `${iw}px`;
-            img.style.height = `${ih}px`;
-            img.className = 'shadow-2xl absolute block pointer-events-auto cursor-pointer transition-all duration-200';
-            img.style.left = `${i * stackOffset * w}px`;
-            img.style.top = `${i * stackOffset * h}px`;
-            const baseZ = i + 1;
-            img.style.zIndex = `${baseZ}`;
-
-            // Hover to bring image to front
-            img.addEventListener('mouseenter', () => {
-              img.style.zIndex = '50';
-              img.style.transform = 'scale(1.03)';
-              img.style.boxShadow = '0 25px 50px -12px rgba(0,0,0,0.5)';
-            });
-            img.addEventListener('mouseleave', () => {
-              img.style.zIndex = `${baseZ}`;
-              img.style.transform = 'scale(1)';
-              img.style.boxShadow = '';
-            });
-            figure.appendChild(img);
-
-            if (item.urls && i === item.urls.length - 1) {
-              caption.style.position = 'absolute';
-              caption.style.left = `${i * stackOffset * w}px`;
-              caption.style.top = `${i * stackOffset * h + ih}px`;
-              caption.style.width = `${iw}px`;
-            }
-          });
-        } else {
-          const img = document.createElement('img');
-          img.src = item.url!;
-          img.className = 'shadow-2xl w-full h-auto block';
-          figure.appendChild(img);
-        }
-
-        figure.appendChild(caption);
-
-        const fromX = (Math.random() - 0.5) * 200;
-        const fromY = (Math.random() - 0.5) * 200;
-        figure.style.setProperty('--from-x', `${fromX}px`);
-        figure.style.setProperty('--from-y', `${fromY}px`);
-
-        placedRects.push(newRect);
-        return figure;
-      }
-      attempts++;
-    }
-    return null;
-  }
-
-  function applySlideState(index: number) {
-    const slide = slides[index];
-    if (!slide) return;
-
-    textEl.textContent = slide.text;
-    textEl.className = `${slide.size} font-black relative z-10`;
-
-    if (slide.video) {
-      textEl.classList.add('text-white');
-      
-      // Only reset to beginning the very first time we encounter a video slide
-      if (slide.videoStart && !bgVideo.dataset.hasStarted) {
-        bgVideo.currentTime = 0;
-        bgVideo.dataset.hasStarted = 'true';
-      }
-
-      videoWrapper.classList.remove('opacity-0');
-      videoWrapper.classList.add('opacity-100');
-      document.body.classList.add('video-mode');
-
-      // Only play if it hasn't finished yet and is paused
-      if (bgVideo.paused && !bgVideo.ended) {
-        bgVideo.muted = false;
-        bgVideo.play().catch(() => {
-          // Browser blocked unmuted — play muted and show nudge
-          bgVideo.muted = true;
-          bgVideo.play().catch(() => { });
-          const btn = document.getElementById('unmute-btn');
-          if (btn) {
-            btn.classList.remove('hidden');
-            btn.classList.add('block');
-
-            const globalUnmute = () => {
-              bgVideo.muted = false;
-              bgVideo.play().catch(() => { });
-
-              btn.style.opacity = '0';
-              setTimeout(() => {
-                btn.classList.add('hidden');
-                btn.classList.remove('block');
-                btn.style.opacity = ''; // Reset for next time
-              }, 300);
-
-              document.removeEventListener('click', globalUnmute);
-            };
-
-            setTimeout(() => {
-              document.addEventListener('click', globalUnmute);
-            }, 100);
-          }
-        });
-      }
-    } else {
-      textEl.classList.add('text-black', 'dark:text-white');
-      videoWrapper.classList.add('opacity-0');
-      videoWrapper.classList.remove('opacity-100');
-      document.body.classList.remove('video-mode');
-      bgVideo.pause();
-    }
-    updateProgress();
-  }
-
-  const progressBarFill = document.getElementById('progress-bar-fill') as HTMLDivElement;
-  const progressBarContainer = document.getElementById('progress-bar-container') as HTMLDivElement;
-
-  function updateProgress() {
-    const baseProgress = current / slides.length;
-    const subProgress = (totalSubSteps > 0 ? (currentSubStep / totalSubSteps) : 0) * (1 / slides.length);
-    const progress = (baseProgress + subProgress) * 100;
-    
-    if (progressBarFill) progressBarFill.style.height = `${progress}%`;
-    
-    if (progressBarContainer) {
-      if (contactVisible) {
-        progressBarContainer.style.opacity = '0';
-        progressBarContainer.style.pointerEvents = 'none';
-      } else {
-        progressBarContainer.style.opacity = '1';
-        progressBarContainer.style.pointerEvents = 'auto';
-      }
-    }
-  }
-
-  // Show first slide immediately
-  applySlideState(0);
-
-  // --- Unified step system ---
-  // Every action (image reveal, text swap, section change) = one step
-  // Every step requires the same scroll effort and has the same cooldown
-  const STEP_THRESHOLD = 100;  // scroll px to trigger any step
-  const STEP_COOLDOWN = 400;   // ms cooldown after any step
-
-  let scrollDelta = 0;
-
-  // Build a queue of steps for the next slide
-  let stepQueue: (() => void)[] = [];
-
-  // Initial state for first slide
-  currentSubStep = 1;
-  totalSubSteps = 1;
-
-  function buildSteps(direction: number) {
-    const nextIndex = current + direction;
-    if (nextIndex < 0 || nextIndex >= slides.length) return;
-
-    const nextSlide = slides[nextIndex];
-    if (!nextSlide) return;
-
-    stepQueue = [];
-
-    // 1. Get potential items
-    const items = nextSlide.gallery || (nextSlide.images ? Array.from({ length: 6 }).map((_, i) => ({
-      url: `https://picsum.photos/400/400?random=${Math.random()}`,
-      caption: 'study no. ' + (i + 1)
-    })) : []);
-
-    // 2. Pre-create image elements so we know how many actually fit
-    const placedRects: any[] = [];
-    const cw = window.innerWidth;
-    const ch = window.innerHeight;
-    const figs: HTMLElement[] = [];
-
-    if (items.length > 0) {
-      items.forEach((item, idx) => {
-        const el = createImageElement(item, idx, cw, ch, placedRects);
-        if (el) figs.push(el);
-      });
-    }
-
-    // 3. Build the step queue based on what fit
-    if (figs.length > 0) {
-      if (nextSlide.video) {
-        // Video slide: Swap text first, then reveal images
-        stepQueue.push(() => {
-          imageLayer.innerHTML = '';
-          current = nextIndex;
-          applySlideState(nextIndex);
-          figs.forEach(f => imageLayer.appendChild(f));
-          if (figs[0]) {
-            figs[0].style.opacity = '1';
-            figs[0].style.animation = 'fadeIn 0.4s cubic-bezier(0.2, 0, 0.2, 1) forwards';
-          }
-        });
-
-        for (let i = 1; i < figs.length; i++) {
-          const idx = i;
-          stepQueue.push(() => {
-            const fig = figs[idx];
-            if (fig) {
-              fig.style.opacity = '1';
-              fig.style.animation = 'fadeIn 0.4s cubic-bezier(0.2, 0, 0.2, 1) forwards';
-            }
-          });
-        }
-      } else {
-        // Images slide: Reveal images one by one, swap text at the end
-        stepQueue.push(() => {
-          imageLayer.innerHTML = '';
-          figs.forEach(f => imageLayer.appendChild(f));
-          if (figs[0]) {
-            figs[0].style.opacity = '1';
-            figs[0].style.animation = 'fadeIn 0.4s cubic-bezier(0.2, 0, 0.2, 1) forwards';
-          }
-        });
-
-        for (let i = 1; i < figs.length - 1; i++) {
-          const idx = i;
-          stepQueue.push(() => {
-            const fig = figs[idx];
-            if (fig) {
-              fig.style.opacity = '1';
-              fig.style.animation = 'fadeIn 0.4s cubic-bezier(0.2, 0, 0.2, 1) forwards';
-            }
-          });
-        }
-
-        stepQueue.push(() => {
-          const lastIdx = figs.length - 1;
-          const fig = figs[lastIdx];
-          if (fig) {
-            fig.style.opacity = '1';
-            fig.style.animation = 'fadeIn 0.4s cubic-bezier(0.2, 0, 0.2, 1) forwards';
-          }
-          current = nextIndex;
-          applySlideState(nextIndex);
-        });
-      }
-    } else {
-      // No images or none fit: just swap text
-      stepQueue.push(() => {
-        imageLayer.innerHTML = '';
-        current = nextIndex;
-        applySlideState(nextIndex);
-      });
-    }
-
-    totalSubSteps = stepQueue.length;
-    currentSubStep = 0;
-  }
-
-  function executeNextStep() {
-    if (stepQueue.length === 0) return;
-
-    currentSubStep++;
-    const step = stepQueue.shift();
-    if (step) step();
-
-    updateProgress();
-    scrollDelta = 0;
-    locked = true;
-
-    setTimeout(() => {
-      locked = false;
-      scrollDelta = 0;
-    }, STEP_COOLDOWN);
-  }
-
-  // --- Contact section reveal ---
-  const showreelWrapper = document.getElementById('showreel-wrapper') as HTMLDivElement;
-
-  function showContact() {
-    if (contactVisible) return;
-    contactVisible = true;
-    showreelWrapper.style.transform = 'translateY(-100vh)';
-    // Pause video when leaving showreel
-    bgVideo.pause();
-    videoWrapper.classList.add('opacity-0');
-    videoWrapper.classList.remove('opacity-100');
-    locked = true;
-    updateProgress();
-    setTimeout(() => {
-      locked = false;
-      scrollDelta = 0;
-    }, 800);
-  }
-
-  function hideContact() {
-    if (!contactVisible) return;
-    contactVisible = false;
-    showreelWrapper.style.transform = 'translateY(0)';
-    // Resume video if the current slide uses it
-    const slide = slides[current];
-    if (slide?.video && bgVideo.paused) {
-      videoWrapper.classList.remove('opacity-0');
-      videoWrapper.classList.add('opacity-100');
-      bgVideo.play().catch(() => {});
-    }
-    updateProgress();
-    locked = true;
-    setTimeout(() => {
-      locked = false;
-      scrollDelta = 0;
-    }, 800);
-  }
-
-  // Back to top button
-  const backToTopBtn = document.getElementById('back-to-top');
-  if (backToTopBtn) {
-    backToTopBtn.addEventListener('click', () => {
-      hideContact();
-      // Reset to first slide after transition
-      setTimeout(() => {
-        current = 0;
-        imageLayer.innerHTML = '';
-        applySlideState(0);
-        stepQueue = [];
-      }, 700);
-    });
-  }
-
-  window.addEventListener('wheel', (e: WheelEvent) => {
-    e.preventDefault();
-    if (locked) return;
-
-    scrollDelta += e.deltaY;
-
-    if (Math.abs(scrollDelta) >= STEP_THRESHOLD) {
-      const direction = scrollDelta > 0 ? 1 : -1;
-
-      // If contact section is visible, only allow scrolling back up
-      if (contactVisible) {
-        if (direction < 0) {
-          hideContact();
-        }
-        scrollDelta = 0;
-        return;
-      }
-
-      // If no steps queued, build AND immediately execute the first step
-      if (stepQueue.length === 0) {
-        buildSteps(direction);
-        if (stepQueue.length > 0) {
-          executeNextStep();
-        } else {
-          // No more slides — reveal contact section on scroll down
-          if (direction > 0 && current >= slides.length - 1) {
-            showContact();
-          }
-          scrollDelta = 0;
-        }
-      } else {
-        // Steps already queued — execute the next one
-        executeNextStep();
-      }
-    }
-  }, { passive: false });
-
-  // Decay stale momentum
-  setInterval(() => {
-    if (!locked && stepQueue.length === 0) {
-      scrollDelta *= 0.85;
-      if (Math.abs(scrollDelta) < 2) scrollDelta = 0;
-    }
-  }, 100);
-</script>
