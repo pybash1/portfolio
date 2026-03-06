@@ -5,6 +5,9 @@ import siteBg from "../../public/site-bg.webp";
 import harvenceImg from "../../public/harvence.webp";
 import provokeImg from "../../public/provoke.webp";
 import curiusImg from "../../public/curius.webp";
+import SiteHeader from "../components/SiteHeader";
+import MarqueeSection from "../components/Marquee";
+import PageAnimations from "../components/PageAnimations";
 
 
 
@@ -34,21 +37,7 @@ const allArticles = articleMatches.map(match => {
   <link rel="preload" as="image" href="/site-bg.webp" slot="head" />
   <main class="relative">
     <!-- Global Header -->
-    <header id="main-header" class="fixed top-0 left-0 w-full z-50 p-6 md:p-10 transition-colors duration-500">
-      <nav class="grid grid-cols-2 md:grid-cols-5 font-sans text-white font-medium text-sm tracking-[0.1em] items-center  ">
-        <div class="">Ananjan Mitra</div>
-        <div class="hidden md:block text-center">
-          <a href="https://github.com/pybash1" target="_blank" class="nav-link">GitHub <span class="nav-arrow">↗</span></a>
-        </div>
-        <div class="hidden md:block text-center">
-          <a href="https://instagram.com/ananjan_" target="_blank" class="nav-link">Instagram <span class="nav-arrow">↗</span></a>
-        </div>
-        <div class="hidden md:block text-center">
-          <a href="https://x.com/py_bash1" class="nav-link">Twitter <span class="nav-arrow">↗</span></a>
-        </div>
-        <div class="text-right">&copy; 2026</div>
-      </nav>
-    </header>
+    <SiteHeader client:load />
 
     <!-- Hero Section -->
     <section class="h-screen flex flex-col justify-center editorial-container relative overflow-hidden">
@@ -125,30 +114,7 @@ const allArticles = articleMatches.map(match => {
     </section>
 
     <!-- Projects Section (Marquee) -->
-    <section id="projects-section" class="py-10 bg-bg text-accent relative z-10 overflow-hidden border-y-2 border-accent">
-      <div class="marquee-wrapper flex whitespace-nowrap overflow-hidden py-4 group">
-        <div class="marquee-group flex items-center pr-20 flex-shrink-0 gap-20 will-change-transform">
-          {[...Array(6)].map((_) => (
-            <div class="flex items-center gap-20">
-              <h2 class="text-6xl md:text-8xl font-serif tracking-tighter leading-none m-0">
-                Selected Work
-              </h2>
-              <span class="font-fancy text-6xl md:text-8xl leading-none select-none flex items-center justify-center translate-y-[0.05em]">&bull;</span>
-            </div>
-          ))}
-        </div>
-        <div class="marquee-group flex items-center pr-20 flex-shrink-0 gap-20 will-change-transform" aria-hidden="true">
-          {[...Array(6)].map((_) => (
-            <div class="flex items-center gap-20">
-              <h2 class="text-6xl md:text-8xl font-serif tracking-tighter leading-none m-0">
-                Selected Work
-              </h2>
-              <span class="font-fancy text-6xl md:text-8xl leading-none select-none flex items-center justify-center translate-y-[0.05em]">&bull;</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
+    <MarqueeSection client:load />
 
     <!-- Featured Project (Orange) -->
     <section id="featured-project" class="bg-accent text-bg relative z-10 overflow-hidden">
@@ -399,178 +365,7 @@ const allArticles = articleMatches.map(match => {
         </div>
       </div>
     </footer>
+    <!-- Scroll animations -->
+    <PageAnimations client:load />
   </main>
 </Layout>
-
-<script>
-  import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  // Dynamic Header Color
-  const header = document.querySelector('#main-header');
-  const lightSections = ['#identity-section', '#projects-section', '#project-provoke', '#project-journal', '#writing-section', 'footer'];
-
-  lightSections.forEach((selector) => {
-    ScrollTrigger.create({
-      trigger: selector,
-      start: "top 50px",
-      end: "bottom 50px",
-      onEnter: () => header?.setAttribute('data-theme', 'light'),
-      onLeave: () => header?.setAttribute('data-theme', 'dark'),
-      onEnterBack: () => header?.setAttribute('data-theme', 'light'),
-      onLeaveBack: () => header?.setAttribute('data-theme', 'dark'),
-    });
-  });
-
-  // Hide header after hero
-  ScrollTrigger.create({
-    trigger: "#identity-section",
-    start: "top 100px",
-    onEnter: () => gsap.to(header, { yPercent: -100, autoAlpha: 0, duration: 0.5, ease: "power2.inOut" }),
-    onLeaveBack: () => gsap.to(header, { yPercent: 0, autoAlpha: 1, duration: 0.5, ease: "power2.inOut" }),
-  });
-
-
-
-  // Writing Section Reveals
-  if (document.querySelectorAll("#writing-section a").length > 0) {
-    gsap.from("#writing-section a", {
-      y: 30,
-      duration: 1,
-      stagger: 0.1,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: "#writing-section",
-        start: "top bottom-=50",
-        toggleActions: "play none none reverse"
-      }
-    });
-  }
-
-  // Project Section Reveals
-  const projectSections = ['#featured-project', '#project-provoke', '#project-journal'];
-  projectSections.forEach((selector) => {
-    const section = document.querySelector(selector);
-    if (!section) return;
-
-    // Reveal images
-    const img = section.querySelector('img');
-    if (img) {
-      gsap.from(img, {
-        scale: 1.1,
-        opacity: 0.6,
-        duration: 1.4,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: img,
-          start: "top bottom-=100",
-          toggleActions: "play none none reverse"
-        }
-      });
-    }
-
-    // Reveal text elements
-    const texts = section.querySelectorAll('h2, p, .flex.flex-col.gap-1');
-    if (texts.length > 0) {
-      gsap.from(texts, {
-        y: 40,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.08,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: section,
-          start: "top bottom-=50",
-          toggleActions: "play none none reverse"
-        }
-      });
-    }
-  });
-
-  // Marquee — manual rAF loop (GSAP repeat:-1 breaks with negative timeScale)
-  const marqueeGroups = document.querySelectorAll('.marquee-group');
-
-  if (marqueeGroups.length > 0) {
-    let xPos = 0;
-    let speed = -1;       // current speed (px per frame)
-    let targetSpeed = -1; // lerp target
-
-    const firstGroup = marqueeGroups[0] as HTMLElement;
-    let groupWidth = firstGroup.offsetWidth;
-
-    // Recalculate on resize
-    window.addEventListener('resize', () => {
-      groupWidth = firstGroup.offsetWidth;
-    });
-
-    function tick() {
-      // Smooth lerp toward target speed
-      speed += (targetSpeed - speed) * 0.05;
-
-      xPos += speed;
-
-      // Seamless wrap in both directions
-      if (xPos <= -groupWidth) xPos += groupWidth;
-      if (xPos >= 0) xPos -= groupWidth;
-
-      marqueeGroups.forEach((g) => {
-        (g as HTMLElement).style.transform = `translateX(${xPos}px)`;
-      });
-
-      requestAnimationFrame(tick);
-    }
-
-    requestAnimationFrame(tick);
-
-    // Flip direction based on scroll
-    ScrollTrigger.create({
-      onUpdate: (self) => {
-        if (self.direction !== 0) {
-          // Scroll down → marquee moves right, scroll up → left
-          targetSpeed = self.direction * 1;
-        }
-      }
-    });
-  }
-
-  // Refresh ScrollTrigger to account for pinning height changes
-  window.addEventListener('load', () => ScrollTrigger.refresh());
-</script>
-
-<style>
-  .project-card h3 {
-    text-transform: none; /* Keep titles readable */
-    font-weight: 400;
-  }
-
-  /* Responsive clamp for hero title */
-  @media (max-width: 768px) {
-    h1 {
-      font-size: 5rem;
-    }
-  }
-
-  /* Header Theme Styles */
-  #main-header[data-theme="light"] nav {
-    color: var(--color-primary); /* Obsidian Ink / Dark */
-  }
-
-  #main-header[data-theme="dark"] nav {
-    color: white;
-  }
-
-  #main-header nav {
-    transition: color 0.5s ease;
-  }
-
-  .nav-arrow {
-    display: inline-block;
-    transition: transform 0.3s ease;
-  }
-
-  .nav-link:hover .nav-arrow {
-    transform: translate(2px, -2px);
-  }
-</style>

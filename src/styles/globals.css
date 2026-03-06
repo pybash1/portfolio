@@ -5,6 +5,7 @@
   src: url('/fonts/PPLocomotiveNew-Light.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -12,6 +13,7 @@
   src: url('/fonts/HelveticaNowDisplay-Regular.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -19,6 +21,7 @@
   src: url('/fonts/HelveticaNowDisplay-Medium.woff2') format('woff2');
   font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -26,6 +29,7 @@
   src: url('/fonts/HelveticaNowDisplay-Bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -33,6 +37,7 @@
   src: url('/fonts/HelveticaNowDisplay-Black.woff2') format('woff2');
   font-weight: 900;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
@@ -40,6 +45,7 @@
   src: url('/fonts/HW-Cigars.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @theme {
@@ -103,5 +109,35 @@
 
   .lenis.lenis-scrolling iframe {
     pointer-events: none;
+  }
+}
+
+/* Header theme switching (React component, must be global) */
+#main-header[data-theme="light"] nav {
+  color: var(--color-primary);
+}
+
+#main-header[data-theme="dark"] nav {
+  color: white;
+}
+
+#main-header nav {
+  transition: color 0.5s ease;
+}
+
+/* Nav arrow animation */
+.nav-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.nav-link:hover .nav-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* Responsive hero title */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 5rem;
   }
 }
