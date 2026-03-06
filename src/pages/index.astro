@@ -46,23 +46,23 @@ const allArticles = articleMatches.map(match => {
         <div class="fixed inset-0 bg-[url('/site-bg.webp')] bg-cover bg-center"></div>
       </div>
 
-      <div class="relative z-10 text-white flex items-end w-full justify-end">
-        <div class="flex flex-col leading-[1.1] font-medium">
-          <h1 class="text-9xl">
+      <div class="relative z-10 text-white flex items-end w-full justify-center md:justify-end">
+        <div class="flex flex-col leading-[1.1] font-medium text-center md:text-left">
+          <h1 class="text-[clamp(4rem,18vw,9rem)]">
             Making
           </h1>
-          <h1 class="text-9xl">
+          <h1 class="text-[clamp(4rem,18vw,9rem)]">
             Things
           </h1>
-          <h1 class="text-9xl">
+          <h1 class="text-[clamp(4rem,18vw,9rem)]">
             Happen.
           </h1>
         </div>
       </div>
 
       <div class="absolute bottom-10 left-6 md:left-10 right-6 md:right-10 flex flex-col md:flex-row justify-between items-end gap-12 text-white">
-        <div class="max-w-[440px] hidden md:block">
-          <p class="text-[21px] font-medium leading-[1.3] opacity-90">
+        <div class="max-w-[440px]">
+          <p class="text-[14px] md:text-[21px] font-medium leading-[1.4] opacity-80 md:opacity-90">
             I try to build things. Some work, some don't but that's never really been the point. Engineering because why not? I want to change the world - delusional but oh well.
           </p>
         </div>
@@ -105,7 +105,7 @@ const allArticles = articleMatches.map(match => {
                 </p>
               </div>
             </div>
-            <div class="relative w-full md:w-2/3 aspect-[4/5] bg-black/5 overflow-hidden justify-self-center mt-10 md:mt-20 self-start">
+            <div class="hidden md:block relative w-full md:w-2/3 aspect-[4/5] bg-black/5 overflow-hidden justify-self-center mt-10 md:mt-20 self-start">
                <Image src={siteBg} alt="Environment" width={700} loading="lazy" decoding="async" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
             </div>
           </div>
@@ -304,7 +304,7 @@ const allArticles = articleMatches.map(match => {
                 <span class="text-[10px] uppercase tracking-widest opacity-40 font-sans transition-opacity duration-500 group-hover:opacity-100">Journal / {article.displayDate}</span>
                 <h3 class="text-3xl md:text-6xl font-serif tracking-tight transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] origin-left group-hover:-skew-x-12">{article.title}</h3>
               </div>
-              <div class="flex items-center gap-4 transition-all duration-500 opacity-20 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0">
+              <div class="hidden md:flex items-center gap-4 transition-all duration-500 opacity-20 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0">
                 <span class="text-xs uppercase tracking-widest font-sans">Read Article</span>
                 <svg viewBox="0 0 24 24" class="w-6 h-6 border border-primary/20 rounded-full p-1 transition-transform duration-500 group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M7 17L17 7M17 7H7M17 7V17" />
@@ -327,15 +327,15 @@ const allArticles = articleMatches.map(match => {
 
 
     <!-- Footer -->
-    <footer class="pt-40 pb-8 bg-bg editorial-container relative z-10">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-y-20">        
-        <div class="md:col-span-8">
-          <h2 class="text-[clamp(3rem,10vw,12rem)] leading-[1.3] tracking-tighter italic font-serif flex flex-col">
+    <footer class="pt-20 md:pt-40 pb-8 bg-bg editorial-container relative z-10">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-y-16 md:gap-y-20">        
+        <div class="md:col-span-8 text-center md:text-left">
+          <h2 class="text-[clamp(3.5rem,12vw,12rem)] leading-[1.2] tracking-tighter italic font-serif flex flex-col items-center md:items-start">
             <span class="flex items-baseline">
-              <span class="font-fancy text-[clamp(6rem,14vw,16rem)] leading-[0.5]">L&nbsp;</span>et's make
+              <span class="font-fancy text-[clamp(7rem,16vw,16rem)] leading-[0.5]">L&nbsp;</span>et's make
             </span>
-            <span class="ml-[5vw]">something</span>
-            <span class="ml-[10vw]">wonderful.</span>
+            <span class="md:ml-[5vw]">something</span>
+            <span class="md:ml-[10vw]">wonderful.</span>
           </h2>
         </div>
 
