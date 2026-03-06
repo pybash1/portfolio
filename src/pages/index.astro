@@ -106,7 +106,7 @@ const allArticles = articleMatches.map(match => {
               </div>
             </div>
             <div class="relative w-full md:w-2/3 aspect-[4/5] bg-black/5 overflow-hidden justify-self-center mt-10 md:mt-20 self-start">
-               <Image src={siteBg} alt="Environment" width={920} loading="lazy" decoding="async" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
+               <Image src={siteBg} alt="Environment" width={700} loading="lazy" decoding="async" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ const allArticles = articleMatches.map(match => {
     </section>
 
     <!-- Projects Section (Marquee) -->
-    <MarqueeSection client:load />
+    <MarqueeSection client:idle />
 
     <!-- Featured Project (Orange) -->
     <section id="featured-project" class="bg-accent text-bg relative z-10 overflow-hidden">
@@ -135,7 +135,7 @@ const allArticles = articleMatches.map(match => {
               <Image
                 src={harvenceImg}
                 alt="Harvence"
-                width={960}
+                width={800}
                 loading="lazy"
                 decoding="async"
                 class="w-full h-auto rounded-sm"
@@ -182,7 +182,7 @@ const allArticles = articleMatches.map(match => {
             <Image
               src={provokeImg}
               alt="Provoke — Intelligent Web Crawler"
-              width={960}
+              width={800}
               loading="lazy"
               decoding="async"
               class="w-full h-auto object-cover"
@@ -246,7 +246,7 @@ const allArticles = articleMatches.map(match => {
           <Image
             src={curiusImg}
             alt="Curius"
-            width={1200}
+            width={1000}
             loading="lazy"
             decoding="async"
             class="w-full md:w-3/4 h-auto rounded-sm"
@@ -369,6 +369,6 @@ const allArticles = articleMatches.map(match => {
       </div>
     </footer>
     <!-- Scroll animations -->
-    <PageAnimations client:load />
+    <PageAnimations client:idle />
   </main>
 </Layout>

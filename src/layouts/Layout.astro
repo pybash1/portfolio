@@ -18,6 +18,11 @@ const { title } = Astro.props;
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <!-- Preload critical fonts to avoid render-blocking -->
+    <link rel="preload" href="/fonts/PPLocomotiveNew-Light.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/HelveticaNowDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/HelveticaNowDisplay-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/HW-Cigars.woff2" as="font" type="font/woff2" crossorigin />
     <slot name="head" />
   </head>
   <body class="bg-transparent text-primary selection:bg-accent selection:text-white overflow-x-hidden">
