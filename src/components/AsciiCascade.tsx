@@ -256,11 +256,12 @@ export default function AsciiCascade() {
           const accentNoise = hash(col, row, 17);
           const accentDetail = Math.max(glassesArea * darkFeature, jawLine * 0.58, mouthLine * 0.5, imageEdge * 0.46);
           const heat = accentDetail > 0.42 && accentNoise < 0.18;
-          const alpha = clamp(0.02 + density * 0.68 + features * 0.28, 0, heat ? 0.65 : 0.92);
+          // foreground base ensures bright skin tones are visible, not just dark features
+          const alpha = clamp(foreground * 0.5 + density * 0.88 + features * 0.48, 0, heat ? 0.88 : 0.99);
 
           ctx.fillStyle = heat
             ? `rgba(255, 91, 29, ${alpha * 0.88})`
-            : `rgba(245, 242, 232, ${alpha})`;
+            : `rgba(255, 255, 255, ${alpha})`;
           ctx.fillText(glyph, px, py);
         }
       }

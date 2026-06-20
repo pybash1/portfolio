@@ -117,34 +117,34 @@ const principles = [
             >
               <div class="flex items-center justify-between px-4 md:px-5 py-2.5 border-b border-white/[0.08] bg-white/[0.03]">
                 <div class="flex items-center gap-3">
-                  <span class="text-white/35 text-[9px]">[{project.num}]</span>
+                  <span class="text-white/55 text-[9px]">[{project.num}]</span>
                   <span class="text-[11px] md:text-[13px] tracking-[0.1em] text-white">{project.name}</span>
-                  <span class="text-[9px] text-white/40 tracking-widest hidden md:inline">— {project.stack}</span>
+                  <span class="text-[9px] text-white/58 tracking-widest hidden md:inline">— {project.stack}</span>
                 </div>
                 <div class="flex items-center gap-4">
-                  <span class={`text-[9px] tracking-widest uppercase ${project.status === 'Live' ? 'text-accent' : 'text-white/45'}`}>
+                  <span class={`text-[9px] tracking-widest uppercase ${project.status === 'Live' ? 'text-accent' : 'text-white/62'}`}>
                     {project.status}
                   </span>
-                  <span class="text-white/35 text-[9px] hidden md:inline">{project.year}</span>
+                  <span class="text-white/55 text-[9px] hidden md:inline">{project.year}</span>
                 </div>
               </div>
               <div class="px-4 md:px-5 py-4 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_10rem] gap-4 md:gap-8 md:items-center">
-                <p class="text-[11px] leading-[2] text-white/62 max-w-[620px]">{project.description}</p>
+                <p class="text-[11px] leading-[2] text-white/72 max-w-[620px]">{project.description}</p>
                 <div class="md:justify-self-end md:self-center">
                   {project.link ? (
                     <a
                       href={project.link}
                       target="_blank"
                       rel="noreferrer"
-                      class="group inline-flex h-8 items-center justify-end gap-2 text-[9px] uppercase tracking-[0.22em] text-white/50 hover:text-white/90 transition-colors duration-300"
+                      class="group inline-flex h-8 items-center justify-end gap-2 text-[9px] uppercase tracking-[0.22em] text-white/65 hover:text-white transition-colors duration-300"
                     >
                       <span>{project.linkText}</span>
-                      <svg viewBox="0 0 24 24" class="w-3 h-3 text-white/35 transition-all duration-300 group-hover:text-accent group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <svg viewBox="0 0 24 24" class="w-3 h-3 text-white/50 transition-all duration-300 group-hover:text-accent group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
                         <path d="M7 17L17 7M17 7H7M17 7V17" />
                       </svg>
                     </a>
                   ) : (
-                    <span class="inline-flex h-8 items-center text-[9px] uppercase tracking-[0.22em] text-white/30">Coming Soon</span>
+                    <span class="inline-flex h-8 items-center text-[9px] uppercase tracking-[0.22em] text-white/48">Coming Soon</span>
                   )}
                 </div>
               </div>
@@ -181,10 +181,10 @@ const principles = [
           </div>
 
           <!-- Principles list -->
-          <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.08em] text-white/50 border-t border-white/[0.1] pt-6 md:pt-10 flex flex-col gap-0.5">
+          <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.08em] text-white/65 border-t border-white/[0.1] pt-6 md:pt-10 flex flex-col gap-0.5">
             {principles.map((p, i) => (
-              <div class="flex gap-4 py-1.5 group hover:text-white/85 transition-colors duration-200 cursor-default leading-[1.7]">
-                <span class="text-accent/60 group-hover:text-accent transition-colors shrink-0 tabular-nums">
+              <div class="flex gap-4 py-1.5 group hover:text-white transition-colors duration-200 cursor-default leading-[1.7]">
+                <span class="text-accent/80 group-hover:text-accent transition-colors shrink-0 tabular-nums">
                   [{String(i + 1).padStart(2, "0")}]
                 </span>
                 <span>{p}</span>
@@ -210,12 +210,12 @@ const principles = [
               rel="noreferrer"
               class="group -mx-3 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-8 px-3 py-4 border-b border-white/[0.08] hover:border-white/[0.18] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] hover:bg-white/[0.025] transition-all duration-300"
             >
-              <h3 class="font-mono text-sm md:text-[15px] text-white/68 group-hover:text-white group-hover:translate-x-1 transition-all duration-300 tracking-tight">
+              <h3 class="font-mono text-sm md:text-[15px] text-white/82 group-hover:text-white group-hover:translate-x-1 transition-all duration-300 tracking-tight">
                 {article.title}
               </h3>
               <div class="flex items-center gap-4 shrink-0">
-                <span class="font-mono text-[9px] text-white/38 group-hover:text-accent uppercase tracking-widest transition-colors duration-300">{article.displayDate}</span>
-                <svg viewBox="0 0 24 24" class="w-3 h-3 text-white/30 group-hover:text-white/70 transition-all duration-300 group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
+                <span class="font-mono text-[9px] text-white/55 group-hover:text-accent uppercase tracking-widest transition-colors duration-300">{article.displayDate}</span>
+                <svg viewBox="0 0 24 24" class="w-3 h-3 text-white/45 group-hover:text-white/80 transition-all duration-300 group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M7 17L17 7M17 7H7M17 7V17" />
                 </svg>
               </div>
@@ -224,8 +224,8 @@ const principles = [
         </div>
         <div class="mt-7">
           <a href="https://journal.pybash.xyz/" target="_blank" rel="noreferrer"
-            class="group font-mono text-[9px] uppercase tracking-[0.3em] text-white/38 hover:text-white/75 transition-colors duration-300 flex items-center gap-3">
-            <span class="border-b border-white/15 group-hover:border-white/40 pb-px">All Articles</span>
+            class="group font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 hover:text-white/85 transition-colors duration-300 flex items-center gap-3">
+            <span class="border-b border-white/25 group-hover:border-white/55 pb-px">All Articles</span>
             <svg viewBox="0 0 24 24" class="w-2.5 h-2.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M5 12h14m-7-7l7 7-7 7" />
             </svg>
@@ -246,15 +246,8 @@ const principles = [
           </span>
         </h2>
         <div class="flex flex-col md:flex-row gap-2 md:gap-6 font-mono text-[9px] tracking-widest border-t border-white/[0.08] pt-7">
-          <a href="mailto:hi@pybash.xyz" class="text-white/55 hover:text-white transition-colors duration-300 uppercase">hi@pybash.xyz</a>
-          <a href="https://github.com/pybash1" target="_blank" rel="noreferrer" class="text-white/55 hover:text-white transition-colors duration-300 uppercase">@pybash1</a>
-          <a href="https://x.com/py_bash1" target="_blank" rel="noreferrer" class="text-white/55 hover:text-white transition-colors duration-300 uppercase">@py_bash1</a>
-          <a href="https://linkedin.com/in/ananjanmitra" target="_blank" rel="noreferrer" class="text-white/55 hover:text-white transition-colors duration-300 uppercase">LinkedIn</a>
-          <a href="https://instagram.com/ananjan_" target="_blank" rel="noreferrer" class="text-white/55 hover:text-white transition-colors duration-300 uppercase">Instagram</a>
-        </div>
-        <div class="mt-10 font-mono text-[9px] uppercase tracking-[0.2em] text-white/18 flex justify-between">
-          <span>Designed for Impact</span>
-          <span>© 2026</span>
+          <a href="mailto:hi@pybash.xyz" class="text-white/70 hover:text-white transition-colors duration-300 uppercase">hi@pybash.xyz</a>
+          <a href="https://linkedin.com/in/ananjanmitra" target="_blank" rel="noreferrer" class="text-white/70 hover:text-white transition-colors duration-300 uppercase">LinkedIn</a>
         </div>
       </div>
     </footer>

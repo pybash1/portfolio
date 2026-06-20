@@ -10,27 +10,17 @@ export default function SiteHeader() {
           Ananjan Mitra
         </div>
         <div className="hidden md:block text-center opacity-40 hover:opacity-90 transition-opacity duration-300">
-          <a
-            href="https://github.com/pybash1"
-            target="_blank"
-            rel="noreferrer"
-            className="nav-link"
-          >
+          <a href="https://github.com/pybash1" target="_blank" rel="noreferrer" className="nav-link">
             GitHub <span className="nav-arrow">↗</span>
           </a>
         </div>
         <div className="hidden md:block text-center opacity-40 hover:opacity-90 transition-opacity duration-300">
-          <a
-            href="https://instagram.com/ananjan_"
-            target="_blank"
-            rel="noreferrer"
-            className="nav-link"
-          >
+          <a href="https://instagram.com/ananjan_" target="_blank" rel="noreferrer" className="nav-link">
             Instagram <span className="nav-arrow">↗</span>
           </a>
         </div>
         <div className="hidden md:block text-center opacity-40 hover:opacity-90 transition-opacity duration-300">
-          <a href="https://x.com/py_bash1" className="nav-link">
+          <a href="https://x.com/py_bash1" target="_blank" rel="noreferrer" className="nav-link">
             Twitter <span className="nav-arrow">↗</span>
           </a>
         </div>
