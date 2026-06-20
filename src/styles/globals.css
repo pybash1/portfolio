@@ -33,14 +33,6 @@
 }
 
 @font-face {
-  font-family: 'Helvetica Now Display';
-  src: url('/fonts/HelveticaNowDisplay-Black.woff2') format('woff2');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'HW Cigars';
   src: url('/fonts/HW-Cigars.woff2') format('woff2');
   font-weight: 400;
@@ -48,27 +40,40 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Berkeley Mono';
+  src: url('/fonts/Berkeley-Mono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
-  /* Colors in OKLCH */
-  --color-primary: oklch(18.67% 0.005 60.1);
-  /* Obsidian Ink */
+  /* Flipped for dark terminal theme */
+  --color-primary: oklch(88% 0.004 85);
   --color-accent: oklch(0.684 0.212 40.592);
-  --color-bg: oklch(96.1% 0.012 85.1);
-  /* Warm Editorial Cream */
+  --color-bg: oklch(9% 0.004 85);
   --color-white: #ffffff;
 
-  /* Font Family */
   --font-serif: "PP Locomotive New", Georgia, serif;
   --font-sans: "Helvetica Now Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-fancy: "HW Cigars", "PP Locomotive New", Georgia, serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-mono: "Berkeley Mono", "JetBrains Mono", ui-monospace, Menlo, Monaco, "Cascadia Code", "Fira Code", "Courier New", monospace;
 
   --ease-editorial: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @layer base {
   html {
-    background-color: #000;
+    background-color: var(--color-bg);
     color: var(--color-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -77,22 +82,14 @@
   body {
     margin: 0;
     padding: 0;
-    font-family: var(--font-sans);
-    background: transparent !important;
+    font-family: var(--font-mono);
+    background-color: var(--color-bg);
   }
 }
 
 @layer components {
-  .grid-line-h {
-    @apply border-t border-[--color-primary] w-full;
-  }
-
-  .grid-line-v {
-    @apply border-l border-[--color-primary] h-full;
-  }
-
   .editorial-container {
-    @apply px-4 md:px-8 max-w-[1800px] mx-auto;
+    @apply px-4 md:px-8 max-w-[1400px] mx-auto;
   }
 
   .lenis.lenis-smooth {
@@ -112,20 +109,17 @@
   }
 }
 
-/* Header theme switching (React component, must be global) */
-#main-header[data-theme="light"] nav {
-  color: var(--color-primary);
+/* Cursor blink */
+.cursor-blink {
+  animation: cursorBlink 1.2s step-end infinite;
 }
 
-#main-header[data-theme="dark"] nav {
-  color: white;
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
-#main-header nav {
-  transition: color 0.5s ease;
-}
-
-/* Nav arrow animation */
+/* Nav arrow */
 .nav-arrow {
   display: inline-block;
   transition: transform 0.3s ease;
@@ -135,9 +129,21 @@
   transform: translate(2px, -2px);
 }
 
-/* Responsive hero title */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 5rem;
-  }
+/* ASCII section divider */
+.ascii-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: oklch(55% 0 0);
+}
+
+.ascii-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: oklch(20% 0 0);
 }

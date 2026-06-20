@@ -2,18 +2,18 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const ITEMS = Array.from({ length: 6 });
+const ITEMS = Array.from({ length: 5 });
 
 function MarqueeItems() {
   return (
     <>
       {ITEMS.map((_, i) => (
-        <div key={i} className="flex items-center gap-20">
-          <h2 className="text-6xl md:text-8xl font-serif tracking-tighter leading-none m-0">
+        <div key={i} className="flex items-center gap-16 shrink-0">
+          <span className="font-mono text-4xl md:text-6xl tracking-[0.08em] uppercase leading-none whitespace-nowrap">
             Selected Work
-          </h2>
-          <span className="font-fancy text-6xl md:text-8xl leading-none select-none flex items-center justify-center translate-y-[0.05em]">
-            &bull;
+          </span>
+          <span className="font-mono text-accent text-2xl md:text-4xl leading-none select-none opacity-60">
+            //
           </span>
         </div>
       ))}
@@ -79,18 +79,18 @@ export default function Marquee() {
   return (
     <section
       id="projects-section"
-      className="py-10 bg-bg text-accent relative z-10 overflow-hidden border-y-2 border-accent"
+      className="py-8 bg-bg text-primary relative z-10 overflow-hidden border-y border-white/[0.08]"
     >
-      <div className="marquee-wrapper flex whitespace-nowrap overflow-hidden py-4">
+      <div className="marquee-wrapper flex whitespace-nowrap overflow-hidden py-3">
         <div
           ref={group1Ref}
-          className="marquee-group flex items-center pr-20 shrink-0 gap-20 will-change-transform"
+          className="marquee-group flex items-center pr-16 shrink-0 gap-16 will-change-transform"
         >
           <MarqueeItems />
         </div>
         <div
           ref={group2Ref}
-          className="marquee-group flex items-center pr-20 shrink-0 gap-20 will-change-transform"
+          className="marquee-group flex items-center pr-16 shrink-0 gap-16 will-change-transform"
           aria-hidden="true"
         >
           <MarqueeItems />
