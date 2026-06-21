@@ -23,7 +23,7 @@ const allArticles = articleMatches.map(match => {
     date: new Date(pubDate),
     displayDate: new Date(pubDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
   };
-}).sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 5);
+}).sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 4);
 
 const items = [
   {
