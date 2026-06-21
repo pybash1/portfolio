@@ -1,10 +1,18 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Berkeley Mono";
+  src: url("/fonts/Berkeley-Mono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-primary: oklch(88% 0.004 85);
   --color-accent: oklch(0.684 0.212 40.592);
   --color-bg: oklch(9% 0.004 85);
   --color-white: #ffffff;
 
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
