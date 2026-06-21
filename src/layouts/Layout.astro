@@ -4,24 +4,25 @@ import SmoothScroll from "../components/SmoothScroll";
 
 interface Props {
   title: string;
+  preloadPortrait?: boolean;
 }
 
-const { title } = Astro.props;
+const { title, preloadPortrait = false } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth bg-bg text-primary">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content="Making things, but with more intention" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" href="/favicon.ico" />
-    <link rel="preload" as="image" href="/portrait.webp" type="image/webp" />
+    {preloadPortrait && <link rel="preload" as="image" href="/portrait.webp" type="image/webp" />}
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <slot name="head" />
   </head>
-  <body class="bg-transparent text-primary selection:bg-accent selection:text-white overflow-x-hidden">
+  <body class="m-0 min-h-screen overflow-x-hidden bg-bg p-0 font-mono text-primary antialiased selection:bg-accent selection:text-white">
     <SmoothScroll client:load />
     <slot />
   </body>

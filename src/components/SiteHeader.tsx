@@ -10,18 +10,18 @@ export default function SiteHeader() {
           Ananjan Mitra
         </div>
         <div className="hidden md:block text-center opacity-40 hover:opacity-90 transition-opacity duration-300">
-          <a href="https://github.com/pybash1" target="_blank" rel="noreferrer" className="nav-link">
-            GitHub <span className="nav-arrow">↗</span>
+          <a href="https://github.com/pybash1" target="_blank" rel="noreferrer" className="group">
+            GitHub <span className="inline-block transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
           </a>
         </div>
         <div className="hidden md:block text-center opacity-40 hover:opacity-90 transition-opacity duration-300">
-          <a href="https://instagram.com/ananjan_" target="_blank" rel="noreferrer" className="nav-link">
-            Instagram <span className="nav-arrow">↗</span>
+          <a href="https://instagram.com/ananjan_" target="_blank" rel="noreferrer" className="group">
+            Instagram <span className="inline-block transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
           </a>
         </div>
         <div className="hidden md:block text-center opacity-40 hover:opacity-90 transition-opacity duration-300">
-          <a href="https://x.com/py_bash1" target="_blank" rel="noreferrer" className="nav-link">
-            Twitter <span className="nav-arrow">↗</span>
+          <a href="https://x.com/py_bash1" target="_blank" rel="noreferrer" className="group">
+            Twitter <span className="inline-block transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
           </a>
         </div>
         <div className="text-right opacity-30 text-[10px]">&copy; 2026</div>
