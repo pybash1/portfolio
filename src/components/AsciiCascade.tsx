@@ -31,36 +31,6 @@ function ellipse(x: number, y: number, cx: number, cy: number, rx: number, ry: n
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-function drawWaitingField(
-  ctx: CanvasRenderingContext2D,
-  cols: number,
-  rows: number,
-  cellX: number,
-  cellY: number,
-  time: number
-) {
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      const px = col * cellX + cellX * 0.5;
-      const py = row * cellY + cellY * 0.5;
-      const x = col / Math.max(1, cols - 1);
-      const y = row / Math.max(1, rows - 1);
-      const ring = Math.abs(ellipse(x, y, 0.5, 0.5, 0.34, 0.44) - (0.6 + Math.sin(time * 0.9) * 0.08));
-      const diagonal = Math.abs((x + y * 0.72 + time * 0.035) % 0.22 - 0.11);
-      const signal = Math.max(1 - smoothstep(0, 0.024, ring), 1 - smoothstep(0, 0.018, diagonal));
-      const noise = hash(col, row, Math.floor(time * 8));
-
-      if (signal < 0.18 || noise > 0.62) continue;
-
-      const glyph = GLYPHS[Math.floor(signal * (GLYPHS.length - 1))] ?? ".";
-      const heat = signal > 0.72 && noise < 0.18;
-      ctx.fillStyle = heat
-        ? `rgba(255, 91, 29, ${0.28 + signal * 0.58})`
-        : `rgba(226, 224, 216, ${0.14 + signal * 0.55})`;
-      ctx.fillText(glyph, px, py);
-    }
-  }
-}
 
 export default function AsciiCascade() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -161,7 +131,6 @@ export default function AsciiCascade() {
       const portrait = portraitRef.current;
 
       if (!portrait) {
-        drawWaitingField(ctx, cols, rows, cellX, cellY, t);
         rafRef.current = requestAnimationFrame(draw);
         return;
       }

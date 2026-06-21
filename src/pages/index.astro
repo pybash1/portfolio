@@ -25,46 +25,96 @@ const allArticles = articleMatches.map(match => {
   };
 }).sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 5);
 
-const projects = [
+const items = [
   {
     num: "01",
-    name: "HARVENCE",
-    stack: "React Native",
-    year: "2024",
+    name: "KORA",
+    subtitle: "Astro / Go / Plasmo",
+    period: "2026",
     status: "Live",
-    description: "Eat healthier without thinking about it. Calorie tracking and instant barcode scanning for nutritional info before you even buy it.",
-    link: "https://harvence.pybash.xyz",
+    description: "Read, save, and annotate the web — with people you trust.",
+    bullets: [
+      "Bookmarks, highlights, and notes with a Tiptap editor",
+      "RSS reader, podcast support, and social following built in",
+      "Cross-browser extension (Chrome, Firefox, Edge) via Plasmo",
+    ],
+    badge: undefined,
+    link: "https://kora.sh",
     linkText: "View Project",
   },
   {
     num: "02",
-    name: "PROVOKE",
-    stack: "Python / Redis",
-    year: "2026",
-    status: "In Dev",
-    description: "A search engine built exclusively for great writing. Asynchronous large-scale web crawling with a trained content classifier. A small language model is next.",
-    link: "https://github.com/pybash1/provoke",
-    linkText: "View on GitHub",
-  },
-  {
-    num: "03",
-    name: "CURIUS",
-    stack: "Astro / Go",
-    year: "2026",
-    status: "Soon",
-    description: "An open source alternative to Curius. Built to simplify peer-based reading habits and encourage going down the right rabbit holes.",
+    name: "GRASS LABS",
+    subtitle: "Engineer",
+    period: "2024 — Present",
+    status: "Active",
+    description: "Part-time engineering role building products across the stack.",
+    bullets: [],
+    badge: undefined,
     link: undefined,
     linkText: undefined,
   },
+  {
+    num: "03",
+    name: "RIFT",
+    subtitle: "Founding Engineer",
+    period: "2024",
+    status: "Past",
+    description: "Creator platform empowering creators with micropayments, token-gating, and reward systems.",
+    bullets: [
+      "Built community engagement tools for the new creator economy",
+      "Received grant from Superteam",
+    ],
+    badge: "Superteam Grant",
+    link: undefined,
+    linkText: undefined,
+  },
+  {
+    num: "04",
+    name: "HARVENCE",
+    subtitle: "React Native",
+    period: "2024",
+    status: "Live",
+    description: "Calorie tracking and nutrition lookup — before you even buy it.",
+    bullets: [
+      "Instant barcode scanning with full nutritional breakdown",
+      "Zero-friction logging UX built around daily habit formation",
+      "React Native, built for iOS and Android",
+    ],
+    badge: undefined,
+    link: "https://harvence.pybash.xyz",
+    linkText: "View Project",
+  },
+  {
+    num: "05",
+    name: "BITPLANET",
+    subtitle: "Frontend Developer",
+    period: "2023 — 2024",
+    status: "Past",
+    description: "Core web app experience for a social chat platform.",
+    bullets: [
+      "Implemented profile pages, notifications, and onboarding flow",
+      "Built a robust multi-level autocomplete system with paginated fetching",
+      "Improved Feed UI/UX and overall core chat experience",
+    ],
+    badge: undefined,
+    link: undefined,
+    linkText: undefined,
+  },
+  {
+    num: "06",
+    name: "DRIPCRAFT",
+    subtitle: "Solana / React",
+    period: "2024",
+    status: "Live",
+    description: "Solana-based NFT marketplace — burn common NFTs to earn rarer ones, with admin access built from the ground up.",
+    bullets: [],
+    badge: undefined,
+    link: "https://dripcraft.xyz",
+    linkText: "View Project",
+  },
 ];
 
-const principles = [
-  "Loading screens are cheating.",
-  "If it needs explanation, it's bad design.",
-  "Build what you'd use.",
-  "Precision before speed.",
-  "Make it, then make it better.",
-];
 ---
 
 <Layout title="Portfolio — Ananjan Mitra">
@@ -110,43 +160,56 @@ const principles = [
           <div class="flex-1 h-px bg-white/[0.1]"></div>
         </div>
         <div class="flex flex-col gap-2">
-          {projects.map((project) => (
+          {items.map((item) => (
             <div
               class="project-window font-mono border border-white/[0.12] hover:border-white/[0.28] transition-colors duration-500"
               style="opacity: 0; transform: translateY(18px);"
             >
               <div class="flex items-center justify-between px-4 md:px-5 py-2.5 border-b border-white/[0.08] bg-white/[0.03]">
                 <div class="flex items-center gap-3">
-                  <span class="text-white/55 text-[9px]">[{project.num}]</span>
-                  <span class="text-[11px] md:text-[13px] tracking-[0.1em] text-white">{project.name}</span>
-                  <span class="text-[9px] text-white/58 tracking-widest hidden md:inline">— {project.stack}</span>
+                  <span class="text-white/55 text-[9px]">[{item.num}]</span>
+                  <span class="text-[11px] md:text-[13px] tracking-[0.1em] text-white">{item.name}</span>
+                  <span class="text-[9px] text-white/58 tracking-widest hidden md:inline">— {item.subtitle}</span>
+                  {item.badge && (
+                    <span class="text-[8px] tracking-[0.15em] uppercase text-accent/70 border border-accent/30 px-1.5 py-0.5 hidden md:inline">{item.badge}</span>
+                  )}
                 </div>
                 <div class="flex items-center gap-4">
-                  <span class={`text-[9px] tracking-widest uppercase ${project.status === 'Live' ? 'text-accent' : 'text-white/62'}`}>
-                    {project.status}
+                  <span class={`text-[9px] tracking-widest uppercase ${item.status === 'Live' || item.status === 'Active' ? 'text-accent' : 'text-white/62'}`}>
+                    {item.status}
                   </span>
-                  <span class="text-white/55 text-[9px] hidden md:inline">{project.year}</span>
+                  <span class="text-white/55 text-[9px] hidden md:inline">{item.period}</span>
                 </div>
               </div>
-              <div class="px-4 md:px-5 py-4 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_10rem] gap-4 md:gap-8 md:items-center">
-                <p class="text-[11px] leading-[2] text-white/72 max-w-[620px]">{project.description}</p>
-                <div class="md:justify-self-end md:self-center">
-                  {project.link ? (
+              <div class="px-4 md:px-5 py-4 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_10rem] gap-4 md:gap-8 md:items-start">
+                <div>
+                  <p class="text-[11px] leading-[2] text-white/72 max-w-[620px]">{item.description}</p>
+                  {item.bullets.length > 0 && (
+                    <ul class="mt-2 flex flex-col gap-0.5">
+                      {item.bullets.map((b) => (
+                        <li class="flex gap-3 text-[10px] leading-[1.9] text-white/48">
+                          <span class="text-accent/50 shrink-0 mt-[1px]">—</span>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                {item.link && (
+                  <div class="md:justify-self-end md:pt-1">
                     <a
-                      href={project.link}
+                      href={item.link}
                       target="_blank"
                       rel="noreferrer"
                       class="group inline-flex h-8 items-center justify-end gap-2 text-[9px] uppercase tracking-[0.22em] text-white/65 hover:text-white transition-colors duration-300"
                     >
-                      <span>{project.linkText}</span>
+                      <span>{item.linkText}</span>
                       <svg viewBox="0 0 24 24" class="w-3 h-3 text-white/50 transition-all duration-300 group-hover:text-accent group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
                         <path d="M7 17L17 7M17 7H7M17 7V17" />
                       </svg>
                     </a>
-                  ) : (
-                    <span class="inline-flex h-8 items-center text-[9px] uppercase tracking-[0.22em] text-white/48">Coming Soon</span>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
           ))}
@@ -163,31 +226,36 @@ const principles = [
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-14 md:gap-24 items-start">
-          <!-- Statement + bio -->
+          <!-- Heading + bio -->
           <div>
             <h2 class="font-mono uppercase leading-[0.88] tracking-tight overflow-hidden">
               <span class="block text-white" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">
-                <WaveReveal text="BUILDER" client:visible />
+                <WaveReveal text="FOR NOW," client:visible />
               </span>
               <span class="block text-accent" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">
-                <WaveReveal text="OR NOTHING." delay={0.12} client:visible />
+                <WaveReveal text="AT LEAST." delay={0.12} client:visible />
               </span>
             </h2>
             <p class="font-mono text-[11px] leading-[2.3] text-white/60 mt-10 max-w-[360px]">
-              A builder who'd rather make something than talk about it.
-              Comfortable with failure as long as I'm in the process of making.
-              Ambitious but self-aware enough to laugh at my own ambition.
+              I got started trying to build an OS in Python —
+              too niche to find tutorials for, which turned out to be the point.
+              I try to build things. Some work, some don't.
+              I'm never quite satisfied when they do.
             </p>
           </div>
 
-          <!-- Principles list -->
-          <div class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.08em] text-white/65 border-t border-white/[0.1] pt-6 md:pt-10 flex flex-col gap-0.5">
-            {principles.map((p, i) => (
-              <div class="flex gap-4 py-1.5 group hover:text-white transition-colors duration-200 cursor-default leading-[1.7]">
-                <span class="text-accent/80 group-hover:text-accent transition-colors shrink-0 tabular-nums">
-                  [{String(i + 1).padStart(2, "0")}]
-                </span>
-                <span>{p}</span>
+          <!-- Right now — plain stacked lines -->
+          <div class="flex flex-col">
+            {[
+              ["calcutta", "online most of the time"],
+              ["homelab", "repurposed i5, 12 services on WSL2"],
+              ["setup", "self-hosting everything i reasonably can"],
+              ["recently", "broke an obsidian plugin instead of buying an iPhone"],
+              ["status", "contemplating the next thing"],
+            ].map(([key, val]) => (
+              <div class="grid grid-cols-[5rem_1fr] gap-4 py-3.5 border-b border-white/[0.06] font-mono group hover:bg-white/[0.02] transition-colors duration-200 -mx-2 px-2">
+                <span class="text-[9px] uppercase tracking-[0.2em] text-accent/50 pt-[1px]">{key}</span>
+                <span class="text-[11px] text-white/60 group-hover:text-white/80 transition-colors duration-200 leading-[1.7]">{val}</span>
               </div>
             ))}
           </div>
