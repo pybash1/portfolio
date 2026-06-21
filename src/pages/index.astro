@@ -124,13 +124,13 @@ const items = [
     <!-- ─── HERO ─────────────────────────────────────────────────────── -->
     <section class="min-h-screen md:h-screen grid grid-cols-1 md:grid-cols-[minmax(280px,0.78fr)_minmax(0,1.22fr)] px-4 md:px-8 pt-20 pb-10 relative z-10 overflow-hidden gap-8 md:gap-14">
 
-      <div class="relative z-10 flex h-auto md:h-full min-h-0 flex-col justify-center md:justify-end pb-2 md:pb-24 max-w-[520px]">
+      <div class="relative z-10 flex h-auto md:h-full min-h-0 flex-col justify-center md:justify-end pb-2 md:pb-24 max-w-130">
         <div class="font-mono text-[9px] uppercase tracking-[0.32em] text-accent mb-5">~/identity</div>
         <h1 class="font-mono uppercase text-white leading-[0.9] tracking-tight text-[clamp(2.7rem,7vw,6.4rem)]">
           Ananjan<br />
           <span class="text-accent">Mitra</span>
         </h1>
-        <p class="mt-7 max-w-[420px] font-mono text-[11px] md:text-xs leading-[2.1] text-white/65">
+        <p class="mt-7 max-w-105 font-mono text-[11px] md:text-xs leading-[2.1] text-white/65">
           Builder from Kolkata working across apps, systems, search, and interface experiments.
           I care about fast software, strange taste, and making the thing real before explaining it.
         </p>
@@ -153,22 +153,22 @@ const items = [
     </section>
 
     <!-- ─── WORK ──────────────────────────────────────────────────────── -->
-    <section class="py-14 md:py-20 relative z-10 px-4 md:px-8 border-t border-white/[0.08]">
-      <div class="max-w-[1400px] mx-auto">
+    <section class="py-14 md:py-20 relative z-10 px-4 md:px-8 border-t border-white/8">
+      <div class="max-w-350 mx-auto">
         <div class="flex items-center gap-4 mb-8 md:mb-12">
           <span class="font-mono text-[9px] text-accent tracking-[0.3em] uppercase">/* 01 work */</span>
-          <div class="flex-1 h-px bg-white/[0.1]"></div>
+          <div class="flex-1 h-px bg-white/10"></div>
         </div>
         <div class="flex flex-col gap-2">
           {items.map((item) => (
             <div
-              class="project-window font-mono border border-white/[0.12] hover:border-white/[0.28] transition-colors duration-500"
+              class="project-window font-mono border border-white/12 hover:border-white/[0.28] transition-colors duration-500"
               style="opacity: 0; transform: translateY(18px);"
             >
-              <div class="flex items-center justify-between px-4 md:px-5 py-2.5 border-b border-white/[0.08] bg-white/[0.03]">
+              <div class="flex items-center justify-between px-4 md:px-5 py-2.5 border-b border-white/8 bg-white/3">
                 <div class="flex items-center gap-3">
                   <span class="text-white/55 text-[9px]">[{item.num}]</span>
-                  <span class="text-[11px] md:text-[13px] tracking-[0.1em] text-white">{item.name}</span>
+                  <span class="text-[11px] md:text-[13px] tracking-widest text-white">{item.name}</span>
                   <span class="text-[9px] text-white/58 tracking-widest hidden md:inline">— {item.subtitle}</span>
                   {item.badge && (
                     <span class="text-[8px] tracking-[0.15em] uppercase text-accent/70 border border-accent/30 px-1.5 py-0.5 hidden md:inline">{item.badge}</span>
@@ -183,12 +183,12 @@ const items = [
               </div>
               <div class="px-4 md:px-5 py-4 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_10rem] gap-4 md:gap-8 md:items-start">
                 <div>
-                  <p class="text-[11px] leading-[2] text-white/72 max-w-[620px]">{item.description}</p>
+                  <p class="text-[11px] leading-loose text-white/72 max-w-155">{item.description}</p>
                   {item.bullets.length > 0 && (
                     <ul class="mt-2 flex flex-col gap-0.5">
                       {item.bullets.map((b) => (
                         <li class="flex gap-3 text-[10px] leading-[1.9] text-white/48">
-                          <span class="text-accent/50 shrink-0 mt-[1px]">—</span>
+                          <span class="text-accent/50 shrink-0 mt-px">—</span>
                           <span>{b}</span>
                         </li>
                       ))}
@@ -218,11 +218,11 @@ const items = [
     </section>
 
     <!-- ─── PHILOSOPHY ────────────────────────────────────────────────── -->
-    <section class="py-20 md:py-32 relative z-10 px-4 md:px-8 border-t border-white/[0.08]">
-      <div class="max-w-[1400px] mx-auto">
+    <section class="py-20 md:py-32 relative z-10 px-4 md:px-8 border-t border-white/8">
+      <div class="max-w-350 mx-auto">
         <div class="flex items-center gap-4 mb-12 md:mb-20">
           <span class="font-mono text-[9px] text-accent tracking-[0.3em] uppercase">/* 02 philosophy */</span>
-          <div class="flex-1 h-px bg-white/[0.1]"></div>
+          <div class="flex-1 h-px bg-white/10"></div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-14 md:gap-24 items-start">
@@ -236,7 +236,7 @@ const items = [
                 <WaveReveal text="AT LEAST." delay={0.12} client:visible />
               </span>
             </h2>
-            <p class="font-mono text-[11px] leading-[2.3] text-white/60 mt-10 max-w-[360px]">
+            <p class="font-mono text-[11px] leading-[2.3] text-white/60 mt-10 max-w-90">
               I got started trying to build an OS in Python —
               too niche to find tutorials for, which turned out to be the point.
               I try to build things. Some work, some don't.
@@ -253,8 +253,8 @@ const items = [
               ["recently", "broke an obsidian plugin instead of buying an iPhone"],
               ["status", "contemplating the next thing"],
             ].map(([key, val]) => (
-              <div class="grid grid-cols-[5rem_1fr] gap-4 py-3.5 border-b border-white/[0.06] font-mono group hover:bg-white/[0.02] transition-colors duration-200 -mx-2 px-2">
-                <span class="text-[9px] uppercase tracking-[0.2em] text-accent/50 pt-[1px]">{key}</span>
+              <div class="grid grid-cols-[5rem_1fr] gap-4 py-3.5 border-b border-white/6 font-mono group hover:bg-white/2 transition-colors duration-200 -mx-2 px-2">
+                <span class="text-[9px] uppercase tracking-[0.2em] text-accent/50 pt-px">{key}</span>
                 <span class="text-[11px] text-white/60 group-hover:text-white/80 transition-colors duration-200 leading-[1.7]">{val}</span>
               </div>
             ))}
@@ -264,11 +264,11 @@ const items = [
     </section>
 
     <!-- ─── WRITING ───────────────────────────────────────────────────── -->
-    <section class="py-14 md:py-20 relative z-10 px-4 md:px-8 border-t border-white/[0.08]">
-      <div class="max-w-[1400px] mx-auto">
+    <section class="py-14 md:py-20 relative z-10 px-4 md:px-8 border-t border-white/8">
+      <div class="max-w-350 mx-auto">
         <div class="flex items-center gap-4 mb-8 md:mb-12">
           <span class="font-mono text-[9px] text-accent tracking-[0.3em] uppercase">/* 03 writing */</span>
-          <div class="flex-1 h-px bg-white/[0.1]"></div>
+          <div class="flex-1 h-px bg-white/10"></div>
         </div>
         <div class="flex flex-col">
           {allArticles.map((article) => (
@@ -276,7 +276,7 @@ const items = [
               href={article.link}
               target="_blank"
               rel="noreferrer"
-              class="group -mx-3 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-8 px-3 py-4 border-b border-white/[0.08] hover:border-white/[0.18] hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] hover:bg-white/[0.025] transition-all duration-300"
+              class="group -mx-3 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-8 px-3 py-4 border-b border-white/8 hover:border-white/18 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] hover:bg-white/2.5 transition-all duration-300"
             >
               <h3 class="font-mono text-sm md:text-[15px] text-white/82 group-hover:text-white group-hover:translate-x-1 transition-all duration-300 tracking-tight">
                 {article.title}
@@ -303,8 +303,8 @@ const items = [
     </section>
 
     <!-- ─── EOF / CONTACT ────────────────────────────────────────────── -->
-    <footer class="pt-14 pb-10 md:pt-18 md:pb-12 relative z-10 border-t border-white/[0.08] px-4 md:px-8">
-      <div class="max-w-[1400px] mx-auto">
+    <footer class="pt-14 pb-10 md:pt-18 md:pb-12 relative z-10 border-t border-white/8 px-4 md:px-8">
+      <div class="max-w-350 mx-auto">
         <h2 class="font-mono uppercase leading-[0.88] tracking-tight text-white mb-9 overflow-hidden">
           <span class="block" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">
             <WaveReveal text="GET IN" client:visible />
@@ -313,7 +313,7 @@ const items = [
             <WaveReveal text="TOUCH." delay={0.12} client:visible />
           </span>
         </h2>
-        <div class="flex flex-col md:flex-row gap-2 md:gap-6 font-mono text-[9px] tracking-widest border-t border-white/[0.08] pt-7">
+        <div class="flex flex-col md:flex-row gap-2 md:gap-6 font-mono text-[9px] tracking-widest border-t border-white/8 pt-7">
           <a href="mailto:hi@pybash.xyz" class="text-white/70 hover:text-white transition-colors duration-300 uppercase">hi@pybash.xyz</a>
           <a href="https://linkedin.com/in/ananjanmitra" target="_blank" rel="noreferrer" class="text-white/70 hover:text-white transition-colors duration-300 uppercase">LinkedIn</a>
         </div>

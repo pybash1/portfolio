@@ -2,7 +2,7 @@ export default function SiteHeader() {
   return (
     <header
       id="main-header"
-      className="fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-4 border-b border-white/[0.06] bg-bg/70 backdrop-blur-sm"
+      className="fixed top-0 left-0 w-full z-50 px-4 md:px-8 py-4 border-b border-white/6 bg-bg/70 backdrop-blur-sm"
     >
       <nav className="grid grid-cols-2 md:grid-cols-5 font-mono text-white text-[11px] tracking-[0.14em] items-center uppercase">
         <div className="opacity-70">
