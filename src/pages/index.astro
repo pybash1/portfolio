@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import SiteHeader from "../components/SiteHeader";
 import AsciiCascade from "../components/AsciiCascade";
 import WaveReveal from "../components/WaveReveal";
+import EyeReveal from "../components/EyeReveal";
 
 const rssResponse = await fetch("https://journal.pybash.xyz/rss.xml");
 const rssText = await rssResponse.text();
@@ -131,8 +132,9 @@ const items = [
           <span class="text-accent">Mitra</span>
         </h1>
         <p class="mt-7 max-w-105 font-mono text-[11px] md:text-xs leading-[2.1] text-white/65">
-          Builder from Kolkata working across apps, systems, search, and interface experiments.
-          I care about fast software, strange taste, and making the thing real before explaining it.
+          I notice how software feels before I notice what it does.
+          I'll lose an afternoon to the half-second a button waits, the error that blames you instead of helping — the parts most people never name.
+          Usefulness gets it shipped. Taste makes it worth keeping.
         </p>
         <div class="mt-8 grid grid-cols-[auto_1fr] gap-x-5 gap-y-2.5 font-mono text-[9px] uppercase tracking-[0.2em]">
           <span class="text-white/35">loc</span>
@@ -225,37 +227,47 @@ const items = [
           <div class="flex-1 h-px bg-white/10"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-14 md:gap-24 items-start">
-          <!-- Heading + bio -->
-          <div>
-            <h2 class="font-mono uppercase leading-[0.88] tracking-tight overflow-hidden">
-              <span class="block text-white" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">
-                <WaveReveal text="FOR NOW," client:visible />
-              </span>
-              <span class="block text-accent" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">
-                <WaveReveal text="AT LEAST." delay={0.12} client:visible />
-              </span>
-            </h2>
-            <p class="font-mono text-[11px] leading-[2.3] text-white/60 mt-10 max-w-90">
-              I got started trying to build an OS in Python —
-              too niche to find tutorials for, which turned out to be the point.
-              I try to build things. Some work, some don't.
-              I'm never quite satisfied when they do.
+        <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-8 md:gap-14 items-start">
+          <h2 class="font-mono uppercase leading-[0.88] tracking-tight">
+            <span class="block text-white" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">THE PART</span>
+            <EyeReveal client:visible className="block">
+              <span class="block text-accent" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">NOBODY SEES.</span>
+            </EyeReveal>
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10 pt-2 md:pt-3">
+            <p class="font-mono text-[11px] leading-[2.3] text-white/60">
+              A demo takes an afternoon. The six weeks after it — the empty states, the error that explains itself, the half-second a button waits — that is the actual work.
+            </p>
+            <p class="font-mono text-[11px] leading-[2.3] text-white/60">
+              I keep the projects that still feel honest a year later. Everything else was practice, and practice was never the wasted part.
             </p>
           </div>
+        </div>
 
-          <!-- Right now — plain stacked lines -->
+        <div class="mt-14 md:mt-20 font-mono border border-white/12">
+          <div class="flex items-center justify-between px-4 md:px-5 py-2.5 border-b border-white/8 bg-white/3">
+            <div class="flex items-center gap-3">
+              <span class="text-white/55 text-[9px]">[log]</span>
+              <span class="text-[11px] tracking-widest text-white">CURRENT STATE</span>
+            </div>
+            <span class="text-[9px] tracking-widest uppercase text-accent">Live</span>
+          </div>
           <div class="flex flex-col">
             {[
-              ["calcutta", "online most of the time"],
-              ["homelab", "repurposed i5, 12 services on WSL2"],
-              ["setup", "self-hosting everything i reasonably can"],
-              ["recently", "broke an obsidian plugin instead of buying an iPhone"],
-              ["status", "contemplating the next thing"],
-            ].map(([key, val]) => (
-              <div class="grid grid-cols-[5rem_1fr] gap-4 py-3.5 border-b border-white/6 font-mono group hover:bg-white/2 transition-colors duration-200 -mx-2 px-2">
-                <span class="text-[9px] uppercase tracking-[0.2em] text-accent/50 pt-px">{key}</span>
-                <span class="text-[11px] text-white/60 group-hover:text-white/80 transition-colors duration-200 leading-[1.7]">{val}</span>
+              ["25/03", "boot", "booted in Calcutta, no factory reset since"],
+              ["17/08", "policy", "build whatever's cool, sort out the reason later"],
+              ["10/07", "commit", "first line of code, first commit, no idea it'd lead here"],
+              ["25/03", "uptime", "running since 25/03, no reboots logged"],
+              ["18/07", "next", "first semester started, deciding what these six months deserve"],
+            ].map(([time, label, val], i) => (
+              <div class={`grid grid-cols-[3.5rem_5.5rem_1fr] gap-4 px-4 md:px-5 py-3.5 group hover:bg-white/2 transition-colors duration-200 ${i < 4 ? "border-b border-white/6" : ""}`}>
+                <span class="text-[9px] text-white/35 pt-px">{time}</span>
+                <span class="text-[9px] uppercase tracking-[0.2em] text-accent/70 pt-px">{label}</span>
+                <span class="text-[11px] text-white/60 group-hover:text-white/85 transition-colors duration-200 leading-[1.7]">
+                  {val}
+                  {i === 4 && <span class="inline-block w-[6px] h-[11px] bg-accent align-middle ml-1.5 animate-blink" />}
+                </span>
               </div>
             ))}
           </div>
