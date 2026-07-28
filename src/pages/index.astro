@@ -1,377 +1,352 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { Image } from "astro:assets";
-import siteBg from "../../public/site-bg.webp";
-import harvenceImg from "../../public/harvence.webp";
-import provokeImg from "../../public/provoke.webp";
-import curiusImg from "../../public/curius.webp";
 import SiteHeader from "../components/SiteHeader";
-import MarqueeSection from "../components/Marquee";
-import PageAnimations from "../components/PageAnimations";
-
-
+import AsciiCascade from "../components/AsciiCascade";
+import WaveReveal from "../components/WaveReveal";
+import EyeReveal from "../components/EyeReveal";
 
 const rssResponse = await fetch("https://journal.pybash.xyz/rss.xml");
 const rssText = await rssResponse.text();
-
 const articleMatches = [...rssText.matchAll(/<item>([\s\S]*?)<\/item>/g)];
 const allArticles = articleMatches.map(match => {
   const content = match[1];
   const title = content?.match(/<title>([\s\S]*?)<\/title>/)?.[1] || "";
   const link = content?.match(/<link>([\s\S]*?)<\/link>/)?.[1]?.replace("/blog/", "/writing/") || "";
   const pubDate = content?.match(/<pubDate>([\s\S]*?)<\/pubDate>/)?.[1] || "";
-  
-  // Clean up title (unescape common entities)
-  const cleanTitle = title.replace(/&apos;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
-  
+  const cleanTitle = title
+    .replace(/&apos;/g, "'").replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&").replace(/&gt;/g, ">").replace(/&lt;/g, "<")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&minus;/g, "−");
   return {
-    title: cleanTitle, 
-    link, 
+    title: cleanTitle,
+    link,
     date: new Date(pubDate),
     displayDate: new Date(pubDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
   };
-}).sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 3);
+}).sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 4);
+
+const items = [
+  {
+    num: "01",
+    name: "KORA",
+    subtitle: "Astro / Go / Plasmo",
+    period: "2026",
+    status: "Live",
+    description: "Read, save, and annotate the web — with people you trust.",
+    bullets: [
+      "Bookmarks, highlights, and notes with a Tiptap editor",
+      "RSS reader, podcast support, and social following built in",
+      "Cross-browser extension (Chrome, Firefox, Edge) via Plasmo",
+    ],
+    badge: undefined,
+    link: "https://kora.sh",
+    linkText: "View Project",
+  },
+  {
+    num: "02",
+    name: "GRASS LABS",
+    subtitle: "Engineer",
+    period: "2024 — Present",
+    status: "Active",
+    description: "Part-time engineering role building products across the stack.",
+    bullets: [],
+    badge: undefined,
+    link: undefined,
+    linkText: undefined,
+  },
+  {
+    num: "03",
+    name: "RIFT",
+    subtitle: "Founding Engineer",
+    period: "2024",
+    status: "Past",
+    description: "Creator platform empowering creators with micropayments, token-gating, and reward systems.",
+    bullets: [
+      "Built community engagement tools for the new creator economy",
+      "Received grant from Superteam",
+    ],
+    badge: "Superteam Grant",
+    link: undefined,
+    linkText: undefined,
+  },
+  {
+    num: "04",
+    name: "HARVENCE",
+    subtitle: "React Native",
+    period: "2024",
+    status: "Live",
+    description: "Calorie tracking and nutrition lookup — before you even buy it.",
+    bullets: [
+      "Instant barcode scanning with full nutritional breakdown",
+      "Zero-friction logging UX built around daily habit formation",
+      "React Native, built for iOS and Android",
+    ],
+    badge: undefined,
+    link: "https://harvence.pybash.xyz",
+    linkText: "View Project",
+  },
+  {
+    num: "05",
+    name: "BITPLANET",
+    subtitle: "Frontend Developer",
+    period: "2023 — 2024",
+    status: "Past",
+    description: "Core web app experience for a social chat platform.",
+    bullets: [
+      "Implemented profile pages, notifications, and onboarding flow",
+      "Built a robust multi-level autocomplete system with paginated fetching",
+      "Improved Feed UI/UX and overall core chat experience",
+    ],
+    badge: undefined,
+    link: undefined,
+    linkText: undefined,
+  },
+  {
+    num: "06",
+    name: "DRIPCRAFT",
+    subtitle: "Solana / React",
+    period: "2024",
+    status: "Live",
+    description: "Solana-based NFT marketplace — burn common NFTs to earn rarer ones, with admin access built from the ground up.",
+    bullets: [],
+    badge: undefined,
+    link: "https://dripcraft.xyz",
+    linkText: "View Project",
+  },
+];
+
 ---
 
-<Layout title="Portfolio — Ananjan Mitra">
-  <link rel="preload" as="image" href="/site-bg.webp" slot="head" />
+<Layout title="Portfolio — Ananjan Mitra" preloadPortrait>
   <main class="relative">
-    <!-- Global Header -->
-    <SiteHeader client:load />
+<SiteHeader client:load />
 
-    <!-- Hero Section -->
-    <section class="h-screen flex flex-col justify-center editorial-container relative overflow-hidden">
-      <!-- Background Image scoped only to this section -->
-      <div class="absolute inset-0 -z-10 pointer-events-none">
-        <div class="fixed inset-0 bg-[url('/site-bg.webp')] bg-cover bg-center"></div>
-      </div>
+    <!-- ─── HERO ─────────────────────────────────────────────────────── -->
+    <section class="min-h-screen md:h-screen grid grid-cols-1 md:grid-cols-[minmax(280px,0.78fr)_minmax(0,1.22fr)] px-4 md:px-8 pt-20 pb-10 relative z-10 overflow-hidden gap-8 md:gap-14">
 
-      <div class="relative z-10 text-white flex items-end w-full justify-center md:justify-end">
-        <div class="flex flex-col leading-[1.1] font-medium text-center md:text-left">
-          <h1 class="text-[clamp(4rem,18vw,9rem)]">
-            Making
-          </h1>
-          <h1 class="text-[clamp(4rem,18vw,9rem)]">
-            Things
-          </h1>
-          <h1 class="text-[clamp(4rem,18vw,9rem)]">
-            Happen.
-          </h1>
+      <div class="relative z-10 flex h-auto md:h-full min-h-0 flex-col justify-center md:justify-end pb-2 md:pb-24 max-w-130">
+        <div class="font-mono text-[9px] uppercase tracking-[0.32em] text-accent mb-5">~/identity</div>
+        <h1 class="font-mono uppercase text-white leading-[0.9] tracking-tight text-[clamp(2.7rem,7vw,6.4rem)]">
+          Ananjan<br />
+          <span class="text-accent">Mitra</span>
+        </h1>
+        <p class="mt-7 max-w-105 font-mono text-[11px] md:text-xs leading-[2.1] text-white/65">
+          I notice how software feels before I notice what it does.
+          I'll lose an afternoon to the half-second a button waits, the error that blames you instead of helping — the parts most people never name.
+          Usefulness gets it shipped. Taste makes it worth keeping.
+        </p>
+        <div class="mt-8 grid grid-cols-[auto_1fr] gap-x-5 gap-y-2.5 font-mono text-[9px] uppercase tracking-[0.2em]">
+          <span class="text-white/35">loc</span>
+          <span class="text-white/70">Kolkata, India</span>
+          <span class="text-white/35">mode</span>
+          <span class="text-white/70">building in public, mostly quietly</span>
         </div>
       </div>
 
-      <div class="absolute bottom-10 left-6 md:left-10 right-6 md:right-10 flex flex-col md:flex-row justify-between items-end gap-12 text-white">
-        <div class="max-w-[440px]">
-          <p class="text-[14px] md:text-[21px] font-medium leading-[1.4] opacity-80 md:opacity-90">
-            I try to build things. Some work, some don't but that's never really been the point. Engineering because why not? I want to change the world - delusional but oh well.
-          </p>
-        </div>
+      <div class="relative min-h-0 h-[42vh] md:h-full">
+        <AsciiCascade client:load />
+      </div>
+
+      <div class="absolute bottom-8 left-4 right-4 md:left-8 md:right-8 flex justify-between items-end pointer-events-none">
+        <div class="font-mono text-[9px] uppercase tracking-[0.3em] text-white/25">Scroll ↓</div>
+        <div class="font-mono text-[9px] text-white/20 tracking-[0.12em] hidden md:block">v2026.06 · pybash.xyz</div>
       </div>
     </section>
 
-    <!-- Content Breakdown (Grid Section) -->
-    <section id="identity-section" class="py-10 bg-bg text-primary min-h-screen relative z-10">
-      <div class="editorial-container">
-        <div class="grid grid-cols-1 md:grid-cols-2">
-          <h2 class="text-4xl md:text-5xl font-serif"><span class="font-fancy text-8xl pr-2">I</span>dentity</h2>
-          <div class="col-span-2 grid grid-cols-1 md:grid-cols-2 md:pt-10 gap-x-20">
-            <div class="flex flex-col">
-              <p class="md:text-xl tracking-tight leading-tight pb-10">
-                A builder who&apos;d rather make something than talk about it. Someone who&apos;s comfortable with failure as long as they&apos;re in the process of making. Ambitious but self-aware enough to laugh at my own ambition.<br /><br />
-                I don&apos;t fit neatly into &quot;student&quot; or &quot;developer&quot; or &quot;engineer.&quot; I&apos;m just someone figuring it out, building along the way, and quietly convinced that it&apos;s all leading somewhere worth going.
-              </p>
-
-              <div class="grid grid-cols-1 gap-10 mt-10 pt-10 border-t border-primary/10">
-                <h3 class="text-xs uppercase tracking-[0.3em] mb-2">Opinions</h3>
-                <p class="text-sm leading-relaxed">
-                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-40">01 /</span>
-                  Simple is hard.
-                </p>
-                <p class="text-sm leading-relaxed">
-                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-40">02 /</span>
-                  Loading screens are cheating with exceptions.
-                </p>
-                <p class="text-sm leading-relaxed">
-                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-40">03 /</span>
-                  Precision before speed.
-                </p>
-                <p class="text-sm leading-relaxed">
-                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-40">04 /</span>
-                  If it needs explanation, it&apos;s bad design.
-                </p>
-                <p class="text-sm leading-relaxed">
-                  <span class="text-[10px] uppercase tracking-[0.2em] opacity-40">05 /</span>
-                  Build things I want to use.
-                </p>
+    <!-- ─── WORK ──────────────────────────────────────────────────────── -->
+    <section class="py-14 md:py-20 relative z-10 px-4 md:px-8 border-t border-white/8">
+      <div class="max-w-350 mx-auto">
+        <div class="flex items-center gap-4 mb-8 md:mb-12">
+          <span class="font-mono text-[9px] text-accent tracking-[0.3em] uppercase">/* 01 work */</span>
+          <div class="flex-1 h-px bg-white/10"></div>
+        </div>
+        <div class="flex flex-col gap-2">
+          {items.map((item) => (
+            <div
+              class="project-window font-mono border border-white/12 hover:border-white/[0.28] transition-colors duration-500"
+              style="opacity: 0; transform: translateY(18px);"
+            >
+              <div class="flex items-center justify-between px-4 md:px-5 py-2.5 border-b border-white/8 bg-white/3">
+                <div class="flex items-center gap-3">
+                  <span class="text-white/55 text-[9px]">[{item.num}]</span>
+                  <span class="text-[11px] md:text-[13px] tracking-widest text-white">{item.name}</span>
+                  <span class="text-[9px] text-white/58 tracking-widest hidden md:inline">— {item.subtitle}</span>
+                  {item.badge && (
+                    <span class="text-[8px] tracking-[0.15em] uppercase text-accent/70 border border-accent/30 px-1.5 py-0.5 hidden md:inline">{item.badge}</span>
+                  )}
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class={`text-[9px] tracking-widest uppercase ${item.status === 'Live' || item.status === 'Active' ? 'text-accent' : 'text-white/62'}`}>
+                    {item.status}
+                  </span>
+                  <span class="text-white/55 text-[9px] hidden md:inline">{item.period}</span>
+                </div>
+              </div>
+              <div class="px-4 md:px-5 py-4 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_10rem] gap-4 md:gap-8 md:items-start">
+                <div>
+                  <p class="text-[11px] leading-loose text-white/72 max-w-155">{item.description}</p>
+                  {item.bullets.length > 0 && (
+                    <ul class="mt-2 flex flex-col gap-0.5">
+                      {item.bullets.map((b) => (
+                        <li class="flex gap-3 text-[10px] leading-[1.9] text-white/48">
+                          <span class="text-accent/50 shrink-0 mt-px">—</span>
+                          <span>{b}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+                {item.link && (
+                  <div class="md:justify-self-end md:pt-1">
+                    <a
+                      href={item.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="group inline-flex h-8 items-center justify-end gap-2 text-[9px] uppercase tracking-[0.22em] text-white/65 hover:text-white transition-colors duration-300"
+                    >
+                      <span>{item.linkText}</span>
+                      <svg viewBox="0 0 24 24" class="w-3 h-3 text-white/50 transition-all duration-300 group-hover:text-accent group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M7 17L17 7M17 7H7M17 7V17" />
+                      </svg>
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
-            <div class="hidden md:block relative w-full md:w-2/3 aspect-[4/5] bg-black/5 overflow-hidden justify-self-center mt-10 md:mt-20 self-start">
-               <Image src={siteBg} alt="Environment" width={700} loading="lazy" decoding="async" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" />
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
 
-    <!-- Projects Section (Marquee) -->
-    <MarqueeSection client:idle />
+    <!-- ─── PHILOSOPHY ────────────────────────────────────────────────── -->
+    <section class="py-20 md:py-32 relative z-10 px-4 md:px-8 border-t border-white/8">
+      <div class="max-w-350 mx-auto">
+        <div class="flex items-center gap-4 mb-12 md:mb-20">
+          <span class="font-mono text-[9px] text-accent tracking-[0.3em] uppercase">/* 02 philosophy */</span>
+          <div class="flex-1 h-px bg-white/10"></div>
+        </div>
 
-    <!-- Featured Project (Orange) -->
-    <section id="featured-project" class="bg-accent text-bg relative z-10 overflow-hidden">
-      <div class="editorial-container py-20">
-        <div class="flex flex-col gap-12">
-
-          <!-- Label -->
-          <span class="text-[10px] uppercase tracking-[0.4em] opacity-60 font-sans">Featured Project</span>
-
-          <!-- Title -->
-          <h2 class="text-6xl md:text-8xl lg:text-9xl font-serif tracking-tighter leading-[0.9]">
-            <span class="font-fancy text-[1.3em] pr-3">H</span>arvence
+        <div class="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-8 md:gap-14 items-start">
+          <h2 class="font-mono uppercase leading-[0.88] tracking-tight">
+            <span class="block text-white" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">THE PART</span>
+            <EyeReveal client:visible className="block">
+              <span class="block text-accent" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">NOBODY SEES.</span>
+            </EyeReveal>
           </h2>
 
-          <!-- Screenshot + text side by side -->
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-            <div class="md:col-span-7">
-              <Image
-                src={harvenceImg}
-                alt="Harvence"
-                width={800}
-                loading="lazy"
-                decoding="async"
-                class="w-full h-auto rounded-sm"
-              />
-            </div>
-            <div class="md:col-span-5 flex flex-col gap-8 md:pt-2">
-              <p class="text-base md:text-lg font-sans leading-relaxed opacity-100">
-                An app to help you eat healthier simply by keeping track of all your calories and easily allowing user&apos;s to scan any packaged food for nutritional info even before they buy it.
-                <!-- A social bookmarking platform that helps you save, highlight, and share the best content from across the web. Built with real-time collaboration and community-driven discovery. -->
-              </p>
-              <div class="grid grid-cols-3 gap-6 border-t border-bg/20 pt-6">
-                <div class="flex flex-col gap-1">
-                  <span class="text-[10px] uppercase tracking-widest opacity-50 font-sans">Stack</span>
-                  <span class="text-sm font-sans">React Native</span>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <span class="text-[10px] uppercase tracking-widest opacity-50 font-sans">Year</span>
-                  <span class="text-sm font-sans">2024</span>
-                </div>
-                <div class="flex flex-col gap-1">
-                  <span class="text-[10px] uppercase tracking-widest opacity-50 font-sans">Type</span>
-                  <span class="text-sm font-sans">App</span>
-                </div>
-              </div>
-              <a href="https://harvence.pybash.xyz" class="group flex items-center gap-3 text-[10px] uppercase tracking-[0.1em] font-sans opacity-100 hover:opacity-70 transition-opacity duration-500">
-                <span class="border-b border-bg/80 group-hover:border-bg/40 pb-1 transition-colors duration-500">View Project</span>
-                <svg viewBox="0 0 24 24" class="w-5 h-5 border border-bg/80 rounded-full p-1 transition-transform duration-500 group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
-                  <path d="M7 17L17 7M17 7H7M17 7V17" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Project 2: Split Layout -->
-    <section id="project-provoke" class="bg-bg text-primary relative z-10 border-b border-primary/10">
-      <div class="editorial-container py-20 md:py-32">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20 items-center">
-          <!-- Image Side -->
-          <div class="md:col-span-7 relative overflow-hidden rounded-sm order-2 md:order-1">
-            <Image
-              src={provokeImg}
-              alt="Provoke — Intelligent Web Crawler"
-              width={800}
-              loading="lazy"
-              decoding="async"
-              class="w-full h-auto object-cover"
-            />
-          </div>
-
-          <!-- Text Side -->
-          <div class="md:col-span-5 flex flex-col gap-8 order-1 md:order-2">
-            <div class="flex flex-col gap-4">
-              <span class="text-[10px] uppercase tracking-[0.15em] opacity-40 font-sans">02 — Open Source</span>
-              <h2 class="text-5xl md:text-7xl font-serif tracking-tighter leading-[0.9]">
-                <span class="font-fancy text-8xl pr-5">P</span>rovoke
-              </h2>
-            </div>
-            <p class="text-base md:text-lg font-sans leading-relaxed opacity-85">
-              A search engine exclusively for great quality writing on the internet. Designing it for asynchronous, large scale, autonomous web crawling and dynamic content detection. Currently using specifically trained classifier but I plan on adding a small language model eventually.
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 md:gap-10 pt-2 md:pt-3">
+            <p class="font-mono text-[11px] leading-[2.3] text-white/60">
+              A demo takes an afternoon. The six weeks after it — the empty states, the error that explains itself, the half-second a button waits — that is the actual work.
             </p>
-            <div class="flex flex-col gap-3 border-t border-primary/10 pt-6">
-              <div class="flex justify-between items-center">
-                <span class="text-[10px] uppercase tracking-widest opacity-60 font-sans">Stack</span>
-                <span class="text-xs font-sans opacity-85">Python, Redis</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-[10px] uppercase tracking-widest opacity-60 font-sans">Year</span>
-                <span class="text-xs font-sans opacity-85">2026</span>
-              </div>
-              <div class="flex justify-between items-center">
-                <span class="text-[10px] uppercase tracking-widest opacity-60 font-sans">Type</span>
-                <span class="text-xs font-sans opacity-85">Web</span>
-              </div>
+            <p class="font-mono text-[11px] leading-[2.3] text-white/60">
+              I keep the projects that still feel honest a year later. Everything else was practice, and practice was never the wasted part.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-14 md:mt-20 font-mono border border-white/12">
+          <div class="flex items-center justify-between px-4 md:px-5 py-2.5 border-b border-white/8 bg-white/3">
+            <div class="flex items-center gap-3">
+              <span class="text-white/55 text-[9px]">[log]</span>
+              <span class="text-[11px] tracking-widest text-white">CURRENT STATE</span>
             </div>
-            <a href="https://github.com/pybash1/provoke" class="group/link flex items-center gap-3 text-[10px] uppercase tracking-[0.1em] font-sans opacity-70 hover:opacity-100 transition-all duration-500 mt-4">
-              <span class="border-b border-primary/20 group-hover/link:border-primary/60 pb-1 transition-colors duration-500">View on GitHub</span>
-              <svg viewBox="0 0 24 24" class="w-5 h-5 border border-primary/20 rounded-full p-1 transition-transform duration-500 group-hover/link:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M7 17L17 7M17 7H7M17 7V17" />
-              </svg>
-            </a>
+            <span class="text-[9px] tracking-widest uppercase text-accent">Live</span>
+          </div>
+          <div class="flex flex-col">
+            {[
+              ["25/03", "boot", "booted in Calcutta, no factory reset since"],
+              ["17/08", "policy", "build whatever's cool, sort out the reason later"],
+              ["10/07", "commit", "first line of code, first commit, no idea it'd lead here"],
+              ["25/03", "uptime", "running since 25/03, no reboots logged"],
+              ["18/07", "next", "first semester started, deciding what these six months deserve"],
+            ].map(([time, label, val], i) => (
+              <div class={`grid grid-cols-[3.5rem_5.5rem_1fr] gap-4 px-4 md:px-5 py-3.5 group hover:bg-white/2 transition-colors duration-200 ${i < 4 ? "border-b border-white/6" : ""}`}>
+                <span class="text-[9px] text-white/35 pt-px">{time}</span>
+                <span class="text-[9px] uppercase tracking-[0.2em] text-accent/70 pt-px">{label}</span>
+                <span class="text-[11px] text-white/60 group-hover:text-white/85 transition-colors duration-200 leading-[1.7]">
+                  {val}
+                  {i === 4 && <span class="inline-block w-[6px] h-[11px] bg-accent align-middle ml-1.5 animate-blink" />}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Project 3: Full-Width Editorial -->
-    <section id="project-journal" class="bg-bg text-primary relative z-10">
-      <div class="py-20 md:py-32">
-        <!-- Title + Description -->
-        <div class="editorial-container mb-16">
-          <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-end">
-            <div class="md:col-span-6">
-              <span class="text-[10px] uppercase tracking-[0.4em] opacity-40 font-sans block mb-4">03 — Open Source</span>
-              <h2 class="text-5xl md:text-7xl font-serif tracking-tighter leading-[0.9]">
-                <span class="font-fancy text-[1.3em] pr-2">C</span>urius
-              </h2>
-            </div>
-            <div class="md:col-span-5 md:col-start-8">
-              <p class="text-base font-sans leading-relaxed opacity-60">
-                A better, open source alternative to <a href="https://curius.app" class="underline underline-offset-2">Curius</a> to simplify and promote peer-based reading habits and exploring deep rabbit holes.
-              </p>
-            </div>
-          </div>
+    <!-- ─── WRITING ───────────────────────────────────────────────────── -->
+    <section class="py-14 md:py-20 relative z-10 px-4 md:px-8 border-t border-white/8">
+      <div class="max-w-350 mx-auto">
+        <div class="flex items-center gap-4 mb-8 md:mb-12">
+          <span class="font-mono text-[9px] text-accent tracking-[0.3em] uppercase">/* 03 writing */</span>
+          <div class="flex-1 h-px bg-white/10"></div>
         </div>
-
-        <!-- Image -->
-        <div class="editorial-container flex justify-center">
-          <Image
-            src={curiusImg}
-            alt="Curius"
-            width={1000}
-            loading="lazy"
-            decoding="async"
-            class="w-full md:w-3/4 h-auto rounded-sm"
-          />
-        </div>
-
-        <!-- Meta Row -->
-        <div class="editorial-container mt-10">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-t border-primary/10 pt-8">
-            <div class="flex gap-12">
-              <div class="flex flex-col gap-1">
-                <span class="text-[10px] uppercase tracking-widest opacity-40 font-sans">Stack</span>
-                <span class="text-xs font-sans opacity-60">Astro, Go</span>
-              </div>
-              <div class="flex flex-col gap-1">
-                <span class="text-[10px] uppercase tracking-widest opacity-40 font-sans">Year</span>
-                <span class="text-xs font-sans opacity-60">2026</span>
-              </div>
-              <div class="flex flex-col gap-1">
-                <span class="text-[10px] uppercase tracking-widest opacity-40 font-sans">Type</span>
-                <span class="text-xs font-sans opacity-60">Web</span>
-              </div>
-            </div>
-            <a class="group/link flex items-center gap-3 text-[10px] uppercase tracking-[0.3em] font-sans opacity-40 hover:opacity-100 transition-all duration-500">
-              <span class="border-b border-primary/20 group-hover/link:border-primary/60 pb-1 transition-colors duration-500">Coming Soon</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- View All Projects -->
-    <section class="bg-bg text-primary relative z-10 py-16 flex justify-center">
-      <a href="/projects" class="group flex items-center gap-4 text-xs uppercase tracking-[0.4em] opacity-40 hover:opacity-100 transition-all duration-500">
-        <span class="border-b border-transparent group-hover:border-primary/40 pb-1">View All Projects</span>
-        <svg viewBox="0 0 24 24" class="w-4 h-4 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M5 12h14m-7-7l7 7-7 7" />
-        </svg>
-      </a>
-    </section>
-    
-    <!-- Writing Section -->
-    <section id="writing-section" class="py-10 bg-bg text-primary relative z-10">
-      <div class="editorial-container">
-        <div class="flex justify-between items-baseline mb-20">
-          <h2 class="text-5xl font-serif">
-            <span class="font-fancy text-8xl pr-2">W</span>riting
-          </h2>
-        </div>
-
-        <div class="flex flex-col border-t border-primary/10">
+        <div class="flex flex-col">
           {allArticles.map((article) => (
-            <a href={article.link} target="_blank" class="group border-b border-primary/10 py-10 flex flex-col md:flex-row md:items-center justify-between gap-6 transition-colors duration-500">
-              <div class="flex flex-col gap-2">
-                <span class="text-[10px] uppercase tracking-widest opacity-40 font-sans transition-opacity duration-500 group-hover:opacity-100">Journal / {article.displayDate}</span>
-                <h3 class="text-3xl md:text-6xl font-serif tracking-tight transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] origin-left group-hover:-skew-x-12">{article.title}</h3>
-              </div>
-              <div class="hidden md:flex items-center gap-4 transition-all duration-500 opacity-20 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0">
-                <span class="text-xs uppercase tracking-widest font-sans">Read Article</span>
-                <svg viewBox="0 0 24 24" class="w-6 h-6 border border-primary/20 rounded-full p-1 transition-transform duration-500 group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
+            <a
+              href={article.link}
+              target="_blank"
+              rel="noreferrer"
+              class="group -mx-3 flex flex-col md:flex-row md:items-center justify-between gap-2 md:gap-8 px-3 py-4 border-b border-white/8 hover:border-white/18 hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.18)] hover:bg-white/2.5 transition-all duration-300"
+            >
+              <h3 class="font-mono text-sm md:text-[15px] text-white/82 group-hover:text-white group-hover:translate-x-1 transition-all duration-300 tracking-tight">
+                {article.title}
+              </h3>
+              <div class="flex items-center gap-4 shrink-0">
+                <span class="font-mono text-[9px] text-white/55 group-hover:text-accent uppercase tracking-widest transition-colors duration-300">{article.displayDate}</span>
+                <svg viewBox="0 0 24 24" class="w-3 h-3 text-white/45 group-hover:text-white/80 transition-all duration-300 group-hover:rotate-45" fill="none" stroke="currentColor" stroke-width="1.5">
                   <path d="M7 17L17 7M17 7H7M17 7V17" />
                 </svg>
               </div>
             </a>
           ))}
-          <div class="mt-20 flex justify-center">
-            <a href="https://journal.pybash.xyz/" target="_blank" class="group flex items-center gap-4 text-xs uppercase tracking-[0.4em] opacity-40 hover:opacity-100 transition-all duration-500">
-              <span class="border-b border-transparent group-hover:border-primary/40 pb-1">View All Articles</span>
-              <svg viewBox="0 0 24 24" class="w-4 h-4 transition-transform group-hover:translate-x-2" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M5 12h14m-7-7l7 7-7 7" />
-              </svg>
-            </a>
-          </div>
+        </div>
+        <div class="mt-7">
+          <a href="https://journal.pybash.xyz/" target="_blank" rel="noreferrer"
+            class="group font-mono text-[9px] uppercase tracking-[0.3em] text-white/55 hover:text-white/85 transition-colors duration-300 flex items-center gap-3">
+            <span class="border-b border-white/25 group-hover:border-white/55 pb-px">All Articles</span>
+            <svg viewBox="0 0 24 24" class="w-2.5 h-2.5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14m-7-7l7 7-7 7" />
+            </svg>
+          </a>
         </div>
       </div>
     </section>
 
-
-
-    <!-- Footer -->
-    <footer class="pt-20 md:pt-40 pb-8 bg-bg editorial-container relative z-10">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-y-16 md:gap-y-20">        
-        <div class="md:col-span-8 text-center md:text-left">
-          <h2 class="text-[clamp(3.5rem,12vw,12rem)] leading-[1.2] tracking-tighter italic font-serif flex flex-col items-center md:items-start">
-            <span class="flex items-baseline">
-              <span class="font-fancy text-[clamp(7rem,16vw,16rem)] leading-[0.5]">L&nbsp;</span>et's make
-            </span>
-            <span class="md:ml-[5vw]">something</span>
-            <span class="md:ml-[10vw]">wonderful.</span>
-          </h2>
-        </div>
-
-        <div class="md:col-span-4 flex flex-col justify-end font-sans text-xs tracking-widest gap-2">
-          <a href="mailto:hi@pybash.xyz" class="hover:underline flex justify-between items-center border-b border-accent/20 pb-2">
-            <span class="font-medium">Email</span>
-            <span class="font-medium">hi@pybash.xyz</span>
-          </a>
-          <a href="https://github.com/pybash1" target="_blank" class="hover:underline flex justify-between items-center border-b border-accent/20 pb-2">
-            <span class="font-medium">Github</span>
-            <span class="font-medium">@pybash1</span>
-          </a>
-          <a href="https://linkedin.com/in/ananjanmitra" target="_blank" class="hover:underline flex justify-between items-center border-b border-accent/20 pb-2">
-            <span class="font-medium">LinkedIn</span>
-            <span class="font-medium">Ananjan Mitra</span>
-          </a>
-          <a href="https://instagram.com/in/ananjan_" target="_blank" class="hover:underline flex justify-between items-center border-b border-accent/20 pb-2">
-            <span class="font-medium">Instagram</span>
-            <span class="font-medium">@ananjan_</span>
-          </a>
-          <a href="https://x.com/py_bash1" target="_blank" class="hover:underline flex justify-between items-center border-b border-accent/20 pb-2">
-            <span class="font-medium">Twitter</span>
-            <span class="font-medium">@py_bash1</span>
-          </a>
-        </div>
-
-        <div class="md:col-span-12 pt-20 flex justify-between items-end text-[10px] font-sans uppercase tracking-[0.2em] opacity-40">
-          <div>Designed for Impact</div>
-          <div class="text-right">©2026 All Rights Reserved</div>
+    <!-- ─── EOF / CONTACT ────────────────────────────────────────────── -->
+    <footer class="pt-14 pb-10 md:pt-18 md:pb-12 relative z-10 border-t border-white/8 px-4 md:px-8">
+      <div class="max-w-350 mx-auto">
+        <h2 class="font-mono uppercase leading-[0.88] tracking-tight text-white mb-9 overflow-hidden">
+          <span class="block" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">
+            <WaveReveal text="GET IN" client:visible />
+          </span>
+          <span class="block text-accent" style="font-size: clamp(2.5rem, 5.5vw, 5.5rem);">
+            <WaveReveal text="TOUCH." delay={0.12} client:visible />
+          </span>
+        </h2>
+        <div class="flex flex-col md:flex-row gap-2 md:gap-6 font-mono text-[9px] tracking-widest border-t border-white/8 pt-7">
+          <a href="mailto:hi@pybash.xyz" class="text-white/70 hover:text-white transition-colors duration-300 uppercase">hi@pybash.xyz</a>
+          <a href="https://linkedin.com/in/ananjanmitra" target="_blank" rel="noreferrer" class="text-white/70 hover:text-white transition-colors duration-300 uppercase">LinkedIn</a>
         </div>
       </div>
     </footer>
-    <!-- Scroll animations -->
-    <PageAnimations client:idle />
   </main>
+
+  <script>
+    import gsap from "gsap";
+    import { ScrollTrigger } from "gsap/ScrollTrigger";
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.querySelectorAll(".project-window").forEach((el, i) => {
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        ease: "power3.out",
+        delay: i * 0.06,
+        scrollTrigger: { trigger: el, start: "top 90%" },
+      });
+    });
+  </script>
 </Layout>

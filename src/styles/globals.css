@@ -1,143 +1,26 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'PP Locomotive New';
-  src: url('/fonts/PPLocomotiveNew-Light.woff2') format('woff2');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Helvetica Now Display';
-  src: url('/fonts/HelveticaNowDisplay-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Helvetica Now Display';
-  src: url('/fonts/HelveticaNowDisplay-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Helvetica Now Display';
-  src: url('/fonts/HelveticaNowDisplay-Bold.woff2') format('woff2');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Helvetica Now Display';
-  src: url('/fonts/HelveticaNowDisplay-Black.woff2') format('woff2');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'HW Cigars';
-  src: url('/fonts/HW-Cigars.woff2') format('woff2');
-  font-weight: 400;
+  font-family: "Berkeley Mono";
+  src: url("/fonts/Berkeley-Mono-Variable.woff2") format("woff2");
+  font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 @theme {
-  /* Colors in OKLCH */
-  --color-primary: oklch(18.67% 0.005 60.1);
-  /* Obsidian Ink */
+  --color-primary: oklch(88% 0.004 85);
   --color-accent: oklch(0.684 0.212 40.592);
-  --color-bg: oklch(96.1% 0.012 85.1);
-  /* Warm Editorial Cream */
+  --color-bg: oklch(9% 0.004 85);
   --color-white: #ffffff;
 
-  /* Font Family */
-  --font-serif: "PP Locomotive New", Georgia, serif;
-  --font-sans: "Helvetica Now Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-fancy: "HW Cigars", "PP Locomotive New", Georgia, serif;
-  --font-mono: "JetBrains Mono", monospace;
+  --font-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-  --ease-editorial: cubic-bezier(0.23, 1, 0.32, 1);
+  --animate-blink: blink 1s step-end infinite;
 }
 
-@layer base {
-  html {
-    background-color: #000;
-    color: var(--color-primary);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: var(--font-sans);
-    background: transparent !important;
-  }
-}
-
-@layer components {
-  .grid-line-h {
-    @apply border-t border-[--color-primary] w-full;
-  }
-
-  .grid-line-v {
-    @apply border-l border-[--color-primary] h-full;
-  }
-
-  .editorial-container {
-    @apply px-4 md:px-8 max-w-[1800px] mx-auto;
-  }
-
-  .lenis.lenis-smooth {
-    height: auto;
-  }
-
-  .lenis.lenis-smooth [data-lenis-prevent] {
-    overscroll-behavior: contain;
-  }
-
-  .lenis.lenis-stopped {
-    overflow: hidden;
-  }
-
-  .lenis.lenis-scrolling iframe {
-    pointer-events: none;
-  }
-}
-
-/* Header theme switching (React component, must be global) */
-#main-header[data-theme="light"] nav {
-  color: var(--color-primary);
-}
-
-#main-header[data-theme="dark"] nav {
-  color: white;
-}
-
-#main-header nav {
-  transition: color 0.5s ease;
-}
-
-/* Nav arrow animation */
-.nav-arrow {
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-.nav-link:hover .nav-arrow {
-  transform: translate(2px, -2px);
-}
-
-/* Responsive hero title */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 5rem;
+@keyframes blink {
+  50% {
+    opacity: 0;
   }
 }
