@@ -18,7 +18,77 @@ const {
   aria-label={label}
   class:list={["relative isolate", className]}
 >
+  <script is:inline>
+    (() => {
+      const canvas = document.currentScript.parentElement;
+
+      try {
+        // Hide saved layouts before their children can paint at authored positions.
+        const saved = JSON.parse(
+          localStorage.getItem(canvas.dataset.storageKey) ?? "null",
+        );
+        const mode =
+          innerWidth >= 1024
+            ? "desktop"
+            : innerWidth >= 640
+              ? "tablet"
+              : "mobile";
+        const layout = saved?.version === 1 && saved.layouts?.[mode];
+
+        if (layout && typeof layout === "object") {
+          canvas.prepaintLayout = layout;
+          canvas.style.visibility = "hidden";
+        }
+      } catch {
+        // The authored layout remains visible when storage is unavailable.
+      }
+    })();
+  </script>
   <slot />
+  <script is:inline>
+    (() => {
+      const canvas = document.currentScript.parentElement;
+      const layout = canvas.prepaintLayout;
+      if (!layout) return;
+
+      const reveal = () => {
+        delete canvas.prepaintLayout;
+        canvas.style.removeProperty("visibility");
+      };
+
+      const showSavedLayout = () => {
+        if (canvas.dataset.deskReady) {
+          // The desk's own font-ready restore is already queued after this one.
+          queueMicrotask(reveal);
+          return;
+        }
+
+        try {
+          const width = canvas.clientWidth;
+          const height = canvas.clientHeight;
+
+          for (const item of canvas.querySelectorAll("[data-movable-item]")) {
+            const p = layout[item.dataset.movableId];
+            if (!p || ![p.x, p.y, p.z].every(Number.isFinite)) continue;
+
+            item.style.translate = `${p.x * width}px ${p.y * height}px`;
+            item.style.zIndex = String(Math.min(1000000, Math.max(0, p.z)));
+
+            if (Number.isFinite(p.r) && p.r) {
+              const tilt = parseFloat(getComputedStyle(item).rotate) || 0;
+              const turn = Math.max(-180, Math.min(180, p.r));
+              item.style.rotate = `${(tilt + turn).toFixed(3)}deg`;
+            }
+          }
+        } finally {
+          reveal();
+        }
+      };
+
+      // Text can change the height of an auto-sized canvas after it first parses.
+      void document.fonts.ready.then(showSavedLayout, showSavedLayout);
+    })();
+  </script>
   <button
     type="button"
     data-desk-reset
