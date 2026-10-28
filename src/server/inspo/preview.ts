@@ -5,16 +5,27 @@ import { EditorError } from "./http";
 import { fetchPublicPage, publicTarget } from "./publicFetch";
 import { sign, validSignature } from "./auth";
 
-function decode(value: string): string {
-  return value
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;|&apos;/g, "'")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&#(\d+);/g, (_, code: string) =>
-      String.fromCodePoint(Math.min(Number(code), 0x10ffff)),
-    );
+export function decodeHtmlTitle(value: string): string {
+  const named: Record<string, string> = {
+    amp: "&",
+    quot: '"',
+    apos: "'",
+    lt: "<",
+    gt: ">",
+  };
+  return value.replace(
+    /&(?:amp|quot|apos|lt|gt|#(?:x[\da-f]+|\d+));/gi,
+    (entity) => {
+      const key = entity.slice(1, -1).toLowerCase();
+      if (!key.startsWith("#")) return named[key] ?? entity;
+
+      const hex = key[1] === "x";
+      const code = Number.parseInt(key.slice(hex ? 2 : 1), hex ? 16 : 10);
+      return code > 0 && code <= 0x10ffff && !(code >= 0xd800 && code <= 0xdfff)
+        ? String.fromCodePoint(code)
+        : "\ufffd";
+    },
+  );
 }
 
 async function pageTitle(url: string, fallback: string): Promise<string> {
@@ -24,7 +35,7 @@ async function pageTitle(url: string, fallback: string): Promise<string> {
     .match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1]
     ?.replace(/\s+/g, " ")
     .trim();
-  return decode(title || fallback).slice(0, 180);
+  return decodeHtmlTitle(title || fallback).slice(0, 180);
 }
 
 export async function makeUrlPreview(value: string): Promise<UrlPreview> {
