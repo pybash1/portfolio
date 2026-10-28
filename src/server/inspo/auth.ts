@@ -17,7 +17,6 @@ export function oidcSettings() {
     clientId: env("AUTHENTIK_CLIENT_ID") || "portfolio-inspo",
     clientSecret: env("AUTHENTIK_CLIENT_SECRET"),
     ownerSub: env("INSPO_OWNER_SUB"),
-    ownerUsername: env("INSPO_OWNER_USERNAME") || "ananjan",
     siteUrl: env("INSPO_SITE_URL") || "https://pybash.xyz",
   };
 }
@@ -29,6 +28,7 @@ export function ownerConfigured(): boolean {
     const site = new URL(settings.siteUrl);
     return (
       !!settings.clientSecret &&
+      !!settings.ownerSub &&
       env("INSPO_SESSION_SECRET").length >= 32 &&
       issuer.protocol === "https:" &&
       !issuer.username &&
@@ -91,11 +91,8 @@ export function readPayload(
 }
 
 export function assertOwner(identity: OwnerIdentity): void {
-  const { ownerSub, ownerUsername } = oidcSettings();
-  if (
-    !identity.sub ||
-    (ownerSub ? identity.sub !== ownerSub : identity.username !== ownerUsername)
-  ) {
+  const { ownerSub } = oidcSettings();
+  if (!ownerSub || identity.sub !== ownerSub) {
     throw new EditorError(
       "This Authentik account doesn’t have owner access.",
       403,
