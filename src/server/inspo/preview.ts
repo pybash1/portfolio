@@ -106,9 +106,7 @@ export async function makeUrlPreview(value: string): Promise<UrlPreview> {
     draft.mediaSrc = url.href;
   }
 
-  if (draft.kind === "website") {
-    draft.title = await pageTitle(url.href, host);
-  } else if (!draft.mediaSrc) {
+  if (!draft.mediaSrc) {
     try {
       draft.title = await pageTitle(url.href, host);
     } catch {
