@@ -19,27 +19,6 @@ const {
   crosses = [],
 } = Astro.props;
 
-const palette = [
-  "#b8c38f",
-  "#d7b77c",
-  "#cc9788",
-  "#bec8af",
-  "#d6a975",
-  "#b3c4ac",
-  "#c6a3a0",
-];
-
-const northeastColors: Record<string, string> = {
-  AR: "#c5977f",
-  AS: "#b4bf8d",
-  ML: "#c7b895",
-  NL: "#bda3b9",
-  MN: "#abc3c1",
-  MZ: "#c79b8a",
-  TR: "#d4b37a",
-  SK: "#d3a18b",
-};
-
 const tiny = new Set(["CH", "DL", "DN", "DD", "PY", "GA", "LD"]);
 
 const stateName = (name: string) =>
@@ -157,9 +136,6 @@ const cityLabels = [...highlighted, ...background].map(({ name, p, major }) => {
     <clipPath id={`${id}-print-area`}
       ><rect x="20" y="64" width="560" height="590"></rect></clipPath
     >
-    <clipPath id={`${id}-land`}
-      ><path d={atlas.states.map((s) => s.d).join("")}></path></clipPath
-    >
     <pattern id={`${id}-sea`} width="5" height="5" patternUnits="userSpaceOnUse"
       ><path d="M0 1h5" stroke="#738d79" stroke-width=".22" opacity=".25"
       ></path></pattern
@@ -185,36 +161,7 @@ const cityLabels = [...highlighted, ...background].map(({ name, p, major }) => {
     ></rect>
     <rect x="20" y="64" width="560" height="590" fill={`url(#${id}-sea)`}
     ></rect>
-    {
-      atlas.neighbors.map((n) => (
-        <path
-          d={n.d}
-          fill="#e0cc9c"
-          fill-opacity=".7"
-          stroke="#737456"
-          stroke-width=".8"
-        />
-      ))
-    }
-    {
-      atlas.states.map((s, i) => (
-        <path
-          data-india-state={s.name}
-          d={s.d}
-          fill={
-            northeastColors[s.code ?? ""] ??
-            palette[(i * 3 + s.name.length) % palette.length]
-          }
-          fill-opacity=".9"
-          stroke="#71694e"
-          stroke-width=".75"
-          stroke-linejoin="round"
-        />
-      ))
-    }
-    <g fill="none" stroke="#789998" stroke-width=".75" opacity=".9"
-      >{atlas.rivers.map((r) => <path d={r.d} />)}</g
-    >
+    <image href="/maps/india-geography.svg" width="600" height="676" />
     <g fill="none" stroke="#707c5c" stroke-width=".25" opacity=".35">
       {
         Array.from({ length: 16 }, (_, i) => {

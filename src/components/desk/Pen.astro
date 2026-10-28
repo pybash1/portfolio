@@ -85,6 +85,7 @@ const press = {
   style={`rotate:${angle}deg`}
 >
   <defs>
+    <path id={`${id}-outline`} d={outline}></path>
     <filter id={`${id}-edge`} x="-10%" y="-100%" width="120%" height="300%"
       ><feGaussianBlur stdDeviation=".6"></feGaussianBlur></filter
     >
@@ -97,8 +98,8 @@ const press = {
           {heights.map((z) => {
             const d = toLocal(ray.x * z, ray.y * z);
             return (
-              <path
-                d={outline}
+              <use
+                href={`#${id}-outline`}
                 data-pen-ray
                 data-ray-x={ray.x}
                 data-ray-y={ray.y}

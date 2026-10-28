@@ -1,0 +1,23 @@
+{
+  "date": "2026-10-28",
+  "url": "http://127.0.0.1:45328/",
+  "method": "Production Astro build, Python static server without compression, three fresh headless Chrome contexts, 1440x900 viewport",
+  "before": {
+    "transferBytes": 10728701,
+    "requests": 33,
+    "htmlBytes": 2798568,
+    "medianFcpMs": 180,
+    "medianLoadMs": 90
+  },
+  "after": {
+    "transferBytes": 3500823,
+    "requests": 34,
+    "htmlBytes": 613469,
+    "medianFcpMs": 176,
+    "medianLcpMs": 176,
+    "medianLoadMs": 95,
+    "htmlGzipBytes": 92982,
+    "geographySvgBytes": 559693,
+    "geographySvgGzipBytes": 198520
+  }
+}

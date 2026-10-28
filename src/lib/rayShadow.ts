@@ -417,7 +417,7 @@ export function aimPen(pen: SVGSVGElement) {
   const cos = Math.cos(angle),
     sin = Math.sin(angle);
 
-  pen.querySelectorAll<SVGPathElement>("[data-pen-ray]").forEach((path) => {
+  pen.querySelectorAll<SVGGraphicsElement>("[data-pen-ray]").forEach((path) => {
     const z = Number(path.dataset.z) + lift,
       x = Number(path.dataset.rayX) * z,
       y = Number(path.dataset.rayY) * z;
