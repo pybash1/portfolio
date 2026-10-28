@@ -77,6 +77,8 @@ export function initializeDesk(canvas: HTMLElement) {
   let frame = 0;
   let resizeFrame = 0;
   const glides = new Map<HTMLElement, () => void>();
+  // Reading mode owns the document's layer until its closing transition ends.
+  const documentFocused = () => canvas.dataset.deskFocused !== undefined;
 
   const announce = (message: string) => {
     const live = canvas.querySelector<HTMLElement>("[data-desk-announcement]");
@@ -713,6 +715,7 @@ export function initializeDesk(canvas: HTMLElement) {
 
   canvas.addEventListener("pointerdown", (event) => {
     if (
+      documentFocused() ||
       drag ||
       event.button !== 0 ||
       !event.isPrimary ||
@@ -813,6 +816,7 @@ export function initializeDesk(canvas: HTMLElement) {
   canvas.addEventListener(
     "touchstart",
     (event) => {
+      if (documentFocused()) return;
       if (event.touches.length !== 1) {
         finish(true);
         return;
@@ -948,6 +952,7 @@ export function initializeDesk(canvas: HTMLElement) {
         event.preventDefault();
         event.stopImmediatePropagation();
       } else {
+        if (documentFocused()) return;
         const target = event.target instanceof Element ? event.target : null;
         const item = target?.closest<HTMLElement>("[data-movable-item]");
 
@@ -977,7 +982,8 @@ export function initializeDesk(canvas: HTMLElement) {
   canvas.addEventListener("keydown", (event) => {
     const target = event.target instanceof HTMLElement ? event.target : null;
     const item = target?.closest<HTMLElement>("[data-movable-item]");
-    if (!item || !positions.has(item) || target !== item) return;
+    if (!item || !positions.has(item) || target !== item || documentFocused())
+      return;
 
     const delta = {
       ArrowLeft: [-1, 0],
