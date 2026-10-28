@@ -1,0 +1,23 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  class?: string;
+}
+
+const { id, label, class: className } = Astro.props;
+---
+
+<section
+  data-movable-item
+  data-movable-id={id}
+  aria-label={label}
+  aria-roledescription="movable object"
+  tabindex="0"
+  class:list={[
+    "group/movable relative cursor-grab outline-offset-8 focus-visible:outline focus-visible:outline-1 focus-visible:outline-paper/50 data-[dragging=true]:cursor-grabbing data-[dragging=true]:select-none data-[pinned=true]:cursor-default has-[>[data-work-folder],>[data-pen],>[data-breadboard]]:pointer-events-none",
+    className,
+  ]}
+>
+  <slot />
+</section>

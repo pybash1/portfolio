@@ -1,0 +1,110 @@
+---
+import PaperSurface from "./PaperSurface.astro";
+import MetalClip from "./MetalClip.astro";
+import { componentId } from "../../lib/componentId";
+
+interface Props {
+  title: string;
+  reference?: string;
+  role: string;
+  text: string;
+  annotation?: string;
+  class?: string;
+}
+
+const {
+  title,
+  reference,
+  role,
+  text,
+  annotation,
+  class: className,
+} = Astro.props;
+
+const id = componentId("dossier");
+---
+
+<article
+  data-clip-surface
+  class:list={["relative isolate p-3 text-[#30241d]", className]}
+>
+  <PaperSurface
+    seed={title}
+    material="card"
+    wear="sharp"
+    color="#d52f24"
+    strength="heavy"
+  />
+  <div class="border border-current p-1">
+    <div class="relative border border-current p-4">
+      {
+        reference && (
+          <p class="border-b border-current/60 pb-2 font-print text-[9px] font-bold uppercase tracking-[.12em]">
+            {reference}
+          </p>
+        )
+      }
+      <h2
+        class="my-4 whitespace-pre-line font-sans text-[30px] leading-[.95] tracking-tight"
+      >
+        {title}
+      </h2>
+      <div class="flex gap-3 border-y border-current/70 py-3">
+        <svg viewBox="0 0 90 112" aria-hidden="true" class="w-20 shrink-0">
+          <ellipse
+            cx="45"
+            cy="56"
+            rx="40"
+            ry="51"
+            fill="none"
+            stroke="currentColor"></ellipse>
+          <ellipse
+            cx="45"
+            cy="56"
+            rx="37"
+            ry="48"
+            fill="none"
+            stroke="currentColor"
+            stroke-width=".5"></ellipse>
+          <path
+            d="M19 92c1-21 13-29 26-29s25 8 26 29M31 42c0-24 29-24 29 0l-4 18-11 8-11-8Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"></path>
+          <path
+            d="m29 39 4-15 15-7 15 13-3 18-5-15-10 1-9-4-1 16m-2 33 12 12 14-13M21 92h49M42 38h-7m20 0h-7m-7 15 8 0m-4-10-2 6 4 0"
+            stroke="currentColor"
+            fill="none"></path>
+          <path
+            d="m27 83 2 10m4-14 3 15m24-15-3 15m7-10-2 10M33 25l24 3M32 29l26 3M26 73l7 4M56 72l9 5"
+            stroke="currentColor"
+            stroke-width=".5"></path>
+        </svg>
+
+        <div>
+          <p class="font-book text-[17px] leading-tight">{role}</p><p
+            class="mt-3 font-typewriter text-[9px] leading-relaxed"
+          >
+            {text}
+          </p>
+        </div>
+      </div>
+      {
+        annotation && (
+          <p class="mt-3 -rotate-3 text-right font-hand text-[21px]">
+            {annotation}
+          </p>
+        )
+      }
+      <span
+        aria-hidden="true"
+        class="absolute -left-2 top-1/2 size-2 rounded-full bg-black"></span>
+    </div>
+  </div>
+  <MetalClip
+    id={`${id}-clip`}
+    kind="paperclip"
+    color="yellow"
+    class="absolute right-3 -top-[19px] z-40 w-12"
+  />
+</article>

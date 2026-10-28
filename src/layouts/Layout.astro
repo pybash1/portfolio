@@ -1,6 +1,5 @@
 ---
 import "../styles/globals.css";
-import SmoothScroll from "../components/SmoothScroll";
 
 interface Props {
   title: string;
@@ -10,23 +9,26 @@ const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html
+  lang="en"
+  class="min-h-full overflow-x-clip bg-[#111] font-sans text-white antialiased select-none"
+>
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Making things, but with more intention" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <!-- Preload critical fonts to avoid render-blocking -->
-    <link rel="preload" href="/fonts/PPLocomotiveNew-Light.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/HelveticaNowDisplay-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/HelveticaNowDisplay-Medium.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/HW-Cigars.woff2" as="font" type="font/woff2" crossorigin />
+    <link
+      rel="preload"
+      href="/fonts/balete-variablevf.woff"
+      as="font"
+      type="font/woff"
+      crossorigin
+    />
     <slot name="head" />
   </head>
-  <body class="bg-transparent text-primary selection:bg-accent selection:text-white overflow-x-hidden">
-    <SmoothScroll client:load />
+  <body class="min-h-dvh overflow-x-clip">
     <slot />
   </body>
 </html>

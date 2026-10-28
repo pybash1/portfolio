@@ -1,0 +1,61 @@
+---
+import MapSheet, { type Props as SheetProps } from "./MapSheet.astro";
+import {
+  createCityRoute,
+  type CityConnection,
+  type CityOverrides,
+} from "../../lib/cityPins";
+import { componentId } from "../../lib/componentId";
+
+interface Props extends Omit<
+  SheetProps,
+  | "pins"
+  | "connections"
+  | "crosses"
+  | "id"
+  | "title"
+  | "caption"
+  | "backNote"
+  | "backReference"
+> {
+  cities: readonly string[];
+  xCities?: readonly string[];
+  connections?: readonly CityConnection[];
+  cityOverrides?: CityOverrides;
+  id?: string;
+  class?: string;
+  title?: string;
+  caption?: string;
+  backNote?: string;
+  backReference?: string;
+}
+
+const {
+  cities,
+  xCities = [],
+  connections,
+  cityOverrides,
+  id: requestedId,
+  class: className,
+  title = "India — a personal field atlas",
+  caption = "",
+  backNote = "",
+  backReference = "",
+  ...content
+} = Astro.props;
+
+const props = {
+  ...content,
+  id: componentId("map", requestedId),
+  title,
+  caption,
+  backNote,
+  backReference,
+  ...createCityRoute(cities, connections, cityOverrides),
+  crosses: createCityRoute(xCities, [], cityOverrides).pins,
+};
+---
+
+<div class:list={["relative w-full", className]}>
+  <MapSheet {...props} />
+</div>

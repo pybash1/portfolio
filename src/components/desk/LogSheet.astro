@@ -1,0 +1,126 @@
+---
+import PaperSurface from "./PaperSurface.astro";
+
+/** One article as a field "sightings" log sheet: a printed form, filled in
+ * by hand. The heading band carries the article's title; the ruled boxes its
+ * date, where it was filed, what it is about, and who recorded it. The title
+ * links to the article. */
+interface Props {
+  title: string;
+  summary: string;
+  date: Date;
+  href: string;
+  minutes: number;
+  /** Its number in the file (1 = the first article). */
+  entry: number;
+  heading?: string;
+  signed?: string;
+  class?: string;
+}
+
+const {
+  title,
+  summary,
+  date,
+  href,
+  minutes,
+  entry,
+  heading = "Field log sheet",
+  signed = "A. Mitra",
+  class: className,
+} = Astro.props;
+
+const day = date.toLocaleDateString("en-GB", {
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+const ink = "text-[#2f3a52]";
+const address = href.replace(/^https?:\/\//, "");
+---
+
+<article
+  data-log-sheet
+  class:list={[
+    "relative isolate aspect-[3/4] w-full text-ink [container-type:inline-size]",
+    className,
+  ]}
+>
+  <PaperSurface seed={title} material="laid" color="#f3eedc" height={3} />
+
+  <div class="absolute inset-0 px-[7%] pt-[5%]">
+    <p
+      class="text-center font-book text-[5.4cqw] uppercase tracking-[0.12em] text-stamp"
+    >
+      {heading}
+    </p>
+
+    <div class="-mx-[7%] mt-[3%] bg-[#c8463a] px-[5%] py-[2.4%]">
+      <h3
+        class="bg-[#f6f2e2] px-[4%] pb-[2%] pt-[2.4%] text-center font-sans text-[7.6cqw] italic leading-[1.05]"
+      >
+        <a href={href} target="_blank" rel="noreferrer" class="hover:underline">
+          {title}
+        </a>
+      </h3>
+    </div>
+
+    <div class="mt-[5%] border-[1.5px] border-ink/70 font-print text-[3.6cqw]">
+      <div class="flex border-b border-ink/60">
+        <p class="flex flex-1 items-baseline gap-[3%] px-[3%] py-[2%]">
+          <span class="font-bold uppercase tracking-wide">Date</span>
+          <span class:list={["font-hand text-[6cqw] leading-none", ink]}>
+            {day}
+          </span>
+        </p>
+        <p
+          class="flex items-baseline gap-[3%] border-l border-ink/60 px-[3%] py-[2%]"
+        >
+          <span class="font-bold uppercase tracking-wide">Filed</span>
+          <span class:list={["font-hand text-[6cqw] leading-none", ink]}>
+            Journal
+          </span>
+        </p>
+      </div>
+      <div class="border-b border-ink/60 px-[3%] pb-[3%] pt-[2%]">
+        <p class="font-bold uppercase tracking-wide">Details of entry</p>
+        <p class:list={["mt-[2%] font-hand text-[6.4cqw] leading-[1.1]", ink]}>
+          {summary}
+        </p>
+      </div>
+      <div class="flex border-b border-ink/60">
+        <p class="flex flex-1 items-baseline gap-[3%] px-[3%] py-[2%]">
+          <span class="font-bold uppercase tracking-wide">Reading</span>
+          <span class:list={["font-hand text-[6cqw] leading-none", ink]}>
+            {minutes} min
+          </span>
+        </p>
+        <p
+          class="flex items-baseline gap-[3%] border-l border-ink/60 px-[3%] py-[2%]"
+        >
+          <span class="whitespace-nowrap font-bold uppercase tracking-wide"
+            >No.</span
+          >
+          <span class:list={["font-hand text-[6cqw] leading-none", ink]}>
+            {String(entry).padStart(3, "0")}
+          </span>
+        </p>
+      </div>
+      <p class="flex items-baseline gap-[3%] px-[3%] py-[2%]">
+        <span class="font-bold uppercase tracking-wide">Recorded by</span>
+        <span class:list={["font-hand text-[6cqw] leading-none", ink]}>
+          {signed}
+        </span>
+      </p>
+    </div>
+
+    <p
+      class="mt-[4%] flex items-center justify-between font-mono text-[3.3cqw] text-ink/70"
+    >
+      <span>→ {address}</span>
+      <span>{String(entry).padStart(3, "0")}</span>
+    </p>
+  </div>
+</article>

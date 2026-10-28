@@ -1,0 +1,137 @@
+---
+import { componentId } from "../../lib/componentId";
+
+interface Props {
+  locations: { x: number; y: number; name?: string; state?: string }[];
+  id?: string;
+}
+
+const { locations } = Astro.props;
+const id = componentId("marker-locations", Astro.props.id);
+
+const marks = locations.map((location) => {
+  let seed = 2166136261;
+
+  for (const char of location.name ?? `${location.x},${location.y}`)
+    seed = Math.imul(seed ^ char.charCodeAt(0), 16777619) >>> 0;
+
+  const textureSeed = (seed % 997) + 1;
+  const circled = seed % 10 === 1;
+
+  // Local, city-seeded variation: independent of order, render time, and reloads.
+  const random = (min: number, max: number) => {
+    seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
+    return Number((min + (seed / 4294967296) * (max - min)).toFixed(2));
+  };
+
+  // Small northeastern states need finer ink, not a symbol spanning several states.
+  const regionalScale = location.x > 365 && location.y < 335 ? 0.65 : 1;
+
+  const angle = random(-17, 17),
+    scaleX = random(0.83, 1.17) * regionalScale,
+    scaleY = random(0.85, 1.2) * regionalScale;
+
+  const paths = [
+    `M${random(-13, -8)} ${random(-14, -9)} Q${random(-2, 2)} ${random(-2, 2)} ${random(9, 13)} ${random(10, 14)}`,
+    `M${random(9, 14)} ${random(-13, -8)} Q${random(-2, 2)} ${random(-1, 2)} ${random(-14, -9)} ${random(9, 14)}`,
+  ].map((d) => ({ d, width: random(2.6, 4.1), opacity: random(0.7, 0.92) }));
+
+  if (circled) {
+    const rx = random(17, 21),
+      ry = random(16, 20);
+
+    paths.push({
+      d: `M0 ${-ry} C${rx * 0.65} ${-ry - 2} ${rx + 3} ${-ry * 0.5} ${rx + 1} 0 C${rx - 1} ${ry * 0.7} ${rx * 0.5} ${ry + 2} -1 ${ry} C${-rx * 0.8} ${ry + 2} ${-rx - 3} ${ry * 0.5} ${-rx + 1} -2 C${-rx - 2} ${-ry * 0.65} ${-rx * 0.4} ${-ry - 4} 6 ${-ry + 1}`,
+      width: random(2.2, 3.3),
+      opacity: random(0.65, 0.86),
+    });
+  }
+
+  return { ...location, angle, scaleX, scaleY, paths, circled, textureSeed };
+});
+---
+
+<svg
+  data-marker-locations
+  aria-hidden="true"
+  viewBox="0 0 600 676"
+  class="pointer-events-none absolute inset-0 z-30 h-full w-full text-marker mix-blend-multiply"
+  fill="none"
+  stroke="currentColor"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <defs>
+    {
+      marks.map((mark, i) => (
+        <filter
+          id={`${id}-ink-${i}`}
+          x="-40"
+          y="-40"
+          width="80"
+          height="80"
+          filterUnits="userSpaceOnUse"
+          color-interpolation-filters="sRGB"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency=".9 1.6"
+            numOctaves="3"
+            seed={mark.textureSeed}
+            result="paper-fibers"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="paper-fibers"
+            scale=".85"
+            xChannelSelector="R"
+            yChannelSelector="G"
+            result="ragged-ink"
+          />
+          <feColorMatrix
+            in="paper-fibers"
+            type="matrix"
+            values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.4 .5 .3 0 -.25"
+            result="ink-absorption"
+          />
+          <feComposite in="ragged-ink" in2="ink-absorption" operator="in" />
+        </filter>
+      ))
+    }
+  </defs>
+  {
+    marks.map(
+      ({ x, y, name, state, angle, scaleX, scaleY, paths, circled }, i) => (
+        <g
+          data-marker-location
+          data-city={name}
+          data-circled={String(circled)}
+          transform={`translate(${x} ${y}) rotate(${angle}) scale(${scaleX} ${scaleY})`}
+        >
+          {name && (
+            <title>
+              {name}
+              {state ? `, ${state}` : ""} —{" "}
+              {circled ? "circled X" : "marked with an X"}
+            </title>
+          )}
+          <g filter={`url(#${id}-ink-${i})`}>
+            {paths.map(({ d, width, opacity }) => (
+              <g>
+                <path {d} stroke-width={width + 1} stroke-opacity=".09" />
+                <path {d} stroke-width={width} stroke-opacity={opacity} />
+                <path
+                  {d}
+                  stroke="#e3b69a"
+                  stroke-width=".35"
+                  stroke-opacity=".22"
+                  transform="translate(.3 -.2)"
+                />
+              </g>
+            ))}
+          </g>
+        </g>
+      ),
+    )
+  }
+</svg>

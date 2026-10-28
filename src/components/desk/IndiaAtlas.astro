@@ -1,0 +1,356 @@
+---
+import atlas from "../../data/india-atlas.json";
+import { projectIndia, indiaCities } from "../../lib/indiaMap";
+import { pinRotation } from "../../lib/mapGeometry";
+
+type Location = { x: number; y: number; name?: string; state?: string };
+
+interface Props {
+  id: string;
+  paperTexture?: string;
+  pins?: Location[];
+  crosses?: Location[];
+}
+
+const {
+  id,
+  paperTexture = "/maps/atlas-paper-front.webp",
+  pins = [],
+  crosses = [],
+} = Astro.props;
+
+const palette = [
+  "#b8c38f",
+  "#d7b77c",
+  "#cc9788",
+  "#bec8af",
+  "#d6a975",
+  "#b3c4ac",
+  "#c6a3a0",
+];
+
+const northeastColors: Record<string, string> = {
+  AR: "#c5977f",
+  AS: "#b4bf8d",
+  ML: "#c7b895",
+  NL: "#bda3b9",
+  MN: "#abc3c1",
+  MZ: "#c79b8a",
+  TR: "#d4b37a",
+  SK: "#d3a18b",
+};
+
+const tiny = new Set(["CH", "DL", "DN", "DD", "PY", "GA", "LD"]);
+
+const stateName = (name: string) =>
+  name
+    .replace("Andaman and Nicobar", "Andaman & Nicobar")
+    .replace("Jammu and Kashmir", "Jammu & Kashmir");
+
+const neighbors = [
+  ["PAKISTAN", 69.4, 30.5],
+  ["CHINA", 87, 34.6],
+  ["NEPAL", 84.2, 28.8],
+  ["BHUTAN", 90.5, 28.3],
+  ["BANGLADESH", 89.8, 24.3],
+  ["MYANMAR", 96.3, 21.4],
+  ["SRI LANKA", 80.6, 7.1],
+] as const;
+
+const smallStates =
+  /Chandigarh|Delhi|Haryana|Punjab|Uttarakhand|Dadra|Puducherry/;
+
+const compactStates = new Set(["SK", "MN", "NL", "ML", "MZ", "TR", "HP"]);
+
+const stateLabels = atlas.states
+  .filter((s) => !tiny.has(s.code ?? "") && !smallStates.test(s.name))
+  .map((s) => ({
+    ...s,
+    words: stateName(s.name).toUpperCase().split(" "),
+    fontSize: compactStates.has(s.code ?? "") ? 5 : s.name.length > 17 ? 7 : 8,
+  }));
+
+type Box = { x: number; y: number; w: number; h: number };
+
+const occupied: Box[] = stateLabels.map((s) => ({
+  x: s.label[0]! - Math.max(...s.words.map((w) => w.length)) * s.fontSize * 0.3,
+  y: s.label[1]! - 7,
+  w: Math.max(...s.words.map((w) => w.length)) * s.fontSize * 0.6,
+  h: s.words.length * 9,
+}));
+
+pins.forEach((pin, i) => {
+  const radians = (pinRotation(pin, i) * Math.PI) / 180;
+
+  occupied.push({
+    x: pin.x + 23 * Math.sin(radians) - 9,
+    y: pin.y - 23 * Math.cos(radians) - 9,
+    w: 18,
+    h: 18,
+  });
+});
+
+const collides = (b: Box) =>
+  occupied.some(
+    (a) =>
+      b.x < a.x + a.w + 2 &&
+      b.x + b.w + 2 > a.x &&
+      b.y < a.y + a.h + 2 &&
+      b.y + b.h + 2 > a.y,
+  );
+
+const highlighted = [...pins, ...crosses]
+  .filter((p): p is Location & { name: string } => !!p.name)
+  .map((p) => ({
+    name: p.name === "Dharamsala" ? "Dharamshala" : p.name,
+    p: { x: p.x, y: p.y },
+    major: 0,
+  }));
+
+const background = [...indiaCities]
+  .sort((a, b) => b[3] - a[3])
+  .map(([name, lon, lat, major]) => ({
+    name,
+    p: projectIndia(lon, lat),
+    major,
+  }))
+  .filter(
+    (city) =>
+      !highlighted.some(
+        (h) => Math.hypot(h.p.x - city.p.x, h.p.y - city.p.y) < 2,
+      ),
+  );
+
+const cityLabels = [...highlighted, ...background].map(({ name, p, major }) => {
+  const fontSize = major ? 9 : 6.8,
+    w = name.length * fontSize * 0.52;
+
+  const offsets = [
+    [5, -7],
+    [5, 5],
+    [-w - 5, -5],
+    [-w - 5, 8],
+    [8, -15],
+    [-w / 2, -17],
+    [7, 17],
+    [-w - 6, 18],
+  ];
+
+  const candidate = offsets
+    .map(([dx, dy]) => ({ x: p.x + dx!, y: p.y + dy!, w, h: fontSize + 1 }))
+    .find((b) => !collides(b) && b.x > 25 && b.x + b.w < 570 && b.y > 70);
+
+  if (candidate) occupied.push(candidate);
+  return { name, p, major, fontSize, label: candidate };
+});
+---
+
+<svg
+  data-india-atlas
+  viewBox="0 0 600 676"
+  role="img"
+  aria-label="Vintage atlas of India with state boundaries, rivers, cities, neighboring countries, and islands"
+  class="block h-auto w-full [clip-path:polygon(0_0.5%,14%_0,31%_0.4%,52%_0,76%_0.3%,100%_0,99.7%_20%,100%_42%,99.6%_69%,100%_99.5%,73%_100%,52%_99.7%,24%_100%,0.3%_99.5%,0_75%,0.3%_44%)]"
+  font-family="Georgia, 'Times New Roman', serif"
+>
+  <defs>
+    <clipPath id={`${id}-print-area`}
+      ><rect x="20" y="64" width="560" height="590"></rect></clipPath
+    >
+    <clipPath id={`${id}-land`}
+      ><path d={atlas.states.map((s) => s.d).join("")}></path></clipPath
+    >
+    <pattern id={`${id}-sea`} width="5" height="5" patternUnits="userSpaceOnUse"
+      ><path d="M0 1h5" stroke="#738d79" stroke-width=".22" opacity=".25"
+      ></path></pattern
+    >
+  </defs>
+  <image
+    href={paperTexture}
+    width="600"
+    height="676"
+    preserveAspectRatio="none"
+  />
+  <rect width="600" height="676" fill="#f5e9c2" opacity=".22"></rect>
+  <text
+    x="34"
+    y="43"
+    font-size="32"
+    font-weight="bold"
+    letter-spacing="7"
+    fill="#3a3d2c">INDIA</text
+  >
+  <g clip-path={`url(#${id}-print-area)`}>
+    <rect x="20" y="64" width="560" height="590" fill="#b9ccad" opacity=".6"
+    ></rect>
+    <rect x="20" y="64" width="560" height="590" fill={`url(#${id}-sea)`}
+    ></rect>
+    {
+      atlas.neighbors.map((n) => (
+        <path
+          d={n.d}
+          fill="#e0cc9c"
+          fill-opacity=".7"
+          stroke="#737456"
+          stroke-width=".8"
+        />
+      ))
+    }
+    {
+      atlas.states.map((s, i) => (
+        <path
+          data-india-state={s.name}
+          d={s.d}
+          fill={
+            northeastColors[s.code ?? ""] ??
+            palette[(i * 3 + s.name.length) % palette.length]
+          }
+          fill-opacity=".9"
+          stroke="#71694e"
+          stroke-width=".75"
+          stroke-linejoin="round"
+        />
+      ))
+    }
+    <g fill="none" stroke="#789998" stroke-width=".75" opacity=".9"
+      >{atlas.rivers.map((r) => <path d={r.d} />)}</g
+    >
+    <g fill="none" stroke="#707c5c" stroke-width=".25" opacity=".35">
+      {
+        Array.from({ length: 16 }, (_, i) => {
+          const p = projectIndia(67 + i * 2, 37.8);
+          return <path d={`M${p.x} 64v590`} />;
+        })
+      }
+      {
+        Array.from({ length: 16 }, (_, i) => {
+          const p = projectIndia(67, 7 + i * 2);
+          return <path d={`M20 ${p.y}h560`} />;
+        })
+      }
+    </g>
+    <g fill="#4d563d" opacity=".9" text-anchor="middle">
+      {
+        stateLabels.map((s) => {
+          return (
+            <text
+              x={s.label[0]}
+              y={s.label[1]}
+              font-size={s.fontSize}
+              letter-spacing=".4"
+              data-state-label={s.name}
+            >
+              {s.words.length > 1
+                ? s.words.map((w, i) => (
+                    <tspan x={s.label[0]} dy={i ? 9 : 0}>
+                      {w}
+                    </tspan>
+                  ))
+                : s.words[0]}
+            </text>
+          );
+        })
+      }
+    </g>
+    <g fill="#283b2e">
+      {
+        cityLabels.map(({ name, p, major, fontSize, label }) => (
+          <g data-map-city={name}>
+            <circle cx={p.x} cy={p.y} r={major ? 2.3 : 1.45} />
+            {major > 0 && (
+              <circle
+                cx={p.x}
+                cy={p.y}
+                r="3.7"
+                fill="none"
+                stroke="currentColor"
+                stroke-width=".5"
+              />
+            )}
+            {label && (
+              <text
+                x={label.x}
+                y={label.y + fontSize}
+                font-size={fontSize}
+                font-weight={major ? "bold" : "normal"}
+                paint-order="stroke"
+                stroke="#e1d9ad"
+                stroke-width="1"
+                stroke-opacity=".45"
+              >
+                {name}
+              </text>
+            )}
+          </g>
+        ))
+      }
+    </g>
+    <g
+      text-anchor="middle"
+      fill="#77735a"
+      font-size="10"
+      letter-spacing="2"
+      font-style="italic"
+      >{
+        neighbors.map(([name, lon, lat]) => {
+          const p = projectIndia(lon, lat);
+          return (
+            <text
+              x={p.x}
+              y={p.y}
+              font-size={name === "BANGLADESH" ? 7 : undefined}
+              letter-spacing={name === "BANGLADESH" ? 0.5 : undefined}
+            >
+              {name}
+            </text>
+          );
+        })
+      }</g
+    >
+    <g fill="#5f8b83" font-style="italic" text-anchor="middle"
+      ><text
+        x="113"
+        y="430"
+        font-size="17"
+        letter-spacing="3"
+        transform="rotate(-65 113 430)">ARABIAN SEA</text
+      ><text
+        x="440"
+        y="470"
+        font-size="17"
+        letter-spacing="3"
+        transform="rotate(-58 440 470)">BAY OF BENGAL</text
+      ><text x="273" y="638" font-size="13" letter-spacing="5"
+        >INDIAN OCEAN</text
+      ></g
+    >
+    <image
+      href={paperTexture}
+      width="600"
+      height="676"
+      preserveAspectRatio="none"
+      class="pointer-events-none opacity-30 mix-blend-multiply"
+    />
+  </g>
+  <g font-size="6" fill="#666d4e" text-anchor="middle"
+    >{
+      [70, 75, 80, 85, 90, 95, 100].map((lon) => {
+        const p = projectIndia(lon, 0);
+        return (
+          <>
+            <>
+              <text x={p.x} y="61">
+                {lon}°E
+              </text>
+              <path
+                d={`M${p.x} 64v5M${p.x} 654v-5`}
+                stroke="#666d4e"
+                stroke-width=".5"
+              />
+            </>
+          </>
+        );
+      })
+    }</g
+  >
+</svg>

@@ -1,0 +1,388 @@
+---
+import IndiaAtlas from "./IndiaAtlas.astro";
+import Pinboard from "./Pinboard.astro";
+import MarkerText from "./MarkerText.astro";
+import MetalClip from "./MetalClip.astro";
+import MarkerLocations from "./MarkerLocations.astro";
+import PaperCrease from "./PaperCrease.astro";
+import { deskRays, rayOpacity, shadowInk } from "../../lib/rayShadow";
+
+export interface Props {
+  id: string;
+  title: string;
+  caption: string;
+  backNote: string;
+  backReference: string;
+  pins: { x: number; y: number; name?: string; state?: string }[];
+  connections: { from: number; to: number }[];
+  crosses?: { x: number; y: number; name?: string; state?: string }[];
+  clip?: "steel" | "red" | "yellow" | "blue" | false;
+  pinImage?: string;
+  frontTexture?: string;
+  backTexture?: string;
+}
+
+const {
+  id,
+  title,
+  caption,
+  backNote,
+  backReference,
+  pins,
+  connections,
+  crosses = [],
+  clip = "red",
+  pinImage = "/hardware/red-pushpin.webp",
+  frontTexture = "/maps/atlas-paper-front.webp",
+  backTexture = "/maps/atlas-paper-back.webp",
+} = Astro.props;
+
+// The sheet's die-cut outline (as its clip-path), in 1000-unit shadow space.
+const outline =
+  "M0 5L140 0L310 4L520 0L760 3L1000 0L997 200L1000 420L996 690L1000 995L730 1000L520 997L240 1000L3 995L0 750L3 440Z";
+
+// Fixed sample count: a lifted, turning sheet needs the widest penumbra.
+const mapRays = deskRays(1000);
+const mapRayOpacity = rayOpacity(mapRays.length);
+const restingHeight = 8;
+---
+
+<figure
+  data-map-sheet
+  data-side="front"
+  data-facing="front"
+  class="group/sheet relative m-0 flex w-full flex-col text-ink"
+>
+  <div
+    data-map-flip
+    role="button"
+    tabindex="0"
+    aria-pressed="false"
+    aria-label={`Show the reverse of ${title}`}
+    class="outline-none focus-visible:opacity-95 [perspective:1400px]"
+  >
+    <!-- Ray-traced from the desk light: the sheet rests 8px up and lifts as it
+         turns over, keeping one edge on the desk. Not inside the 3D rotator. -->
+    <svg
+      data-map-shadow
+      data-resting-height={restingHeight}
+      aria-hidden="true"
+      viewBox="0 0 1000 1000"
+      preserveAspectRatio="none"
+      class="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+    >
+      <defs
+        ><filter
+          id={`${id}-shadow-edge`}
+          x="-15%"
+          y="-15%"
+          width="130%"
+          height="130%"
+          ><feGaussianBlur stdDeviation="1.2"></feGaussianBlur></filter
+        ></defs
+      >
+      <g fill={shadowInk} filter={`url(#${id}-shadow-edge)`}>
+        {
+          mapRays.map((ray) => (
+            <path
+              data-map-ray
+              data-ray-x={ray.x}
+              data-ray-y={ray.y}
+              d={outline}
+              opacity={mapRayOpacity.toFixed(5)}
+              transform={`translate(${((ray.x * restingHeight * 1000) / 450).toFixed(2)} ${((ray.y * restingHeight * 1000) / 450).toFixed(2)})`}
+            />
+          ))
+        }
+      </g>
+    </svg>
+    <div
+      data-map-rotator
+      data-clip-surface
+      class="relative transition-transform duration-700 [transform-style:preserve-3d] group-data-[side=back]/sheet:[transform:rotateY(180deg)] motion-reduce:transition-none"
+    >
+      <div
+        data-map-front
+        class="relative [backface-visibility:hidden]"
+        aria-hidden="false"
+      >
+        <IndiaAtlas
+          id={`${id}-atlas`}
+          paperTexture={frontTexture}
+          {pins}
+          {crosses}
+        />
+        {
+          crosses.length > 0 && (
+            <MarkerLocations id={`${id}-marks`} locations={crosses} />
+          )
+        }
+        <Pinboard
+          id={`${id}-pins`}
+          {pins}
+          {connections}
+          imageSrc={pinImage}
+          viewBox="0 0 600 676"
+        />
+        <div
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-0 z-30 shadow-[inset_1px_1px_1px_#fff5,inset_-1px_-1px_2px_#66502d55,inset_0_0_8px_#8b642744] [clip-path:polygon(0_0.5%,14%_0,31%_0.4%,52%_0,76%_0.3%,100%_0,99.7%_20%,100%_42%,99.6%_69%,100%_99.5%,73%_100%,52%_99.7%,24%_100%,0.3%_99.5%,0_75%,0.3%_44%)]"
+        >
+        </div>
+        <PaperCrease seed={title} axis="vertical" position={33.3} />
+        <PaperCrease seed={title} axis="vertical" position={66.7} />
+      </div>
+      <div
+        data-map-back
+        aria-hidden="true"
+        inert
+        class="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]"
+      >
+        <img
+          src={backTexture}
+          alt="The worn reverse of the atlas sheet"
+          width="1254"
+          height="1254"
+          class="absolute inset-0 h-full w-full object-fill [clip-path:polygon(0_0.5%,14%_0,31%_0.4%,52%_0,76%_0.3%,100%_0,99.7%_20%,100%_42%,99.6%_69%,100%_99.5%,73%_100%,52%_99.7%,24%_100%,0.3%_99.5%,0_75%,0.3%_44%)]"
+        />
+        <p
+          class="absolute left-[10%] top-[10%] -rotate-2 font-typewriter text-[9px] text-[#826b46]/60"
+        >
+          {backReference}
+        </p>
+        <div
+          class="absolute bottom-[15%] left-[18%] w-[65%] -rotate-6 opacity-40"
+        >
+          <MarkerText text={backNote} width={300} size={19} />
+        </div>
+        <div
+          aria-hidden="true"
+          class="pointer-events-none absolute inset-0 shadow-[inset_1px_1px_1px_#fff5,inset_-1px_-1px_2px_#66502d55]"
+        >
+        </div>
+        <PaperCrease seed={title} axis="vertical" position={33.3} />
+        <PaperCrease seed={title} axis="vertical" position={66.7} />
+      </div>
+      {
+        clip && (
+          <MetalClip
+            id={`${id}-clip`}
+            kind="paperclip"
+            color={clip}
+            class="absolute right-0 bottom-[18%] z-40 w-12 rotate-90"
+          />
+        )
+      }
+    </div>
+  </div>
+  <figcaption class="sr-only">
+    <span class="sr-only">{title}. {caption}</span>
+    <span class="sr-only"
+      >Pinned cities: {
+        pins
+          .map((p) => p.name)
+          .filter(Boolean)
+          .join(", ") || "none"
+      }.</span
+    >
+    {
+      crosses.length > 0 && (
+        <span class="sr-only">
+          Cities marked with an X:{" "}
+          {crosses
+            .map((p) => p.name)
+            .filter(Boolean)
+            .join(", ")}
+          .
+        </span>
+      )
+    }
+  </figcaption>
+</figure>
+<script>
+  import {
+    aimRayShadowsWithin,
+    screenToLocal,
+    turningSheetMatrix,
+  } from "../../lib/rayShadow";
+
+  document
+    .querySelectorAll<HTMLElement>("[data-map-sheet]")
+    .forEach((sheet) => {
+      const flip = sheet.querySelector<HTMLElement>("[data-map-flip]");
+      const rotator = sheet.querySelector<HTMLElement>("[data-map-rotator]");
+      const shadow = sheet.querySelector<SVGSVGElement>("[data-map-shadow]");
+
+      const rays = [
+        ...sheet.querySelectorAll<SVGPathElement>("[data-map-ray]"),
+      ].map((path) => ({
+        path,
+        ray: { x: Number(path.dataset.rayX), y: Number(path.dataset.rayY) },
+      }));
+
+      // Turning about its vertical centre line, the edge going under stays on
+      // the desk and the rest lifts: z = rest + (1000 - x)·sin·px/unit.
+      const castShadow = () => {
+        if (!rotator || !shadow) return;
+        const toLocal = screenToLocal(shadow.querySelector("g")!);
+        if (!toLocal) return;
+        const m = new DOMMatrix(getComputedStyle(rotator).transform);
+
+        const sin = Math.abs(m.m13),
+          pxPerUnit = shadow.clientWidth / 1000;
+
+        const lift =
+          Number(shadow.dataset.restingHeight) + 500 * pxPerUnit * sin;
+
+        for (const { path, ray } of rays)
+          path.setAttribute(
+            "transform",
+            `matrix(${turningSheetMatrix(ray, toLocal, pxPerUnit, 500, -1, -m.m11, sin, lift).join(" ")})`,
+          );
+      };
+
+      sheet
+        .closest("[data-desk-canvas]")
+        ?.addEventListener("desk:light-refresh", castShadow);
+
+      let frame = 0;
+
+      // Switch the visible wire at the actual half-turn, including interrupted flips
+      // and reduced-motion mode, rather than assuming a fixed animation delay.
+      // `starting`: called as a flip begins, before its transition has started;
+      // it must not report the sheet settled (that would end the turn early).
+      const trackFacing = (starting = false) => {
+        if (!rotator) return;
+        const transform = new DOMMatrix(getComputedStyle(rotator).transform);
+        sheet.dataset.facing = transform.m33 < 0 ? "back" : "front";
+
+        // The printed faces turn rigidly: pins and thread keep their aim and ride
+        // along. Clips mounted on the sheet show either side, so they follow the
+        // light every frame and arrive at their resting aim without a jump.
+        castShadow();
+
+        sheet.dispatchEvent(
+          new CustomEvent("desk:turn-progress", {
+            bubbles: true,
+            detail: { cos: transform.m11 },
+          }),
+        );
+
+        rotator
+          .querySelectorAll<SVGSVGElement>(":scope > [data-gem-clip]")
+          .forEach((clip) => aimRayShadowsWithin(clip, true));
+
+        if (
+          rotator
+            .getAnimations()
+            .some((animation) => animation.playState === "running")
+        )
+          frame = requestAnimationFrame(() => trackFacing());
+        else if (starting) frame = requestAnimationFrame(() => trackFacing());
+        else
+          sheet.dispatchEvent(
+            new CustomEvent("desk:settled", { bubbles: true }),
+          );
+      };
+
+      // Which side is up is remembered with the desk layout, so a stack turned
+      // over with the map stays consistent across reloads.
+      const canvas = sheet.closest<HTMLElement>("[data-desk-canvas]");
+      const sideKey = canvas && `${canvas.dataset.storageKey}:map-sides`;
+
+      const sheetId =
+        sheet.closest<HTMLElement>("[data-movable-id]")?.dataset.movableId ??
+        "map";
+
+      const sides = (): Record<string, string> => {
+        try {
+          return JSON.parse(localStorage.getItem(sideKey!) ?? "{}") ?? {};
+        } catch {
+          return {};
+        }
+      };
+
+      const setSide = (back: boolean, animate: boolean) => {
+        if (!animate && rotator) rotator.style.transition = "none";
+        sheet.dataset.side = back ? "back" : "front";
+        flip?.setAttribute("aria-pressed", String(back));
+
+        flip?.setAttribute(
+          "aria-label",
+          back ? "Show the front of the map" : "Show the reverse of the map",
+        );
+
+        const frontFace = sheet.querySelector<HTMLElement>("[data-map-front]");
+        const backFace = sheet.querySelector<HTMLElement>("[data-map-back]");
+        frontFace?.setAttribute("aria-hidden", String(back));
+        backFace?.setAttribute("aria-hidden", String(!back));
+        if (frontFace) frontFace.inert = back;
+        if (backFace) backFace.inert = !back;
+        cancelAnimationFrame(frame);
+
+        if (!animate && rotator) {
+          void rotator.offsetWidth;
+          rotator.style.removeProperty("transition");
+        }
+
+        trackFacing(animate);
+
+        if (sideKey)
+          try {
+            localStorage.setItem(
+              sideKey,
+              JSON.stringify({
+                ...sides(),
+                [sheetId]: back ? "back" : "front",
+              }),
+            );
+          } catch {
+            /* Optional persistence. */
+          }
+      };
+
+      const toggle = () => {
+        // A fridge magnet holds the map (and its stack) down: it can't be turned over.
+        const item = sheet.closest<HTMLElement>("[data-movable-item]");
+
+        if (item?.dataset.pinned === "true") {
+          const live = canvas?.querySelector("[data-desk-announcement]");
+
+          if (live)
+            live.textContent = `${item.getAttribute("aria-label")} is held down by a magnet. Lift the magnet off to turn it over.`;
+
+          return;
+        }
+
+        // Anything clipped to the map turns over with it.
+        sheet.dispatchEvent(new CustomEvent("desk:flip", { bubbles: true }));
+        setSide(sheet.dataset.side !== "back", true);
+      };
+
+      if (sideKey && sides()[sheetId] === "back") setSide(true, false);
+
+      canvas
+        ?.querySelector("[data-desk-reset]")
+        ?.addEventListener("click", () => {
+          if (sheet.dataset.side === "back") setSide(false, false);
+        });
+
+      flip?.addEventListener("click", (event) => {
+        if (
+          event.target instanceof Element &&
+          event.target.closest("a,button,input,select,textarea")
+        )
+          return;
+
+        toggle();
+      });
+
+      flip?.addEventListener("keydown", (event) => {
+        if (event.target !== flip || !["Enter", " "].includes(event.key))
+          return;
+
+        event.preventDefault();
+        toggle();
+      });
+    });
+</script>

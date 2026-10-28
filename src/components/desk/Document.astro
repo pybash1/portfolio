@@ -1,0 +1,74 @@
+---
+import PaperSurface from "./PaperSurface.astro";
+import PaperCrease from "./PaperCrease.astro";
+import MarkerText from "./MarkerText.astro";
+import MetalClip from "./MetalClip.astro";
+
+interface Props {
+  title: string;
+  paragraphs?: string[];
+  signature?: string;
+  postscript?: string;
+  class?: string;
+}
+
+const {
+  title,
+  paragraphs = [],
+  signature,
+  postscript,
+  class: className,
+} = Astro.props;
+---
+
+<article
+  data-clip-surface
+  class:list={["relative isolate px-8 pb-8 pt-7 text-ink", className]}
+>
+  <PaperSurface seed={title} material="laid" />
+  <MetalClip
+    kind="paperclip"
+    color="blue"
+    class="absolute right-3 -top-[19px] z-40 w-12"
+  />
+  <div
+    aria-hidden="true"
+    class="absolute left-3 top-14 flex h-[70%] flex-col justify-between"
+  >
+    <span
+      class="size-2 rounded-full bg-black shadow-[inset_1px_1px_2px_#998866]"
+    ></span><span
+      class="size-2 rounded-full bg-black shadow-[inset_1px_1px_2px_#998866]"
+    ></span>
+  </div>
+  <div
+    class="border-y-2 border-stamp/60 py-1 text-center font-print text-[9px] font-bold uppercase tracking-wider text-stamp"
+  >
+    Personal correspondence
+  </div>
+  <h2 class="mb-6 mt-6 font-typewriter text-[16px] font-bold leading-tight">
+    {title}
+  </h2>
+  <div class="space-y-4 font-typewriter text-[11px] leading-[1.65]">
+    {paragraphs.map((p) => <p>{p}</p>)}
+  </div>
+  {
+    signature && (
+      <p class="mb-5 mt-4 -rotate-6 text-right font-hand text-[39px] leading-none text-[#334b67]">
+        {signature}
+      </p>
+    )
+  }
+  {
+    postscript && (
+      <div class="-rotate-2 border-t border-stamp/40 pt-3">
+        <MarkerText text={postscript} width={300} size={13} />
+      </div>
+    )
+  }
+  <PaperCrease seed={title} axis="vertical" position={34} />
+  <span
+    aria-hidden="true"
+    class="pointer-events-none absolute bottom-0 right-0 h-9 w-16 bg-[radial-gradient(ellipse_at_100%_100%,#68754533,transparent_70%)]"
+  ></span>
+</article>

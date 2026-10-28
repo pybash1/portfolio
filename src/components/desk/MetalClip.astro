@@ -1,0 +1,429 @@
+---
+import RayShadow from "./RayShadow.astro";
+import { componentId } from "../../lib/componentId";
+
+interface Props {
+  class?: string;
+  kind?: "bulldog" | "paperclip" | "fastener";
+  shape?: "gem" | "triangle";
+  id?: string;
+  mounted?: boolean;
+  color?: "steel" | "red" | "yellow" | "blue";
+}
+
+const {
+  class: className,
+  kind = "bulldog",
+  shape = "gem",
+  mounted = true,
+  color = "steel",
+} = Astro.props;
+
+const movable = kind === "paperclip";
+const id = componentId("clip", Astro.props.id);
+
+const coating = {
+  steel: ["#263022", "#a9aaa0", "#f1efd5"],
+  red: ["#6e171b", "#bd342e", "#ec7a62"],
+  yellow: ["#846010", "#d5a521", "#f7db75"],
+  blue: ["#153c61", "#347aaa", "#88bad0"],
+}[color];
+
+const wirePaint = `url(#${id}-${color === "steel" ? "metal" : "coating"})`;
+
+// A bent wire through corner points, each corner rounded like a real bend.
+type Point = [number, number];
+
+const bend = (points: Point[], radius: number[]) =>
+  points
+    .map((p, i) => {
+      if (i === 0) return `M${p[0]} ${p[1]}`;
+      if (i === points.length - 1) return `L${p[0]} ${p[1]}`;
+      const [a, b] = [points[i - 1]!, points[i + 1]!];
+
+      const toward = (q: Point, r: number) => {
+        const d = Math.hypot(q[0] - p[0], q[1] - p[1]);
+
+        return [p[0] + ((q[0] - p[0]) * r) / d, p[1] + ((q[1] - p[1]) * r) / d]
+          .map((v) => v.toFixed(2))
+          .join(" ");
+      };
+
+      return `L${toward(a, radius[i]!)}Q${p[0]} ${p[1]} ${toward(b, radius[i]!)}`;
+    })
+    .join("");
+
+// Triangular clip, in the gem's frame (paper edge at y=30): the outer right
+// side and top bar lie behind the paper; the outer left side crosses the edge
+// at (17.9, 30), turns at the point and returns as an inner triangle on top.
+const triangle = {
+  end: [47.6, 78] as Point,
+  topRight: [62, 12] as Point,
+  topLeft: [14, 12] as Point,
+  edge: [17.9, 30] as Point,
+  point: [38, 122] as Point,
+  innerRight: [46, 46] as Point,
+  innerLeft: [28, 46] as Point,
+  tongue: [34.6, 96] as Point,
+};
+
+const wire =
+  shape === "triangle"
+    ? bend(
+        [
+          triangle.end,
+          triangle.topRight,
+          triangle.topLeft,
+          triangle.point,
+          triangle.innerRight,
+          triangle.innerLeft,
+          triangle.tongue,
+        ],
+        [0, 7, 7, 6, 4, 4, 0],
+      )
+    : "M48 102V24a15 15 0 0 0-30 0v91a11 11 0 0 0 22 0V28a7 7 0 0 0-14 0v73";
+
+const frontWire =
+  shape === "triangle"
+    ? bend(
+        [
+          triangle.edge,
+          triangle.point,
+          triangle.innerRight,
+          triangle.innerLeft,
+          triangle.tongue,
+        ],
+        [0, 6, 4, 4, 0],
+      )
+    : "M18 30v85a11 11 0 0 0 22 0V28a7 7 0 0 0-14 0v73";
+
+// The part behind the paper, seen on top from the reverse side.
+const rearWire =
+  shape === "triangle"
+    ? bend(
+        [triangle.end, triangle.topRight, triangle.topLeft, triangle.edge],
+        [0, 7, 7, 0],
+      )
+    : "M48 102V24a15 15 0 0 0-30 0v6";
+
+// Nominal viewBox units per CSS px at the usual sizes; the runtime re-aims from
+// the clip's real on-screen transform.
+const unitsPerPx =
+  kind === "fastener" ? 1.4 : kind === "paperclip" ? 76 / 48 : 76 / 52;
+---
+
+<svg
+  aria-hidden={movable ? undefined : true}
+  role={movable ? "button" : undefined}
+  tabindex={movable ? "0" : undefined}
+  aria-label={movable
+    ? `${color} ${shape === "triangle" ? "triangular " : ""}paper clip. Drag to a paper edge to attach, or onto the desk to detach. Enter to pick up or put down; arrow keys to move; Escape to cancel.`
+    : undefined}
+  data-gem-clip={movable || undefined}
+  data-gem-mask={`${id}-rear-arm`}
+  data-gem-desk-shadow={movable ? `${id}-desk` : undefined}
+  data-ray-caster={movable ? `${id}-desk` : undefined}
+  style={movable && !mounted ? `filter:url(#${id}-desk)` : undefined}
+  data-hardware={kind}
+  data-shape={kind === "paperclip" ? shape : undefined}
+  data-mounted={mounted}
+  data-color={color}
+  viewBox={kind === "fastener"
+    ? "0 0 28 120"
+    : kind === "paperclip"
+      ? "0 0 76 140"
+      : "0 0 76 100"}
+  class:list={[
+    "overflow-visible",
+    movable
+      ? "pointer-events-auto touch-none cursor-grab select-none outline-none focus-visible:opacity-80 data-[clip-dragging=true]:cursor-grabbing"
+      : "pointer-events-none",
+    className,
+  ]}
+  fill="none"
+>
+  {movable && <rect width="76" height="140" fill="transparent" />}
+  <defs>
+    <linearGradient id={`${id}-coating`} x1="0" y1="0" x2="1" y2=".08"
+      ><stop stop-color={coating[0]}></stop><stop
+        offset=".24"
+        stop-color={coating[1]}></stop><stop offset=".4" stop-color={coating[2]}
+      ></stop><stop offset=".6" stop-color={coating[1]}></stop><stop
+        offset="1"
+        stop-color={coating[0]}></stop></linearGradient
+    >
+    <linearGradient
+      id={`${id}-metal`}
+      x1="0"
+      y1="0"
+      x2="1"
+      y2="0"
+      gradientUnits="objectBoundingBox"
+    >
+      <stop stop-color="#232722"></stop><stop offset=".13" stop-color="#9f9f8d"
+      ></stop><stop offset=".27" stop-color="#f6f5df"></stop><stop
+        offset=".4"
+        stop-color="#65685d"></stop><stop offset=".55" stop-color="#272d29"
+      ></stop><stop offset=".71" stop-color="#a9aaa0"></stop><stop
+        offset=".85"
+        stop-color="#f1efd5"></stop><stop offset="1" stop-color="#393f38"
+      ></stop>
+    </linearGradient>
+    <linearGradient id={`${id}-face`} x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#c0c1a9"></stop><stop offset=".15" stop-color="#f3f1dc"
+      ></stop><stop offset=".25" stop-color="#6d7166"></stop><stop
+        offset=".75"
+        stop-color="#333b32"></stop><stop offset=".91" stop-color="#dbdaca"
+      ></stop><stop offset="1" stop-color="#72796a"></stop>
+    </linearGradient>
+    <clipPath id={`${id}-rear-arm`}
+      ><rect x="0" y="0" width="76" height="30"></rect></clipPath
+    >
+    <!-- Clip after the contact filter too: the buried short arm's round cap
+         and shadow must stop at the paper edge, while the long arm stays above. -->
+    <clipPath id={`${id}-reverse-entry`}
+      ><path d="M-20-20H96V160H34V30H-20Z"></path></clipPath
+    >
+    <!-- Ray-traced from the desk light. A gem clip's loops bow ~5px off the
+         paper (a wire-thick 2px shadow would hide under the wire itself); the
+         bulldog jaw and fastener stand a little higher. -->
+    <RayShadow
+      inline
+      id={`${id}-contact`}
+      height={5}
+      {unitsPerPx}
+      region="-70% -30% 240% 180%"
+    />
+    <RayShadow
+      inline
+      id={`${id}-jaw-shadow`}
+      height={kind === "fastener" ? 4 : 6}
+      {unitsPerPx}
+      region="-50% -50% 220% 220%"
+    />
+    <!-- Loose on the desk, or lifted while carried: the whole clip casts (CSS px). -->
+    {
+      movable && (
+        <RayShadow
+          inline
+          id={`${id}-desk`}
+          height={6}
+          region="-40% -25% 180% 150%"
+        />
+      )
+    }
+  </defs>
+  {
+    kind === "bulldog" && (
+      <>
+        <path
+          d="M18 69h40v10H18z"
+          fill="#2d3629"
+          stroke="#b7bda0"
+          stroke-width=".8"
+        />
+        <path
+          d="M25 57 24 22C24 5 52 5 52 22L51 57"
+          stroke={`url(#${id}-metal)`}
+          stroke-width="7"
+        />
+        <path
+          d="M29 46V22c0-12 18-12 18 0v24"
+          stroke="#f4efda"
+          stroke-opacity=".6"
+          stroke-width="1"
+        />
+        <path
+          d="m21 52-5 27 44 0-5-27Z"
+          fill={`url(#${id}-face)`}
+          stroke="#32382f"
+        />
+        <path
+          d="M14 77h48v10H14z"
+          fill={`url(#${id}-metal)`}
+          stroke="#393d32"
+          filter={`url(#${id}-jaw-shadow)`}
+          data-ray-caster={`${id}-jaw-shadow`}
+        />
+        <path d="M15 79h46M20 84h37" stroke="#e3e4ce" stroke-opacity=".8" />
+        <path d="M27 59h22v11H27z" fill="#5e6757" />
+        <path d="M30 60h16" stroke="#c4c6ae" />
+        <circle cx="38" cy="22" r="5.5" stroke="#33382d" stroke-width="2" />
+        <circle cx="38" cy="22" r="4" stroke="#cccab3" />
+        <path
+          d="m19 80 8-.4m16 .4 13-.5M24 58l7-1m13 1 5-.5M36 13l-2 4"
+          stroke="#fffde4"
+          stroke-width=".65"
+          stroke-opacity=".65"
+        />
+        <path
+          d="m21 83 12-.4m9-3 5-.5m-9-13 4-1"
+          stroke="#202b21"
+          stroke-width=".5"
+          stroke-opacity=".7"
+        />
+      </>
+    )
+  }
+  {
+    kind === "paperclip" && (
+      <>
+        <g data-gem-obverse>
+          {/* The long rear arm disappears at the paper edge (y=30). */}
+          <g
+            data-gem-rear
+            clip-path={mounted ? `url(#${id}-rear-arm)` : undefined}
+          >
+            <path
+              d={wire}
+              stroke={coating[0]}
+              stroke-width="4.1"
+              stroke-linecap="round"
+            />
+            <path
+              d={wire}
+              stroke={wirePaint}
+              stroke-width="3.2"
+              stroke-linecap="round"
+            />
+            {shape === "triangle" ? (
+              <path
+                d={rearWire}
+                transform="translate(-.7 -.7)"
+                stroke={coating[2]}
+                stroke-opacity=".5"
+                stroke-width=".55"
+              />
+            ) : (
+              <path
+                d="M47 100V24a14 14 0 0 0-28 0"
+                stroke={coating[2]}
+                stroke-opacity=".5"
+                stroke-width=".55"
+              />
+            )}
+          </g>
+          {/* Only the return loop rests on top, with a tight contact shadow. */}
+          <g
+            data-gem-front
+            style={mounted ? undefined : "display:none"}
+            filter={`url(#${id}-contact)`}
+          >
+            <path
+              d={frontWire}
+              stroke={coating[0]}
+              stroke-width="3.9"
+              stroke-linecap="round"
+            />
+            <path
+              d={frontWire}
+              stroke={wirePaint}
+              stroke-width="3.1"
+              stroke-linecap="round"
+            />
+            {shape === "triangle" ? (
+              <path
+                d={frontWire}
+                transform="translate(-.7 -.7)"
+                stroke={coating[2]}
+                stroke-width=".55"
+                stroke-opacity=".6"
+              />
+            ) : (
+              <>
+                <path
+                  d="M18.3 31v83c0 7 6 11 10 11M39 114V28a6 6 0 0 0-12 0v71"
+                  stroke={coating[2]}
+                  stroke-width=".55"
+                  stroke-opacity=".6"
+                />
+                <path
+                  d="m18 73 .1 9m21 18-.1 7m-13-53 .1 6"
+                  stroke={coating[0]}
+                  stroke-width=".5"
+                  stroke-opacity=".3"
+                />
+                <path
+                  d="m18 32 1 1m6-1 2 .2m11-.4 2 .3"
+                  stroke="#172613"
+                  stroke-width="1"
+                  stroke-opacity=".6"
+                />
+              </>
+            )}
+          </g>
+        </g>
+        {/* The long rear arm is on top of the paper when viewed from the reverse. */}
+        <g
+          data-gem-reverse
+          data-ray-caster={`${id}-contact`}
+          clip-path={`url(#${id}-reverse-entry)`}
+          filter={`url(#${id}-contact)`}
+        >
+          <path
+            d={rearWire}
+            stroke={coating[0]}
+            stroke-width="4.1"
+            stroke-linecap="round"
+          />
+          <path
+            d={rearWire}
+            stroke={wirePaint}
+            stroke-width="3.2"
+            stroke-linecap="round"
+          />
+          {shape === "triangle" ? (
+            <path
+              d={rearWire}
+              transform="translate(-.7 -.7)"
+              stroke={coating[2]}
+              stroke-opacity=".5"
+              stroke-width=".55"
+            />
+          ) : (
+            <path
+              d="M47 100V24a14 14 0 0 0-28 0"
+              stroke={coating[2]}
+              stroke-opacity=".5"
+              stroke-width=".55"
+            />
+          )}
+        </g>
+      </>
+    )
+  }
+  {
+    kind === "fastener" && (
+      <>
+        <rect
+          x="4"
+          y="3"
+          width="20"
+          height="114"
+          rx="9"
+          fill={`url(#${id}-metal)`}
+          stroke="#383e31"
+          filter={`url(#${id}-jaw-shadow)`}
+          data-ray-caster={`${id}-jaw-shadow`}
+        />
+        <rect x="9" y="11" width="10" height="98" rx="4" fill="#252e26" />
+        <path d="M7 9v100M20 9v100" stroke="#d9dbc0" stroke-width="1.5" />
+        <path
+          d="M2 49h24v8H2zm0 16h24v7H2z"
+          fill={`url(#${id}-face)`}
+          stroke="#686f59"
+        />
+        <>
+          <circle cx="14" cy="9" r="2" fill="#40483a" />
+          <circle cx="14" cy="111" r="2" fill="#40483a" />
+        </>
+        <path
+          d="m6 24 2 12m12 50 1 9M5 60l17-.5M8 14l2 1m9 89 2 1"
+          stroke="#e9e6c8"
+          stroke-width=".7"
+          stroke-opacity=".7"
+        />
+      </>
+    )
+  }
+</svg>

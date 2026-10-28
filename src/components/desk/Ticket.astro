@@ -1,0 +1,33 @@
+---
+import PaperSurface from "./PaperSurface.astro";
+
+interface Props {
+  title: string;
+  subtitle: string;
+  serial: string;
+  footer: string;
+  class?: string;
+}
+
+const { title, subtitle, serial, footer, class: className } = Astro.props;
+---
+
+<article
+  data-clip-surface
+  class:list={["relative isolate flex p-3 text-ink", className]}
+>
+  <PaperSurface seed={serial} material="laid" wear="ticket" color="#dcb48b" />
+  <div class="flex-1 border-y border-l border-ink/60 px-4 py-4 text-center">
+    <p class="font-print text-[8px] uppercase tracking-[.15em]">{subtitle}</p>
+    <h2 class="my-3 font-sans text-[27px] leading-none">{title}</h2>
+    <p class="font-book text-[10px]">{footer}</p>
+  </div>
+  <div
+    class="relative flex w-11 shrink-0 items-center justify-center border-y border-r border-l-2 border-ink/60 border-l-dashed"
+  >
+    <span
+      class="whitespace-nowrap font-typewriter text-[9px] [writing-mode:vertical-rl]"
+      >{serial}</span
+    >
+  </div>
+</article>

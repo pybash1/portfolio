@@ -1,0 +1,16 @@
+---
+/** Red, green and blue male–male jumper wires that plug into the breadboard
+ * (src/lib/jumperWires.ts draws and handles them). Each lies on the desk in
+ * its own layer, covering the whole desk but only its wire takes the pointer. */
+const colors = ["red", "green", "blue"];
+---
+
+{
+  colors.map((color) => (
+    <svg
+      data-jumper
+      data-color={color}
+      class="pointer-events-none absolute inset-0 z-30 h-full w-full overflow-visible"
+    />
+  ))
+}

@@ -1,0 +1,68 @@
+---
+import { componentId } from "../../lib/componentId";
+import {
+  defaultFolderLight,
+  folderLightRays,
+  folderOutlines,
+  projectFolderShadow,
+  type FolderLight,
+} from "../../lib/folderShadow";
+import { shadowInk } from "../../lib/rayShadow";
+
+interface Props {
+  light?: FolderLight;
+  open?: boolean;
+}
+
+const { light = defaultFolderLight, open = true } = Astro.props;
+const id = componentId("folder-shadow");
+const rays = folderLightRays(light);
+
+// Alpha compositing N fully overlapping samples reproduces the chosen umbra.
+const sampleOpacity =
+  1 - Math.pow(1 - Math.max(0, Math.min(0.95, light.opacity)), 1 / rays.length);
+---
+
+<!-- Above the leaf's paper-clip layer: a shut cover shades clips on the
+     receiving face exactly as it shades the stock beneath them. -->
+<svg
+  data-folder-cast-shadow
+  data-shadow-side="left"
+  aria-hidden="true"
+  viewBox="0 0 1000 1000"
+  preserveAspectRatio="none"
+  class="pointer-events-none absolute inset-0 z-[1000003] h-full w-full overflow-visible"
+>
+  <defs>
+    <clipPath id={`${id}-receiver`}
+      ><path data-shadow-receiver d={folderOutlines.back}></path></clipPath
+    >
+    <!-- In each ray's own (pre-projection) space: the outline's seam overlap past
+         the hinge is the fold itself, not part of the cover, and casts nothing. -->
+    <clipPath id={`${id}-caster`}
+      ><rect data-shadow-caster x="-100" y="-100" width="1100" height="1200"
+      ></rect></clipPath
+    >
+    <!-- Subpixel edge antialiasing only; softness comes from the light rays. -->
+    <filter id={`${id}-edge`} x="-15%" y="-30%" width="130%" height="160%"
+      ><feGaussianBlur stdDeviation="1.2"></feGaussianBlur></filter
+    >
+  </defs>
+  <g clip-path={`url(#${id}-receiver)`}>
+    <g fill={shadowInk} filter={`url(#${id}-edge)`}>
+      {
+        rays.map((ray) => (
+          <path
+            data-shadow-ray
+            data-ray-x={ray.x}
+            data-ray-y={ray.y}
+            d={folderOutlines.front}
+            clip-path={`url(#${id}-caster)`}
+            opacity={sampleOpacity}
+            transform={`matrix(${projectFolderShadow("left", open ? -1 : 1, 0.74, ray).join(" ")})`}
+          />
+        ))
+      }
+    </g>
+  </g>
+</svg>

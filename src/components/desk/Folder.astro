@@ -1,0 +1,853 @@
+---
+import Grain from "./Grain.astro";
+import MetalClip from "./MetalClip.astro";
+import JournalPocket from "./JournalPocket.astro";
+import MarkerText from "./MarkerText.astro";
+import PaperSurface from "./PaperSurface.astro";
+import FolderStock from "./FolderStock.astro";
+import FolderShadow from "./FolderShadow.astro";
+import RayShadow from "./RayShadow.astro";
+import { folderOutlines } from "../../lib/folderShadow";
+import { deskRays, rayOpacity, shadowInk } from "../../lib/rayShadow";
+import { componentId } from "../../lib/componentId";
+import { paperEdgeMask } from "../../lib/paperWear";
+
+interface Props {
+  title: string;
+  subtitle: string;
+  label: string;
+  referenceNo: string;
+  startDate: string;
+  projects?: { name: string; category: string; year: string; href: string }[];
+  /** A field-notes pocket of journal articles, with this label. */
+  pocket?: { label: string };
+  photo?: { src: string; alt: string; caption?: string };
+  class?: string;
+  open?: boolean;
+}
+
+const {
+  title,
+  subtitle,
+  label,
+  referenceNo,
+  startDate,
+  projects = [],
+  pocket,
+  photo,
+  class: className,
+  open = true,
+} = Astro.props;
+
+const id = componentId("folder");
+const projectsLabel = "Record of selected projects";
+const projectsHeading = "Built & released";
+
+// The whole folder's shadow on the desk and anything under it. A folding
+// cover needs the widest penumbra, so the sample count is fixed at its max.
+const deskShadowRays = deskRays(1000);
+const deskShadowOpacity = rayOpacity(deskShadowRays.length);
+const folderHeight = 8;
+const nominal = (folderHeight * 2000) / 700;
+---
+
+<div
+  data-work-folder
+  data-open={String(open)}
+  data-fold-side="left"
+  data-folder-facing={open ? "open" : "closed"}
+  data-fold-rest={open ? "open" : "closed"}
+  style={{
+    "--folder-hinge-left": open ? "6px" : "0px",
+    "--folder-hinge-right": "6px",
+  }}
+  role="button"
+  tabindex="0"
+  aria-expanded={open}
+  aria-label={`Open or close ${title}`}
+  class:list={[
+    "group/folder pointer-events-none relative w-full perspective:-[1800px]",
+    className,
+  ]}
+>
+  <!-- Ray-traced desk shadow: the stationary leaf lies 8px up; the cover is
+     projected about the hinge as it turns, resting on the papers when shut. -->
+  <svg
+    data-folder-desk-shadow
+    data-height={folderHeight}
+    aria-hidden="true"
+    viewBox="0 0 2000 1000"
+    preserveAspectRatio="none"
+    class="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
+  >
+    <defs
+      ><filter
+        id={`${id}-desk-edge`}
+        x="-15%"
+        y="-15%"
+        width="130%"
+        height="130%"
+        ><feGaussianBlur stdDeviation="1.2"></feGaussianBlur></filter
+      ></defs
+    >
+    <g fill={shadowInk} filter={`url(#${id}-desk-edge)`}>
+      {
+        deskShadowRays.map((ray) => (
+          <g
+            data-desk-ray
+            data-ray-x={ray.x}
+            data-ray-y={ray.y}
+            opacity={deskShadowOpacity.toFixed(5)}
+          >
+            <path
+              data-desk-stationary
+              d={folderOutlines.back}
+              transform={`translate(${1000 + ray.x * nominal} ${ray.y * nominal})`}
+            />
+            <path
+              data-desk-cover
+              d={folderOutlines.front}
+              transform={
+                open
+                  ? `translate(${ray.x * nominal} ${ray.y * nominal})`
+                  : `matrix(-1 0 0 1 ${2000 + ray.x * nominal} ${ray.y * nominal})`
+              }
+            />
+          </g>
+        ))
+      }
+    </g>
+  </svg>
+  <div
+    data-folder-stage
+    class="relative aspect-[1.48] w-full text-ink [transform-style:preserve-3d]"
+  >
+    <div
+      data-folder-open
+      data-folder-board
+      data-clip-surface
+      data-clip-surface-key="0"
+      inert={!open}
+      aria-hidden={!open}
+      class="pointer-events-auto absolute inset-0 isolate [transform:translateZ(-3px)] group-data-[fold-rest=closed]/folder:invisible"
+    >
+      <div
+        data-folder-spine-backing
+        class="absolute inset-0 isolate [clip-path:inset(0_calc(50%_-_min(5px,var(--folder-hinge-right)))_0_calc(50%_-_min(5px,var(--folder-hinge-left))))]"
+      >
+        <FolderStock spread />
+      </div>
+    </div>
+    <!-- A scored fold in continuous card stock, not two exposed cut edges.
+       This fixed, narrow layer bridges subpixel seams between the 3D leaves.
+       The cover's half of the crease is exposed only under the cover's own
+       footprint, so it is hidden by the lifting cover rather than faded. -->
+    <svg
+      data-folder-spine
+      aria-hidden="true"
+      viewBox="0 0 20 1000"
+      preserveAspectRatio="none"
+      class="pointer-events-none absolute inset-y-0 left-1/2 h-full w-[12px] -translate-x-1/2 [clip-path:inset(0_calc(6px_-_var(--folder-hinge-right))_0_calc(6px_-_var(--folder-hinge-left)))] [transform:translateZ(-.5px)] group-data-[fold-rest=closed]/folder:invisible"
+    >
+      <defs
+        ><linearGradient id={`${id}-spine`}
+          ><stop stop-color="#b78659" stop-opacity="0"></stop><stop
+            offset=".35"
+            stop-color="#714829"
+            stop-opacity=".12"></stop><stop
+            offset=".55"
+            stop-color="#573d25"
+            stop-opacity=".22"></stop><stop
+            offset=".72"
+            stop-color="#dfb180"
+            stop-opacity=".17"></stop><stop
+            offset="1"
+            stop-color="#b78659"
+            stop-opacity="0"></stop></linearGradient
+        ></defs
+      >
+      <path d="M0 0H20V1000H0Z" fill={`url(#${id}-spine)`}></path>
+      <path
+        d="M10 0 C9.2 190 10.7 320 10 490 S9.3 810 10 1000"
+        fill="none"
+        stroke="#6e4a2e"
+        stroke-opacity=".14"
+        stroke-width=".8"></path>
+    </svg>
+    <div
+      data-folder-leaf="right"
+      data-leaf-facing="open"
+      data-clip-surface
+      data-clip-surface-key="4"
+      class="pointer-events-auto absolute inset-y-0 left-0 w-1/2 origin-right transition-transform duration-[1000ms] ease-[cubic-bezier(.22,.68,.15,1)] [transform:rotateY(180deg)] [transform-style:preserve-3d] motion-reduce:transition-none"
+    >
+      <!-- The back belongs permanently to this leaf. Its die-cut outline is the
+       reverse of the inside, not another copy of the front cover. -->
+      <div
+        data-folder-exterior="back"
+        inert
+        aria-hidden="true"
+        class="absolute inset-0 isolate [backface-visibility:hidden] [transform:translateZ(1px)] [&>[data-paper-backing]]:filter-none"
+      >
+        <FolderStock back reverse />
+      </div>
+      <div
+        data-folder-inside
+        inert={!open}
+        aria-hidden={!open}
+        class="absolute inset-0 isolate [container-type:inline-size] [backface-visibility:hidden] [transform:rotateY(180deg)_translateZ(1px)] [&>[data-paper-backing]]:filter-none"
+      >
+        <FolderStock back />
+        <div
+          data-folder-papers
+          class="absolute inset-0 group-data-[fold-rest=closed]/folder:invisible"
+        >
+          <div
+            data-folder-sheet="backing"
+            role="button"
+            tabindex="0"
+            aria-label="Blue card sheet. Drag it out of the folder to read; Enter to take it out or put it back."
+            class="data-near-home:opacity-85 pointer-events-auto absolute isolate left-[6%] top-[4%] h-[90%] w-[78%] cursor-grab touch-none select-none rotate-[.4deg]"
+          >
+            <PaperSurface
+              seed={`${referenceNo}:back-sheet`}
+              material="card"
+              color="#8fbbc4"
+              height={4}
+            />
+          </div>
+          <div
+            data-folder-sheet="dossier"
+            role="button"
+            tabindex="0"
+            aria-label={`${title} sheet. Drag it out of the folder to read; Enter to take it out or put it back.`}
+            class="data-near-home:opacity-85 pointer-events-auto absolute isolate left-[7%] top-[7%] h-[88%] w-[77%] cursor-grab touch-none select-none rotate-[-.5deg]"
+          >
+            <PaperSurface
+              seed={`${referenceNo}:dossier`}
+              material="card"
+              color="#cbb48c"
+              height={4}
+            />
+            <div
+              class="absolute inset-[5%] border border-double border-[#504c37]/60 [border-width:3px]"
+            >
+            </div>
+            <p
+              class="absolute inset-x-[10%] top-[6%] text-center font-book text-[7cqw] uppercase leading-none text-[#454033]"
+            >
+              {title}
+            </p>
+            <p
+              class="absolute inset-x-[12%] bottom-[5%] text-center font-typewriter text-[1.6cqw] tracking-[.15em]"
+            >
+              {referenceNo}
+            </p>
+          </div>
+          <article
+            data-folder-sheet="record"
+            tabindex="0"
+            aria-label={`${projectsLabel} sheet. Drag it out of the folder to read; Enter to take it out or put it back.`}
+            data-clip-surface
+            data-clip-surface-key="2"
+            class="data-near-home:opacity-85 pointer-events-auto absolute isolate left-[7%] top-[22%] h-[66%] w-[65%] cursor-grab touch-none select-none p-[3%]"
+          >
+            <PaperSurface
+              seed={`${referenceNo}:right`}
+              material="laid"
+              color="#eee8ce"
+              height={4}
+            />
+            <div
+              class="border border-stamp/60 px-[2%] py-[2%] text-center font-book text-[1.9cqw] uppercase tracking-wide text-stamp"
+            >
+              {projectsLabel}
+            </div>
+            <!-- Where the red list lies (it is a sheet of its own, below). -->
+            <div aria-hidden="true" class="mt-[6%] pb-[92%]"></div>
+            <p
+              class="mt-[5%] border-b border-ink/30 pb-[3%] text-center font-typewriter text-[1.6cqw]"
+            >
+              {referenceNo}
+            </p>
+            <div class="mt-[4%] -rotate-3">
+              <MarkerText
+                text="more where these came from"
+                width={260}
+                size={11}
+              />
+            </div>
+          </article>
+          <div
+            data-folder-sheet="list"
+            role="button"
+            tabindex="0"
+            aria-label={`${projectsHeading} sheet. Drag it out of the folder to read; Enter to take it out or put it back.`}
+            data-ray-caster={`${id}-list-shadow`}
+            style={`filter:url(#${id}-list-shadow)`}
+            class="data-near-home:opacity-85 pointer-events-auto absolute isolate left-[7.2%] top-[31.2%] z-10 h-[41.4%] w-[72%] cursor-grab touch-none select-none border border-[#762e2b]/60 bg-[#bc3436] p-[2.45%]"
+          >
+            <RayShadow id={`${id}-list-shadow`} height={3} />
+            <div
+              class="relative z-10 h-full border border-[#462d27]/60 px-[7%] py-[4%]"
+            >
+              <h2
+                class="mb-[4%] border-b border-[#462d27]/50 pb-[4%] text-center font-serif text-[5.1cqw] leading-none"
+              >
+                {projectsHeading}
+              </h2>
+              <div class="divide-y divide-[#462d27]/40">
+                {
+                  projects.map((project) => (
+                    <a
+                      href={project.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      class="block py-[3%] hover:text-[#f1dfba]"
+                    >
+                      <div class="flex items-baseline justify-between gap-[4%]">
+                        <>
+                          <h3 class="font-book text-[4.5cqw] leading-none">
+                            {project.name}
+                          </h3>
+                          <span class="font-typewriter text-[1.7cqw]">
+                            {project.year}
+                          </span>
+                        </>
+                      </div>
+                      <p class="mt-[2%] font-print text-[1.9cqw] leading-tight">
+                        {project.category}
+                      </p>
+                    </a>
+                  ))
+                }
+              </div>
+            </div>
+            <Grain material="card" strength="light" />
+          </div>
+          <!-- The fastener holds the papers to the folder, and stays when they leave. -->
+          <MetalClip
+            id={`${id}-fastener`}
+            kind="fastener"
+            class="absolute left-[6.35%] top-[36.5%] z-40 w-[5.2%]"
+          />
+        </div>
+        <!-- Fixed to the exposed back tab, clear of the front cover when shut. -->
+        <div
+          data-folder-archive-label
+          style={{
+            maskImage: paperEdgeMask(`${referenceNo}:archive-label`),
+            maskSize: "100% 100%",
+            maskRepeat: "no-repeat",
+            filter: "drop-shadow(1px 1px 1px #2c1e1255)",
+          }}
+          class="pointer-events-none absolute right-[.5%] top-[7%] z-[1000003] flex h-[39%] w-[4%] -rotate-[.8deg] flex-col items-center justify-between bg-[#e7ddbd] py-[clamp(4px,1.8cqw,8px)] shadow-[inset_1px_0_1px_#fff8,inset_-1px_0_1px_#5d4e2d33] lg:right-[-1%] lg:w-[4.6%]"
+        >
+          <span
+            class="relative z-40 font-typewriter text-[2.4cqw] leading-none text-[#484639] [writing-mode:vertical-rl]"
+            >{label}</span
+          >
+          <span
+            class="relative z-40 font-typewriter text-[1.7cqw] leading-none text-[#54503e] [writing-mode:vertical-rl]"
+            >{referenceNo}</span
+          >
+          <Grain material="cotton" strength="heavy" creases={false} />
+        </div>
+        <FolderShadow {open} />
+      </div>
+    </div>
+    <!-- Each leaf has a permanent inside and outside and folds about the spine. -->
+    <div
+      data-folder-cover
+      data-folder-leaf="left"
+      data-leaf-facing={open ? "open" : "closed"}
+      data-clip-surface
+      data-clip-surface-key="3"
+      style={`transform:rotateY(${open ? -180 : 0}deg)`}
+      class="pointer-events-auto absolute inset-y-0 left-1/2 z-40 w-1/2 origin-left transition-transform duration-[1000ms] ease-[cubic-bezier(.22,.68,.15,1)] [transform-style:preserve-3d] motion-reduce:transition-none"
+    >
+      <div
+        data-folder-exterior="front"
+        inert={open}
+        aria-hidden={open}
+        class="absolute inset-0 isolate [container-type:inline-size] [backface-visibility:hidden] [transform:translateZ(1px)] [&>[data-paper-backing]]:filter-none"
+      >
+        <FolderStock reverse />
+        <div
+          data-folder-cover-label
+          data-ray-caster={`${id}-label-shadow`}
+          style={`filter:url(#${id}-label-shadow)`}
+          class="absolute left-[22%] top-[14%] flex h-[28%] w-[51%] flex-col rounded-[3%] bg-[#f4efd5] px-[3%] py-[2.6%] text-center text-[#22251e]"
+        >
+          <RayShadow id={`${id}-label-shadow`} height={1} />
+          <div
+            class="flex items-center justify-center gap-[5%] pb-[5%] font-book text-[3cqw] font-bold uppercase leading-none"
+          >
+            <span aria-hidden="true" class="text-[5cqw]">✣</span><p>
+              {label}
+            </p><span aria-hidden="true" class="text-[5cqw]">✣</span>
+          </div>
+          <div
+            class="flex min-h-0 flex-1 flex-col justify-between border border-[#575746]/65"
+          >
+            <p
+              class="line-clamp-2 border-b border-[#575746]/60 px-[3%] py-[3%] text-[2.3cqw] italic leading-tight text-[#9b4840]"
+            >
+              {subtitle}
+            </p>
+            <h2
+              class="px-[2%] py-[4%] font-serif text-[5.9cqw] font-bold uppercase leading-[.92]"
+            >
+              {title}
+            </h2>
+            <p
+              class="border-t border-[#575746]/60 py-[3%] font-typewriter text-[2cqw] tracking-tight"
+            >
+              <span class="font-sans uppercase font-bold">File No.</span>
+              <span
+                class="pr-1 border-r border-[#575746] tracking-[-0.15em] text-marker"
+                >{referenceNo}</span
+              >
+              <span class="font-sans uppercase font-bold">Start Date</span>
+              <span class="tracking-[-0.15em] text-marker">{startDate}</span>
+            </p>
+          </div>
+          <Grain material="cotton" strength="light" />
+        </div>
+        <div
+          data-folder-cover-stamp
+          class="absolute bottom-[13%] left-[15%] flex h-[13%] w-[68%] -rotate-[.4deg] flex-col bg-[#bd272c] px-[2.5%] py-[1.7%] text-center"
+        >
+          <span
+            class="flex flex-1 items-center justify-center bg-[#252522] text-[6.2cqw] font-bold uppercase leading-none tracking-[.12em] text-[#c63739]"
+            >Unfinished</span
+          >
+          <p
+            class="mt-[2%] border-t border-dashed border-[#752b26]/50 pt-[1%] font-book text-[2.7cqw] italic leading-tight text-[#29271f]"
+          >
+            Case still open.
+          </p>
+          <Grain material="card" strength="light" />
+        </div>
+      </div>
+      <div
+        data-folder-interior
+        data-folder-inside
+        inert={!open}
+        aria-hidden={!open}
+        class="absolute inset-0 isolate [container-type:inline-size] [backface-visibility:hidden] [transform:rotateY(180deg)_translateZ(1px)] [&>[data-paper-backing]]:filter-none"
+      >
+        <FolderStock />
+        <div
+          data-folder-papers
+          class="absolute inset-0 group-data-[fold-rest=closed]/folder:invisible"
+        >
+          {
+            photo && (
+              <>
+                <div
+                  data-folder-envelope
+                  aria-hidden="true"
+                  class="absolute isolate left-[44%] top-[10%] h-[44%] w-[47%] -rotate-[3deg]"
+                >
+                  <PaperSurface
+                    seed={`${referenceNo}:envelope`}
+                    material="kraft"
+                    color="#b9915c"
+                    height={4}
+                  />
+                  <svg
+                    viewBox="0 0 100 130"
+                    preserveAspectRatio="none"
+                    class="absolute inset-0 h-full w-full"
+                  >
+                    <>
+                      <path
+                        d="M1 24L49 68Q51 70 53 68L99 24M1 129L37 78M99 129L63 78"
+                        fill="none"
+                        stroke="#6c4c2d"
+                        stroke-opacity=".32"
+                        stroke-width=".5"
+                      />
+                      <path
+                        d="M2 130H98"
+                        stroke="#e4bf87"
+                        stroke-opacity=".6"
+                        stroke-width="1"
+                      />
+                    </>
+                  </svg>
+                </div>
+                <div
+                  aria-hidden="true"
+                  class="absolute left-[43%] top-[2%] h-[37%] w-[46%] -rotate-[2deg] bg-[#e4e7d0] bg-[linear-gradient(#6f9d9b44_1px,transparent_1px),linear-gradient(90deg,#6f9d9b44_1px,transparent_1px)] bg-size-[8px_8px]"
+                  data-ray-caster={`${id}-grid-shadow`}
+                  style={`filter:url(#${id}-grid-shadow)`}
+                />
+                <RayShadow id={`${id}-grid-shadow`} height={2} />
+                <div
+                  data-folder-photo
+                  data-ray-caster={`${id}-photo-shadow`}
+                  style={`filter:url(#${id}-photo-shadow)`}
+                  class="absolute isolate left-[45%] top-[3%] h-[34%] w-[44%] -rotate-[8deg] bg-[#f3edda] p-[2%] pb-[7%]"
+                >
+                  <RayShadow id={`${id}-photo-shadow`} height={4} />
+                  <img
+                    src={photo.src}
+                    alt={photo.alt}
+                    class="h-full w-full object-cover"
+                    loading="lazy"
+                    draggable="false"
+                  />
+                  {photo.caption && (
+                    <div class="absolute bottom-[3%] left-[5%] right-[3%]">
+                      <MarkerText text={photo.caption} width={160} size={11} />
+                    </div>
+                  )}
+                </div>
+              </>
+            )
+          }
+          <div
+            data-clip-surface
+            data-clip-surface-key="1"
+            class="absolute isolate left-[19%] top-[36%] h-[57%] w-[39%] -rotate-[.7deg]"
+          >
+            {
+              pocket ? (
+                <JournalPocket label={pocket.label} class="h-full" />
+              ) : (
+                <PaperSurface
+                  seed={`${referenceNo}:left`}
+                  material="laid"
+                  color="#f1ecd8"
+                  height={4}
+                />
+              )
+            }
+          </div>
+          <figure
+            data-folder-polaroid
+            data-ray-caster={`${id}-portrait-shadow`}
+            style={`filter:url(#${id}-portrait-shadow)`}
+            class="absolute bottom-[5%] right-[6%] h-[30%] w-[32%] rotate-[3deg] bg-[#eee9dc] p-[clamp(4px,1.5cqw,6px)] shadow-[inset_0_0_8px_#aa9e7940]"
+          >
+            <RayShadow id={`${id}-portrait-shadow`} height={4} />
+            <!-- Replace this local placeholder with Ananjan's portrait. -->
+            <img
+              src="/photos/portrait-placeholder.webp"
+              alt="Temporary front-facing portrait placeholder with a red bar over the eyes"
+              width="720"
+              height="1080"
+              loading="lazy"
+              draggable="false"
+              class="aspect-square w-full object-cover object-center"
+            />
+            <Grain material="photo" strength="faint" />
+          </figure>
+        </div>
+      </div>
+      <MetalClip
+        id={`${id}-paperclip`}
+        kind="paperclip"
+        color="red"
+        class="absolute -bottom-[19px] left-8 z-40 w-12 rotate-180"
+      />
+    </div>
+  </div>
+</div>
+<script>
+  import {
+    folderOutlines,
+    projectFolderShadow,
+    type FolderSide,
+  } from "../../lib/folderShadow";
+  import { screenToLocal, turningSheetMatrix } from "../../lib/rayShadow";
+
+  document
+    .querySelectorAll<HTMLElement>("[data-work-folder]")
+    .forEach((folder) => {
+      const leaves = [
+        ...folder.querySelectorAll<HTMLElement>("[data-folder-leaf]"),
+      ];
+
+      // Left is the default closing side, including initially closed folders.
+      let cover = leaves.find((leaf) => leaf.dataset.folderLeaf === "left")!;
+      folder.dataset.foldSide = "left";
+      const contents = folder.querySelector<HTMLElement>("[data-folder-open]");
+
+      const exteriors = [
+        ...folder.querySelectorAll<HTMLElement>("[data-folder-exterior]"),
+      ];
+
+      const shadow = folder.querySelector<SVGSVGElement>(
+        "[data-folder-cast-shadow]",
+      )!;
+
+      const receiver = shadow.querySelector<SVGPathElement>(
+        "[data-shadow-receiver]",
+      )!;
+
+      const caster = shadow.querySelector<SVGRectElement>(
+        "[data-shadow-caster]",
+      )!;
+
+      const shadowRays = [
+        ...shadow.querySelectorAll<SVGPathElement>("[data-shadow-ray]"),
+      ].map((path) => ({
+        path,
+        ray: { x: Number(path.dataset.rayX), y: Number(path.dataset.rayY) },
+      }));
+
+      const desk = folder.querySelector<SVGSVGElement>(
+        "[data-folder-desk-shadow]",
+      )!;
+
+      const deskRays = [
+        ...desk.querySelectorAll<SVGGElement>("[data-desk-ray]"),
+      ].map((group) => ({
+        ray: { x: Number(group.dataset.rayX), y: Number(group.dataset.rayY) },
+        stationary: group.querySelector<SVGPathElement>(
+          "[data-desk-stationary]",
+        )!,
+        cover: group.querySelector<SVGPathElement>("[data-desk-cover]")!,
+      }));
+
+      // Same geometry as the fold shadow, cast down to the desk: one leaf flat,
+      // the cover turning about the spine (x=1000) and settling on the papers.
+      const castOnDesk = (cosine: number) => {
+        const toLocal = screenToLocal(desk.querySelector("g")!);
+        if (!toLocal) return;
+        const side = folder.dataset.foldSide as FolderSide;
+        const pxPerUnit = desk.clientWidth / 2000;
+        const height = Number(desk.dataset.height);
+
+        const cos = Math.max(-1, Math.min(1, cosine)),
+          sin = Math.sqrt(Math.max(0, 1 - cos * cos));
+
+        const lift = height + (14 * pxPerUnit * (1 + cos)) / 2;
+
+        for (const { ray, stationary, cover } of deskRays) {
+          const r = toLocal(ray);
+
+          stationary.setAttribute(
+            "d",
+            side === "left" ? folderOutlines.back : folderOutlines.front,
+          );
+
+          stationary.setAttribute(
+            "transform",
+            `translate(${(side === "left" ? 1000 : 0) + r.x * height} ${r.y * height})`,
+          );
+
+          cover.setAttribute(
+            "d",
+            side === "left" ? folderOutlines.front : folderOutlines.back,
+          );
+
+          const m =
+            side === "left"
+              ? turningSheetMatrix(
+                  ray,
+                  toLocal,
+                  pxPerUnit,
+                  1000,
+                  -1,
+                  cos,
+                  sin,
+                  lift,
+                )
+              : turningSheetMatrix(
+                  ray,
+                  toLocal,
+                  pxPerUnit,
+                  0,
+                  1,
+                  cos,
+                  sin,
+                  lift,
+                );
+
+          if (side === "right") m[4]! += 1000;
+          cover.setAttribute("transform", `matrix(${m.join(" ")})`);
+        }
+      };
+
+      folder
+        .closest("[data-desk-canvas]")
+        ?.addEventListener("desk:light-refresh", () =>
+          castOnDesk(new DOMMatrix(getComputedStyle(cover).transform).m11),
+        );
+
+      const projectShadow = (cosine: number) => {
+        castOnDesk(cosine);
+        const side = folder.dataset.foldSide as FolderSide;
+        const aspect = cover.clientWidth / cover.clientHeight;
+
+        const receivingFace = leaves
+          .find((leaf) => leaf !== cover)!
+          .querySelector<HTMLElement>("[data-folder-inside]")!;
+
+        // Paint on the receiving face, never above the moving cover in 3D space.
+        if (shadow.parentElement !== receivingFace)
+          receivingFace.append(shadow);
+
+        shadow.dataset.shadowSide = side;
+
+        receiver.setAttribute(
+          "d",
+          side === "left" ? folderOutlines.back : folderOutlines.front,
+        );
+
+        // The front cover's hinge is x=1000, the back's x=0 (its tab extends past 1000).
+        caster.setAttribute("x", side === "left" ? "-100" : "0");
+
+        for (const { path, ray } of shadowRays) {
+          path.setAttribute(
+            "d",
+            side === "left" ? folderOutlines.front : folderOutlines.back,
+          );
+
+          const projection = projectFolderShadow(side, cosine, aspect, ray);
+          if (side === "right") projection[4]! += 1000;
+          path.setAttribute("transform", `matrix(${projection.join(" ")})`);
+        }
+      };
+
+      let frame = 0;
+
+      const trackFold = () => {
+        if (!cover) return;
+        const matrix = new DOMMatrix(getComputedStyle(cover).transform);
+        const facing = matrix.m11 < 0 ? "open" : "closed";
+        cover.dataset.leafFacing = facing;
+
+        const moving = cover
+          .getAnimations()
+          .some((animation) => animation.playState === "running");
+
+        // The cover's half of the shared crease lifts away with the cover: show
+        // it only where the cover still overhangs it. The stationary half stays.
+        const side = folder.dataset.foldSide as FolderSide;
+
+        folder.style.setProperty(
+          `--folder-hinge-${side}`,
+          `${Math.max(0, Math.min(6, -matrix.m11 * cover.clientWidth))}px`,
+        );
+
+        folder.style.setProperty(
+          `--folder-hinge-${side === "left" ? "right" : "left"}`,
+          "6px",
+        );
+
+        projectShadow(matrix.m11);
+
+        if (folder.dataset.folderFacing !== facing) {
+          folder.dataset.folderFacing = facing;
+
+          for (const [element, visible] of [
+            [contents, facing === "open"],
+            ...leaves.map(
+              (leaf) =>
+                [
+                  leaf.querySelector<HTMLElement>("[data-folder-inside]"),
+                  facing === "open",
+                ] as const,
+            ),
+            ...exteriors.map(
+              (face) =>
+                [
+                  face,
+                  face.parentElement === cover && facing === "closed",
+                ] as const,
+            ),
+          ] as const) {
+            if (element) {
+              element.inert = !visible;
+              element.setAttribute("aria-hidden", String(!visible));
+            }
+          }
+        }
+
+        folder.dataset.animating = String(moving);
+
+        // Inserts, clips and magnets on the turning leaf re-aim at the light every
+        // frame; the stationary leaf's never change.
+        cover.dispatchEvent(new CustomEvent("desk:turning", { bubbles: true }));
+
+        // Backface culling handles the moving face. Never hide the stationary
+        // panel at 90 degrees: the cover has not covered it yet.
+        folder.dataset.foldRest = moving ? "moving" : facing;
+
+        if (moving) frame = requestAnimationFrame(trackFold);
+        else
+          folder.dispatchEvent(
+            new CustomEvent("desk:folder-toggle", { bubbles: true }),
+          );
+      };
+
+      const toggle = (side?: string) => {
+        const open = folder.dataset.open !== "true";
+
+        if (!open && folder.dataset.animating !== "true" && side) {
+          folder.dataset.foldSide = side;
+          cover = leaves.find((leaf) => leaf.dataset.folderLeaf === side)!;
+        }
+
+        cover.style.zIndex = "40";
+        for (const leaf of leaves) if (leaf !== cover) leaf.style.zIndex = "0";
+
+        // What lies inside is shut in (or let out) with the cover: see folderClose.ts.
+        folder.dispatchEvent(
+          new CustomEvent("desk:folder-fold", {
+            bubbles: true,
+            detail: { opening: open, cover },
+          }),
+        );
+
+        folder.dataset.foldRest = "moving";
+        folder.dataset.open = String(open);
+
+        // Restore interior attachments before unfolding, not halfway through it.
+        if (open)
+          folder.dispatchEvent(
+            new CustomEvent("desk:folder-toggle", { bubbles: true }),
+          );
+
+        cover.style.transform = `rotateY(${open ? (folder.dataset.foldSide === "right" ? 180 : -180) : 0}deg)`;
+        folder.setAttribute("aria-expanded", String(open));
+        cancelAnimationFrame(frame);
+        trackFold();
+      };
+
+      folder.addEventListener("click", (event) => {
+        if (
+          event.target instanceof Element &&
+          event.target.closest(
+            "a,button,input,select,textarea,audio,video,[contenteditable=true]",
+          )
+        )
+          return;
+
+        const bounds = folder
+          .querySelector<HTMLElement>("[data-folder-stage]")!
+          .getBoundingClientRect();
+
+        toggle(
+          event.clientX < bounds.left + bounds.width / 2 ? "left" : "right",
+        );
+      });
+
+      folder.addEventListener("keydown", (event) => {
+        if (event.target !== folder || !["Enter", " "].includes(event.key))
+          return;
+
+        event.preventDefault();
+        toggle();
+      });
+
+      new ResizeObserver(() =>
+        projectShadow(new DOMMatrix(getComputedStyle(cover).transform).m11),
+      ).observe(folder);
+    });
+</script>

@@ -1,0 +1,161 @@
+---
+import { componentId } from "../../lib/componentId";
+import {
+  penClip,
+  penLength,
+  penOutline,
+  penRadius,
+  penSegments,
+  penTravel,
+} from "../../lib/penModel";
+import { deskRays, rayOpacity, shadowInk } from "../../lib/rayShadow";
+
+/** A retractable gel pen ("ADD Gel · Designer Series") lying on the desk, seen
+ * from above. The pen is a 3D model (penModel.ts) path-traced in Blender under
+ * the desk light (scripts/pen-render), rendered as three layers: the refill,
+ * the push button, and the body over both. Clicking the pen pushes the button
+ * in under the collar's rim and slides the point out of the cone; clicking
+ * again retracts it. The cast shadow is traced here from the same model. */
+interface Props {
+  color?: "black" | "blue";
+  angle?: number;
+  id?: string;
+}
+
+const { color = "black", angle = 0 } = Astro.props;
+const id = componentId("pen", Astro.props.id);
+
+// CSS px per mm: the pen is 292px long on the desk.
+const length = 292,
+  k = length / penLength;
+
+// The rendered frame (scripts/pen-render/pen.py): x −6…146 mm, y ±7 mm.
+const frame = { x: -6 * k, y: -7 * k, width: 152 * k, height: 14 * k };
+
+// Rendered every 15° (scripts/pen-render/render-angles.sh): the set lit for
+// the nearest turn. Turned on the desk, the page swaps sets (aimPen).
+const lit = (((Math.round(angle / 15) * 15) % 360) + 360) % 360;
+const layer = (part: string) => `/hardware/pens/${color}/${lit}-${part}.webp`;
+
+// Shadow: the pen's silhouette swept along each ray from the desk up through
+// the barrel (Pshadow = P + ray·z), the pen's axis lying one radius up.
+const height = 2 * penRadius(penClip.to - 1) * k;
+const rays = deskRays(height);
+const opacity = rayOpacity(rays.length);
+const a = (angle * Math.PI) / 180;
+
+const toLocal = (x: number, y: number) => ({
+  x: x * Math.cos(a) + y * Math.sin(a),
+  y: -x * Math.sin(a) + y * Math.cos(a),
+});
+
+const outline = `M${penOutline()
+  .map(([x, y]) => `${(x * k).toFixed(2)} ${(y * k).toFixed(2)}`)
+  .join("L")}Z`;
+
+const heights = [0, 0.2, 0.4, 0.6, 0.8, 0.95].map((t) => t * height);
+
+// Only the push button clicks the pen, as on the real one: the part of it
+// standing out of the black ring (the rest of the pen just picks it up).
+const button = penSegments.find((segment) => segment.part === "button")!;
+
+const ring = penSegments.find(
+  (segment) => segment.part === "body" && segment.to > button.from,
+)!;
+
+const press = {
+  x: ring.to * k,
+  y: -button.r0 * k,
+  width: (button.to - ring.to) * k,
+  height: 2 * button.r0 * k,
+  rx: button.r0 * k * 0.6,
+};
+---
+
+<svg
+  data-pen
+  data-tip="in"
+  data-color={color}
+  data-lit={lit}
+  aria-hidden="true"
+  viewBox="-14 -16 322 32"
+  width="322"
+  height="32"
+  class="group/pen pointer-events-none block overflow-visible"
+  style={`rotate:${angle}deg`}
+>
+  <defs>
+    <filter id={`${id}-edge`} x="-10%" y="-100%" width="120%" height="300%"
+      ><feGaussianBlur stdDeviation=".6"></feGaussianBlur></filter
+    >
+  </defs>
+  <!-- Ray-traced cast shadow on whatever the pen lies on. -->
+  <g data-pen-shadow fill={shadowInk} filter={`url(#${id}-edge)`}>
+    {
+      rays.map((ray) => (
+        <g opacity={opacity.toFixed(5)}>
+          {heights.map((z) => {
+            const d = toLocal(ray.x * z, ray.y * z);
+            return (
+              <path
+                d={outline}
+                data-pen-ray
+                data-ray-x={ray.x}
+                data-ray-y={ray.y}
+                data-z={z.toFixed(3)}
+                transform={`translate(${d.x.toFixed(2)} ${d.y.toFixed(2)})`}
+              />
+            );
+          })}
+        </g>
+      ))
+    }
+  </g>
+  <g data-pen-body>
+    <!-- refill point: back inside the cone until the pen is clicked -->
+    <g
+      data-pen-refill
+      class="translate-x-(--pen-travel) transition-transform duration-160 ease-[cubic-bezier(0.3,1.4,0.5,1)] group-data-[tip=out]/pen:translate-x-0"
+      style={`--pen-travel:${(penTravel.refill * k).toFixed(2)}px`}
+      ><image data-pen-layer="refill" href={layer("refill")} {...frame} /></g
+    >
+    <!-- the push button, slid in under the collar's rim when clicked -->
+    <g
+      data-pen-button
+      class="transition-transform duration-120 ease-[ease-out] group-data-[tip=out]/pen:translate-x-(--pen-travel)"
+      style={`--pen-travel:${(-penTravel.button * k).toFixed(2)}px`}
+      ><image data-pen-layer="button" href={layer("button")} {...frame} /></g
+    >
+    <image data-pen-layer="body" href={layer("body")} {...frame} />
+    <path d={outline} fill="transparent" pointer-events="all"></path>
+    <rect
+      data-pen-press
+      {...press}
+      fill="transparent"
+      pointer-events="all"
+      class="cursor-pointer"></rect>
+  </g>
+</svg>
+<script>
+  // Clicking the push button (or Enter/Space on the pen) clicks it: button in,
+  // point out; again, and the point goes back in.
+  document.querySelectorAll<SVGSVGElement>("[data-pen]").forEach((pen) => {
+    const item = pen.closest<HTMLElement>("[data-movable-item]");
+
+    const click = () => {
+      const out = pen.dataset.tip !== "out";
+      pen.dataset.tip = out ? "out" : "in";
+      item?.setAttribute("aria-pressed", String(out));
+    };
+
+    pen.querySelector("[data-pen-press]")?.addEventListener("click", click);
+
+    item?.addEventListener("keydown", (event) => {
+      if (event.target !== item || (event.key !== "Enter" && event.key !== " "))
+        return;
+
+      event.preventDefault();
+      click();
+    });
+  });
+</script>

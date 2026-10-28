@@ -1,0 +1,125 @@
+---
+import { componentId } from "../../lib/componentId";
+import { folderOutlines } from "../../lib/folderShadow";
+
+interface Props {
+  back?: boolean;
+  spread?: boolean;
+  reverse?: boolean;
+}
+
+const { back = false, spread = false, reverse = false } = Astro.props;
+
+const id = componentId("folder-stock");
+
+// The lower edges share the normal sheet width. Above the shoulder, the front
+// is recessed 52 units and the rear extends another 32 units beyond that width.
+const outline = spread
+  ? "M20 0 H982 Q1000 0 1000 26 V974 Q1000 1000 982 1000 H20 Q0 1000 0 974 V26 Q0 0 20 0 Z"
+  : back
+    ? folderOutlines.back
+    : folderOutlines.front;
+
+// Outer edges catch light; the hinge is not a cut edge and must not be stroked.
+const rim = spread
+  ? "M0 28 Q0 0 20 0 H982 Q1000 0 1000 27 V974 Q1000 1000 982 1000 H20 Q0 1000 0 974 Z"
+  : back
+    ? "M0 0 H997 Q1032 0 1032 27 V474 Q1032 492 1018 504 L1010 511 Q1000 520 1000 541 V974 Q1000 1000 965 1000 H0"
+    : "M1000 0 H87 Q52 0 52 27 V480 Q52 501 39 509 L21 520 Q0 530 0 551 V974 Q0 1000 35 1000 H1000";
+---
+
+<svg
+  data-folder-stock
+  data-paper-backing
+  aria-hidden="true"
+  viewBox="0 0 1000 1000"
+  preserveAspectRatio="none"
+  class="pointer-events-none absolute inset-0 -z-10 h-full w-full overflow-visible"
+>
+  <defs>
+    <clipPath id={`${id}-cut`}><path d={outline}></path></clipPath>
+    <pattern
+      id={`${id}-kraft`}
+      patternUnits="userSpaceOnUse"
+      width="1000"
+      height="780"
+    >
+      <image
+        href="/textures/kraft-fibers.svg"
+        width="1000"
+        height="780"
+        preserveAspectRatio="none"
+      />
+    </pattern>
+    <filter id={`${id}-fiber`} x="0" y="0" width="100%" height="100%">
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency=".24 .31"
+        numOctaves="3"
+        seed="27"
+        stitchTiles="stitch"></feTurbulence>
+      <feColorMatrix type="saturate" values="0"></feColorMatrix>
+    </filter>
+    <filter id={`${id}-mottle`} x="0" y="0" width="100%" height="100%">
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency=".013 .018"
+        numOctaves="4"
+        seed="14"
+        stitchTiles="stitch"></feTurbulence>
+      <feColorMatrix type="saturate" values="0"></feColorMatrix>
+    </filter>
+    <linearGradient id={`${id}-tone`} x1="0" y1="0" x2="1" y2=".3">
+      <stop stop-color="#b78659"></stop><stop offset=".18" stop-color="#bb895b"
+      ></stop><stop offset=".8" stop-color="#b9885b"></stop><stop
+        offset="1"
+        stop-color="#b78659"></stop>
+    </linearGradient>
+    <linearGradient
+      id={`${id}-fold`}
+      x1={back ? "0" : "1"}
+      x2={back ? "1" : "0"}
+    >
+      <stop stop-color="#513922" stop-opacity=".18"></stop>
+      <stop offset=".22" stop-color="#664629" stop-opacity=".08"></stop>
+      <stop offset=".6" stop-color="#dfb485" stop-opacity=".08"></stop>
+      <stop offset="1" stop-color="#b78659" stop-opacity="0"></stop>
+    </linearGradient>
+  </defs>
+  <g
+    clip-path={`url(#${id}-cut)`}
+    transform={reverse ? "translate(1000 0) scale(-1 1)" : undefined}
+  >
+    <path d={outline} fill={`url(#${id}-tone)`}></path>
+    <path
+      data-folder-kraft-texture
+      d={outline}
+      fill={`url(#${id}-kraft)`}
+      opacity=".75"
+      class="mix-blend-multiply"></path>
+    <path
+      d={outline}
+      filter={`url(#${id}-mottle)`}
+      opacity=".13"
+      class="mix-blend-multiply"></path>
+    <path
+      d={outline}
+      filter={`url(#${id}-fiber)`}
+      opacity=".18"
+      class="mix-blend-multiply"></path>
+    {
+      !spread && (
+        <path
+          d={back ? "M0 0H28V1000H0Z" : "M972 0H1002V1000H972Z"}
+          fill={`url(#${id}-fold)`}
+        />
+      )
+    }
+    <path
+      d={rim}
+      fill="none"
+      stroke="#edcea1"
+      stroke-opacity=".2"
+      stroke-width="2"></path>
+  </g>
+</svg>

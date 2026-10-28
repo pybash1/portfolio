@@ -1,0 +1,90 @@
+---
+import { componentId } from "../../lib/componentId";
+import {
+  deskRays,
+  magnetCarried,
+  magnetDisc,
+  magnetFaceTurn,
+  rayOpacity,
+  shadowInk,
+} from "../../lib/rayShadow";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const src = "/hardware/fridge-magnet-metal.webp";
+
+const id = componentId("magnet");
+
+// A solid puck on the paper: each ray sweeps the disc from its base up to its
+// face, so the shadow stays attached at the base and widens away from it.
+// Sample for the widest penumbra, when the magnet is carried.
+const rays = deskRays(magnetCarried + magnetDisc.thickness * 44);
+const opacity = rayOpacity(rays.length);
+
+// Server aim assumes an unturned, resting magnet ~44px across; the client re-aims.
+const lift = magnetDisc.thickness * 100;
+---
+
+<span
+  data-hardware="magnet"
+  data-desk-magnet
+  role="button"
+  tabindex="0"
+  aria-label="Fridge magnet. Drag onto a paper to hold it there, or onto the desk to leave it loose. Enter to pick up or put down; arrow keys to move; Escape to cancel."
+  class:list={[
+    "pointer-events-auto grid aspect-square w-11 cursor-grab touch-none select-none outline-none focus-visible:opacity-80",
+    className,
+  ]}
+>
+  <svg
+    data-magnet-shadow
+    viewBox="0 0 100 100"
+    class="pointer-events-none h-full w-full overflow-visible [grid-area:1/1]"
+  >
+    <!-- User-space region: each ray is a short line with a disc-wide stroke, and a
+         bounding-box region would ignore the stroke and crop the shadow. -->
+    <defs
+      ><filter
+        id={`${id}-edge`}
+        filterUnits="userSpaceOnUse"
+        x="-40"
+        y="-40"
+        width="200"
+        height="200"><feGaussianBlur stdDeviation=".9"></feGaussianBlur></filter
+      ></defs
+    >
+    <g
+      stroke={shadowInk}
+      stroke-linecap="round"
+      fill="none"
+      filter={`url(#${id}-edge)`}
+    >
+      {
+        rays.map((ray) => (
+          <path
+            data-magnet-ray
+            data-ray-x={ray.x}
+            data-ray-y={ray.y}
+            stroke-width={magnetDisc.radius * 2}
+            opacity={opacity.toFixed(5)}
+            d={`M${magnetDisc.x} ${magnetDisc.y}L${(magnetDisc.x + ray.x * lift).toFixed(2)} ${(magnetDisc.y + ray.y * lift).toFixed(2)}`}
+          />
+        ))
+      }
+    </g>
+  </svg>
+  <!-- The photograph's light is baked in; keep it facing the desk light. -->
+  <img
+    data-magnet-face
+    {src}
+    alt=""
+    width="1254"
+    height="1254"
+    draggable="false"
+    style={`rotate:${magnetFaceTurn(0).toFixed(2)}deg`}
+    class="pointer-events-none block h-full w-full object-contain [grid-area:1/1]"
+  />
+</span>

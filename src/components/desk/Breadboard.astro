@@ -1,0 +1,88 @@
+---
+import { componentId } from "../../lib/componentId";
+import { board } from "../../lib/breadboardModel";
+import { deskRays, rayOpacity, shadowInk } from "../../lib/rayShadow";
+
+/** A full-size solderless breadboard lying on the desk, seen from above. A 3D
+ * model built in code (breadboardModel.ts), path-traced in Blender under the
+ * desk light at every 15° turn (scripts/breadboard-render); the page shows the
+ * render for its angle on screen and traces its shadow from the same model. */
+interface Props {
+  angle?: number;
+  id?: string;
+}
+
+const { angle = 0 } = Astro.props;
+const id = componentId("breadboard", Astro.props.id);
+
+// The same scale as the pens: 292 px for the pen's 139.5 mm.
+const k = 292 / 139.5;
+
+const w = board.length * k,
+  h = board.width * k;
+
+// The rendered frame (breadboard.py): ±87 mm by ±30 mm.
+const frame = { x: -87 * k, y: -30 * k, width: 174 * k, height: 60 * k };
+const lit = (((Math.round(angle / 15) * 15) % 360) + 360) % 360;
+
+// Shadow: the block's outline swept along each ray from the desk to its top.
+const height = board.height * k;
+const rays = deskRays(height);
+const opacity = rayOpacity(rays.length);
+const a = (angle * Math.PI) / 180;
+
+const toLocal = (x: number, y: number) => ({
+  x: x * Math.cos(a) + y * Math.sin(a),
+  y: -x * Math.sin(a) + y * Math.cos(a),
+});
+
+const r = board.corner * k;
+const outline = `M${-w / 2 + r} ${-h / 2}H${w / 2 - r}Q${w / 2} ${-h / 2} ${w / 2} ${-h / 2 + r}V${h / 2 - r}Q${w / 2} ${h / 2} ${w / 2 - r} ${h / 2}H${-w / 2 + r}Q${-w / 2} ${h / 2} ${-w / 2} ${h / 2 - r}V${-h / 2 + r}Q${-w / 2} ${-h / 2} ${-w / 2 + r} ${-h / 2}Z`;
+const heights = [0, 0.25, 0.5, 0.75, 1].map((t) => t * height);
+---
+
+<svg
+  data-breadboard
+  data-sprite-base="/hardware/breadboard"
+  data-lit={lit}
+  aria-hidden="true"
+  viewBox={`${-w / 2 - 10} ${-h / 2 - 10} ${w + 20} ${h + 20}`}
+  width={w + 20}
+  height={h + 20}
+  class="pointer-events-none block overflow-visible"
+  style={`rotate:${angle}deg`}
+>
+  <defs>
+    <filter id={`${id}-edge`} x="-10%" y="-20%" width="120%" height="140%"
+      ><feGaussianBlur stdDeviation=".8"></feGaussianBlur></filter
+    >
+  </defs>
+  <!-- Ray-traced cast shadow on whatever the board lies on. -->
+  <g fill={shadowInk} filter={`url(#${id}-edge)`}>
+    {
+      rays.map((ray) => (
+        <g opacity={opacity.toFixed(5)}>
+          {heights.map((z) => {
+            const d = toLocal(ray.x * z, ray.y * z);
+            return (
+              <path
+                d={outline}
+                data-pen-ray
+                data-ray-x={ray.x}
+                data-ray-y={ray.y}
+                data-z={z.toFixed(3)}
+                transform={`translate(${d.x.toFixed(2)} ${d.y.toFixed(2)})`}
+              />
+            );
+          })}
+        </g>
+      ))
+    }
+  </g>
+  <image
+    data-pen-layer="body"
+    href={`/hardware/breadboard/${lit}.webp`}
+    {...frame}
+  />
+  <path d={outline} fill="transparent" pointer-events="all"></path>
+</svg>

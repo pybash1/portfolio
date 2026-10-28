@@ -1,0 +1,60 @@
+---
+import Grain from "./Grain.astro";
+import LogSheet from "./LogSheet.astro";
+import RayShadow from "./RayShadow.astro";
+import { componentId } from "../../lib/componentId";
+import { getArticles } from "../../lib/journal";
+
+/** The folder's field-notes pocket, holding one log sheet per journal
+ * article (src/lib/journal.ts, read at build time). The sheets stand fanned
+ * in the pocket with their tops showing; each can be pulled out and laid on
+ * the desk, and slides back in when brought back to the pocket
+ * (src/lib/journalPocket.ts). */
+interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label = "Field notes", class: className } = Astro.props;
+const articles = (await getArticles()).reverse();
+const shadow = componentId("pocket-shadow");
+---
+
+<div
+  data-journal-pocket
+  class:list={[
+    "relative isolate w-full [container-type:inline-size]",
+    className,
+  ]}
+>
+  {
+    articles.map((article, i) => (
+      <div
+        data-pocket-sheet
+        data-slot={i}
+        role="button"
+        tabindex="0"
+        aria-label={`Journal entry: ${article.title}. Drag it out of the pocket to read; Enter to take it out or put it back.`}
+        class="absolute left-[3%] top-0 w-[94%] cursor-grab touch-none select-none data-near-pocket:opacity-85"
+        style={`--slot-x:${(i - (articles.length - 1) / 2) * 1.6}cqw;--slot-y:${i * 5.2}cqw;--slot-turn:${((i % 3) - 1) * 1.2}deg;translate:var(--slot-x) var(--slot-y);rotate:var(--slot-turn);z-index:${i + 1}`}
+      >
+        <LogSheet {...article} entry={i + 1} />
+      </div>
+    ))
+  }
+
+  {/* The sleeve in front: only the sheets' tops show above it. */}
+  <div
+    data-ray-caster={shadow}
+    style={`filter:url(#${shadow})`}
+    class="pointer-events-none absolute inset-x-0 bottom-0 z-100 h-[46%] border-x border-b border-[#c4c6bb]/60 bg-[#eeeee5] shadow-[inset_0_1px_1px_#fff9]"
+  >
+    <RayShadow id={shadow} height={2} />
+    <p
+      class="absolute inset-x-[12%] bottom-[17%] border border-ink/20 bg-[#a4b59d] px-[3%] py-[8%] text-center font-bold text-[7cqw] uppercase tracking-wide"
+    >
+      {label}
+    </p>
+    <Grain material="cotton" strength="light" />
+  </div>
+</div>

@@ -1,0 +1,64 @@
+---
+import { componentId } from "../../lib/componentId";
+import { paperRandom } from "../../lib/paperWear";
+
+interface Props {
+  seed?: string;
+  axis?: "horizontal" | "vertical";
+  position?: number;
+}
+
+const { seed = "fold", axis = "horizontal", position = 52 } = Astro.props;
+
+const id = componentId("crease");
+const random = paperRandom(`${seed}:${axis}:${position}`);
+const offsets = Array.from({ length: 7 }, () => (random() - 0.5) * 10);
+
+const point = (along: number, n: number) =>
+  axis === "horizontal"
+    ? `${along},${position * 10 + offsets[n]!}`
+    : `${position * 10 + offsets[n]!},${along}`;
+
+const d = `M${point(-10, 0)} C${point(160, 1)} ${point(310, 2)} ${point(480, 3)} S${point(800, 4)} ${point(1010, 5)}`;
+---
+
+<svg
+  data-paper-crease={axis}
+  aria-hidden="true"
+  viewBox="0 0 1000 1000"
+  preserveAspectRatio="none"
+  class="pointer-events-none absolute inset-0 z-30 h-full w-full overflow-hidden"
+  fill="none"
+>
+  <defs
+    ><filter id={id} x="-5%" y="-5%" width="110%" height="110%"
+      ><feGaussianBlur stdDeviation="2.4"></feGaussianBlur></filter
+    ></defs
+  >
+  <path
+    {d}
+    stroke="#4d5031"
+    stroke-width="13"
+    stroke-opacity=".065"
+    filter={`url(#${id})`}></path>
+  <path
+    {d}
+    stroke="#fff5d9"
+    stroke-width="6"
+    stroke-opacity=".12"
+    transform={axis === "horizontal" ? "translate(0 -2)" : "translate(-2 0)"}
+    filter={`url(#${id})`}></path>
+  <path
+    {d}
+    stroke="#5b563a"
+    stroke-width="1.2"
+    stroke-opacity=".075"
+    stroke-dasharray="113 3 207 8 81 2"></path>
+  <path
+    {d}
+    stroke="#fff4d6"
+    stroke-width="1.5"
+    stroke-opacity=".075"
+    transform={axis === "horizontal" ? "translate(0 1.4)" : "translate(1.4 0)"}
+  ></path>
+</svg>

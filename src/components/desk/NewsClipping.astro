@@ -1,0 +1,160 @@
+---
+import Grain from "./Grain.astro";
+import PaperCrease from "./PaperCrease.astro";
+import RayShadow from "./RayShadow.astro";
+import { componentId } from "../../lib/componentId";
+import { tornSheet } from "../../lib/tornEdge";
+
+/** An old newspaper cutting: yellowed newsprint with a headline, justified
+ * columns and a halftone picture, torn from the page by hand on
+ * three sides (a pale fibrous rim where the print peeled away) and cut
+ * straight with scissors on the fourth. A fold runs across it. */
+interface Props {
+  /** One entry per line: each line is set to the full column width. */
+  headline: string | string[];
+  byline: string;
+  /** Column text; one paragraph per entry, flowing across two columns. */
+  paragraphs?: string[];
+  /** Under the halftone picture. */
+  caption: string;
+  class?: string;
+}
+
+const {
+  headline: headlineProp,
+  byline,
+  paragraphs = [],
+  caption,
+  class: className,
+} = Astro.props;
+
+const lines = [headlineProp].flat();
+const headline = lines.join(" ");
+const shadow = componentId("clipping-shadow");
+const { outer, inner } = tornSheet(headline);
+const mask = (image: string) => ({
+  maskImage: image,
+  maskSize: "100% 100%",
+  maskRepeat: "no-repeat",
+});
+---
+
+<article
+  data-clip-surface
+  aria-label={`Newspaper cutting: ${headline}`}
+  class:list={[
+    "relative isolate aspect-[4/5] text-[#2b261c] [container-type:inline-size]",
+    className,
+  ]}
+>
+  <span
+    data-paper-backing
+    data-ray-caster={shadow}
+    aria-hidden="true"
+    style={`filter:url(#${shadow})`}
+    class="pointer-events-none absolute inset-0 -z-10"
+  >
+    <!-- The torn core: paler, fibrous, a little wider than the print. -->
+    <span class="absolute inset-0 bg-[#f2ead3]" style={mask(outer)}>
+      <Grain
+        material="kraft"
+        strength="light"
+        seed={`${headline}:core`}
+        creases={false}
+      />
+    </span>
+    <!-- The newsprint face, stained with age toward its edges. -->
+    <span class="absolute inset-0 bg-[#d9cca4]" style={mask(inner)}>
+      <span
+        class="absolute inset-0 bg-[radial-gradient(ellipse_at_0%_0%,#8a6a2a55,transparent_55%),radial-gradient(ellipse_at_100%_100%,#7a5a2260,transparent_50%),radial-gradient(circle_at_72%_18%,#8a5a2040,transparent_9%),radial-gradient(circle_at_14%_71%,#8a5a2038,transparent_7%),radial-gradient(circle_at_58%_88%,#8a5a2030,transparent_5%)]"
+      ></span>
+      <Grain
+        material="cotton"
+        strength="heavy"
+        seed={headline}
+        creases={false}
+      />
+    </span>
+  </span>
+  <RayShadow id={shadow} height={5} />
+
+  <div
+    class="absolute inset-[9%] flex flex-col mix-blend-multiply [text-rendering:geometricPrecision]"
+  >
+    <h2
+      class="font-sans text-[10.5cqw] font-bold uppercase leading-[0.95] tracking-tight"
+    >
+      {
+        lines.map((line) => (
+          <span data-fit-line class="block whitespace-nowrap">
+            <span class="inline-block">{line}</span>
+          </span>
+        ))
+      }
+    </h2>
+    <p class="mt-[1.6cqw] font-print text-[2.6cqw] uppercase tracking-[0.1em]">
+      {byline}
+    </p>
+
+    <div class="mt-[2.4cqw] flex min-h-0 flex-1 gap-[3cqw]">
+      <div
+        class="min-w-0 flex-1 columns-2 [column-fill:auto] gap-[3cqw] overflow-hidden text-left font-book text-[3.1cqw] leading-[1.32] [column-rule:1px_solid_#2b261c40] [hyphens:auto]"
+        lang="en"
+      >
+        {
+          paragraphs.map((p, i) => (
+            <p
+              class:list={[
+                "indent-[2.6cqw]",
+                i === 0 &&
+                  "first-letter:float-left first-letter:mr-[0.6cqw] first-letter:font-sans first-letter:text-[11cqw] first-letter:font-bold first-letter:leading-[0.8] first-letter:indent-0",
+              ]}
+            >
+              {p}
+            </p>
+          ))
+        }
+      </div>
+      <figure class="w-[28%] shrink-0">
+        <div class="relative aspect-[4/5] overflow-hidden bg-[#c9bb92]">
+          <span
+            aria-hidden="true"
+            class="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,#2b261c_0_22%,transparent_23%),radial-gradient(ellipse_at_50%_105%,#2b261c_0_55%,transparent_56%)] opacity-80"
+          ></span>
+          <span
+            aria-hidden="true"
+            class="absolute inset-0 bg-[radial-gradient(circle,transparent_0_40%,#d9cca4_44%)] bg-[length:1.1cqw_1.1cqw] opacity-70"
+          ></span>
+        </div>
+        <figcaption
+          class="mt-[1cqw] font-print text-[2.4cqw] italic leading-tight"
+        >
+          {caption}
+        </figcaption>
+      </figure>
+    </div>
+  </div>
+
+  <PaperCrease seed={headline} axis="horizontal" position={56} />
+</article>
+
+<script>
+  // Set every headline line to the full width of its column, as a
+  // compositor would: each line gets the size that makes it exactly fit.
+  // Sizes are in cqw, so they follow the clipping when it is resized.
+  const fit = () => {
+    document
+      .querySelectorAll<HTMLElement>("[data-fit-line]")
+      .forEach((line) => {
+        const text = line.firstElementChild as HTMLElement;
+        const card = line.closest<HTMLElement>("article")!;
+        const measured = 100;
+
+        line.style.fontSize = `${measured}px`;
+        const size = (measured * line.clientWidth) / text.offsetWidth;
+        line.style.fontSize = `${(size / card.clientWidth) * 100}cqw`;
+      });
+  };
+
+  document.fonts.ready.then(fit);
+</script>

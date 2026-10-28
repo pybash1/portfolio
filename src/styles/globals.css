@@ -1,143 +1,158 @@
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'PP Locomotive New';
-  src: url('/fonts/PPLocomotiveNew-Light.woff2') format('woff2');
-  font-weight: 300;
+  font-family: "Berkeley Mono";
+  src: url("/fonts/Berkeley-Mono-Variable.woff2") format("woff2");
   font-style: normal;
+  font-weight: 100 900;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Helvetica Now Display';
-  src: url('/fonts/HelveticaNowDisplay-Regular.woff2') format('woff2');
+  font-family: "Balete";
+  src: url("/fonts/balete-variablevf.woff") format("woff");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica Now";
+  src: url("/fonts/HelveticaNowDisplay-Regular.woff2") format("woff2");
   font-weight: 400;
-  font-style: normal;
   font-display: swap;
 }
-
 @font-face {
-  font-family: 'Helvetica Now Display';
-  src: url('/fonts/HelveticaNowDisplay-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Helvetica Now Display';
-  src: url('/fonts/HelveticaNowDisplay-Bold.woff2') format('woff2');
+  font-family: "Helvetica Now";
+  src: url("/fonts/HelveticaNowDisplay-Bold.woff2") format("woff2");
   font-weight: 700;
-  font-style: normal;
   font-display: swap;
 }
-
 @font-face {
-  font-family: 'Helvetica Now Display';
-  src: url('/fonts/HelveticaNowDisplay-Black.woff2') format('woff2');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'HW Cigars';
-  src: url('/fonts/HW-Cigars.woff2') format('woff2');
+  font-family: "Caveat";
+  src: url("/fonts/Caveat-Regular.ttf") format("truetype");
   font-weight: 400;
-  font-style: normal;
   font-display: swap;
 }
 
 @theme {
-  /* Colors in OKLCH */
-  --color-primary: oklch(18.67% 0.005 60.1);
-  /* Obsidian Ink */
-  --color-accent: oklch(0.684 0.212 40.592);
-  --color-bg: oklch(96.1% 0.012 85.1);
-  /* Warm Editorial Cream */
-  --color-white: #ffffff;
-
-  /* Font Family */
-  --font-serif: "PP Locomotive New", Georgia, serif;
-  --font-sans: "Helvetica Now Display", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-fancy: "HW Cigars", "PP Locomotive New", Georgia, serif;
-  --font-mono: "JetBrains Mono", monospace;
-
-  --ease-editorial: cubic-bezier(0.23, 1, 0.32, 1);
+  /* Small phones: the inspo board drops to one column. */
+  --breakpoint-xs: 30.0625rem; /* 481px */
+  --font-sans: "Balete", sans-serif;
+  --font-serif: "Balete", serif;
+  --font-print: "Helvetica Now", "Arial Narrow", sans-serif;
+  --font-typewriter: "Courier New", monospace;
+  --font-mono: "Berkeley Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", cursive;
+  --color-marker: #b32b26;
+  --color-paper: #eee9d4;
+  --color-ink: #292a24;
+  --color-kraft: #ab784b;
+  --color-stamp: #a23c32;
+  --color-inspo-bg: #111;
+  --color-inspo-surface: #1b1b1a;
+  --color-inspo-line: #333330;
+  --color-inspo-ink: #e9e7df;
+  --color-inspo-muted: #aaa9a1;
+  --color-inspo-faint: #85857e;
+  --shadow-paper:
+    3px 5px 3px #17201666, 9px 17px 20px #0009, inset 0 0 28px #7c875222;
+  --shadow-card:
+    3px 6px 3px #17201680, 10px 19px 22px #000a, inset 0 0 24px #39482b22;
+  --shadow-photo:
+    4px 8px 4px #15231b80, 12px 24px 24px #000a, inset 0 0 16px #63745022;
+  --shadow-folder:
+    5px 10px 5px #11180dcc, 14px 24px 30px #000b, inset 0 0 50px #39482b33;
 }
 
-@layer base {
-  html {
-    background-color: #000;
-    color: var(--color-primary);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+@layer utilities {
+  [data-desk-canvas] :focus,
+  [data-gem-clip]:focus {
+    @apply outline-none;
   }
-
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: var(--font-sans);
-    background: transparent !important;
+  [data-desk-canvas] :focus-visible,
+  [data-gem-clip]:focus-visible {
+    @apply outline-none opacity-100;
+  }
+  [data-gem-reverse] {
+    @apply invisible;
+  }
+  /* A sheet turned face-down shows only its back: its own paper, unprinted.
+     Hardware on its front goes face-down with it. */
+  [data-turn-back] {
+    @apply invisible;
+  }
+  /* :where() keeps this rule's weight low, so the overrides below win. A pen
+     looks the same either way up, so a face-down pen still shows. */
+  [data-turned-over="true"]
+    *:not(
+      :where(
+        [data-stack-view],
+        [data-stack-view] *,
+        [data-gem-clip][data-mounted="true"],
+        [data-gem-clip][data-mounted="true"] *,
+        [data-bump-layer],
+        [data-bump-layer] *,
+        [data-pen],
+        [data-pen] *
+      )
+    ) {
+    @apply invisible;
+  }
+  [data-turned-over="true"] [data-turn-back],
+  [data-turned-over="true"] [data-turn-back] *,
+  [data-turned-over="true"] [data-stack-view],
+  [data-turned-over="true"] [data-gem-clip][data-mounted="true"],
+  [data-turned-over="true"] [data-bump-layer] {
+    @apply visible;
+  }
+  /* Clips seen from behind show their back arm: on a map turned over, inside
+     the folder, on a sheet turned face-down (a clip wraps its edge), or
+     re-seated on top of the stack it binds. */
+  :is(
+      [data-map-sheet][data-facing="back"]
+        [data-hardware="paperclip"][data-mounted="true"],
+      [data-folder-clip-layer="inside"]
+        > [data-hardware="paperclip"][data-mounted="true"],
+      [data-turned-over="true"]
+        [data-gem-clip][data-mounted="true"]:not([data-stack-view="obverse"]),
+      [data-stack-view="reverse"]
+    )
+    [data-gem-obverse] {
+    @apply invisible;
+  }
+  :is(
+      [data-map-sheet][data-facing="back"]
+        [data-hardware="paperclip"][data-mounted="true"],
+      [data-folder-clip-layer="inside"]
+        > [data-hardware="paperclip"][data-mounted="true"],
+      [data-turned-over="true"]
+        [data-gem-clip][data-mounted="true"]:not([data-stack-view="obverse"]),
+      [data-stack-view="reverse"]
+    )
+    [data-gem-reverse] {
+    @apply visible;
+  }
+  [data-folder-leaf] > [data-hardware] {
+    @apply [translate:0_0_2px];
+  }
+  [data-folder-leaf][data-leaf-facing="open"] > [data-hardware] {
+    @apply [translate:0_0_-2px];
   }
 }
 
-@layer components {
-  .grid-line-h {
-    @apply border-t border-[--color-primary] w-full;
-  }
-
-  .grid-line-v {
-    @apply border-l border-[--color-primary] h-full;
-  }
-
-  .editorial-container {
-    @apply px-4 md:px-8 max-w-[1800px] mx-auto;
-  }
-
-  .lenis.lenis-smooth {
-    height: auto;
-  }
-
-  .lenis.lenis-smooth [data-lenis-prevent] {
-    overscroll-behavior: contain;
-  }
-
-  .lenis.lenis-stopped {
-    overflow: hidden;
-  }
-
-  .lenis.lenis-scrolling iframe {
-    pointer-events: none;
-  }
+/* Nothing on the page is selectable as text, except form fields. */
+input,
+textarea,
+[contenteditable="true"] {
+  user-select: text;
 }
 
-/* Header theme switching (React component, must be global) */
-#main-header[data-theme="light"] nav {
-  color: var(--color-primary);
+/* Brought up close (deskFocus): no shadows or dents. The sheet lifted to read
+   casts nothing, and nothing lying under it shows a dent through it. */
+[data-desk-focused] [data-bump-layer] {
+  visibility: hidden;
 }
-
-#main-header[data-theme="dark"] nav {
-  color: white;
-}
-
-#main-header nav {
-  transition: color 0.5s ease;
-}
-
-/* Nav arrow animation */
-.nav-arrow {
-  display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-.nav-link:hover .nav-arrow {
-  transform: translate(2px, -2px);
-}
-
-/* Responsive hero title */
-@media (max-width: 768px) {
-  h1 {
-    font-size: 5rem;
-  }
+[data-focused] [data-ray-caster] {
+  filter: none !important;
 }

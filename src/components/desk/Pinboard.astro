@@ -1,0 +1,193 @@
+---
+import { pinRotation } from "../../lib/mapGeometry";
+import RayShadow from "./RayShadow.astro";
+import { pinShadowSamples, shadowInk } from "../../lib/rayShadow";
+
+interface Props {
+  id: string;
+  pins: { x: number; y: number; name?: string; state?: string }[];
+  connections: { from: number; to: number }[];
+  viewBox?: string;
+  imageSrc?: string;
+}
+
+const {
+  id,
+  pins,
+  connections,
+  viewBox = "0 0 420 300",
+  imageSrc = "/hardware/red-pushpin.webp",
+} = Astro.props;
+
+const rotations = pins.map(pinRotation);
+
+const anchors = pins.map((pin, i) => {
+  const radians = (rotations[i]! * Math.PI) / 180;
+  return { x: pin.x + 8 * Math.sin(radians), y: pin.y - 8 * Math.cos(radians) };
+});
+
+// Server aim: viewBox units per px at the usual sheet width, pin turn only.
+const unitsPerPx = Number(viewBox.split(/\s+/)[2]) / 450;
+
+const pinShadows = rotations.map((rotation) => {
+  const r = (-rotation * Math.PI) / 180;
+
+  return pinShadowSamples((v) => ({
+    x: (v.x * Math.cos(r) - v.y * Math.sin(r)) * unitsPerPx,
+    y: (v.x * Math.sin(r) + v.y * Math.cos(r)) * unitsPerPx,
+  }));
+});
+
+const threads = connections.flatMap(({ from, to }, i) => {
+  const a = anchors[from];
+  const b = anchors[to];
+  if (!a || !b) return [];
+  const sag = i % 2 ? 1.6 : 2.5;
+
+  return [
+    `M${a.x} ${a.y} C${a.x + (b.x - a.x) / 3} ${a.y + (b.y - a.y) / 3 + sag},${a.x + (2 * (b.x - a.x)) / 3} ${a.y + (2 * (b.y - a.y)) / 3 + sag},${b.x} ${b.y}`,
+  ];
+});
+---
+
+<svg
+  aria-hidden="true"
+  data-pinboard
+  {viewBox}
+  class="pointer-events-none absolute inset-0 z-40 h-full w-full overflow-visible"
+  fill="none"
+>
+  <defs>
+    <!-- The thread is tied ~4px up the pins (8 of 23 units to the cap). -->
+    <RayShadow
+      inline
+      id={`${id}-thread-shadow`}
+      height={4}
+      {unitsPerPx}
+      region="-15% -15% 135% 140%"
+    />
+  </defs>
+  <!-- Thin, slightly slack cotton thread rather than a heavy braided cable. -->
+  <g
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    filter={`url(#${id}-thread-shadow)`}
+    data-ray-caster={`${id}-thread-shadow`}
+  >
+    {
+      threads.map((d) => (
+        <g data-thread>
+          <path d={d} stroke="#6d2929" stroke-width="1.15" />
+          <path d={d} stroke="#b8493c" stroke-width=".62" />
+          <path
+            d={d}
+            stroke="#d58c74"
+            stroke-width=".2"
+            stroke-dasharray=".3 2.7"
+            stroke-opacity=".4"
+          />
+        </g>
+      ))
+    }
+  </g>
+  {
+    pins.map(({ x, y, name, state }, i) => (
+      <g
+        data-pushpin
+        data-city={name}
+        transform={`translate(${x} ${y}) rotate(${rotations[i]})`}
+      >
+        {name && (
+          <title>
+            {name}
+            {state ? `, ${state}` : ""}
+          </title>
+        )}
+        <g data-pin-shadow stroke={shadowInk} stroke-linecap="round">
+          {pinShadows[i]!.samples.map(({ needle, cap }) => (
+            <g opacity={pinShadows[i]!.opacity.toFixed(5)}>
+              <path d={needle} stroke-width="1.2" />
+              <path d={cap} stroke-width="10" />
+            </g>
+          ))}
+        </g>
+        <ellipse cy=".5" rx="1.4" ry=".8" fill="#263222" opacity=".65" />
+        <image
+          href={imageSrc}
+          x="-14.5"
+          y="-30"
+          width="30"
+          height="32"
+          preserveAspectRatio="none"
+        />
+        {/* One small wrap anchors the thread around the plastic foot. */}
+        <path
+          d="M-3-8c-2 1 5 2.4 7 .5M1-7l1 2"
+          stroke="#852f2a"
+          stroke-width=".65"
+          stroke-linecap="round"
+        />
+      </g>
+    ))
+  }
+</svg>
+<script>
+  import {
+    lightOnFace,
+    pinShadowSamples,
+    screenToLocal,
+  } from "../../lib/rayShadow";
+
+  // Re-aim each pin's projected shadow from its real on-screen orientation.
+  document
+    .querySelectorAll<SVGSVGElement>("[data-pinboard]")
+    .forEach((board) => {
+      const render = () =>
+        board.querySelectorAll<SVGGElement>("[data-pushpin]").forEach((pin) => {
+          // A face turned away keeps its aim: it must still be right when it turns back up.
+          if (
+            lightOnFace(pin)?.hidden &&
+            pin.querySelector("[data-pin-shadow] g")
+          )
+            return;
+
+          const toLocal = screenToLocal(pin);
+          const group = pin.querySelector("[data-pin-shadow]");
+          if (!toLocal || !group) return;
+          const { opacity, samples } = pinShadowSamples(toLocal);
+
+          group.replaceChildren(
+            ...samples.map(({ needle, cap }) => {
+              const sample = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "g",
+              );
+
+              sample.setAttribute("opacity", opacity.toFixed(5));
+
+              for (const [d, width] of [
+                [needle, "1.2"],
+                [cap, "10"],
+              ]) {
+                const path = document.createElementNS(
+                  "http://www.w3.org/2000/svg",
+                  "path",
+                );
+
+                path.setAttribute("d", d!);
+                path.setAttribute("stroke-width", width!);
+                sample.append(path);
+              }
+
+              return sample;
+            }),
+          );
+        });
+
+      board
+        .closest("[data-desk-canvas]")
+        ?.addEventListener("desk:light-refresh", render);
+
+      render();
+    });
+</script>

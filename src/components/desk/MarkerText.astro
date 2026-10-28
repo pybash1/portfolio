@@ -1,0 +1,124 @@
+---
+import { markerGlyphs } from "../../lib/markerGlyphs";
+
+interface Props {
+  text: string;
+  width?: number;
+  size?: number;
+  underline?: boolean;
+  class?: string;
+}
+
+const {
+  text,
+  width = 300,
+  size = 22,
+  underline = false,
+  class: className,
+} = Astro.props;
+
+const scale = size / 20;
+const padding = 5;
+const maxWidth = width - padding * 2;
+// A letter without its own form falls back to its capital.
+const glyphOf = (char: string) =>
+  markerGlyphs[char] ?? markerGlyphs[char.toUpperCase()];
+const advance = (char: string) => (glyphOf(char)?.width ?? 12) * scale;
+const lines: string[] = [];
+
+for (const paragraph of text.split("\n")) {
+  let line = "";
+
+  for (const word of paragraph.split(/\s+/)) {
+    const candidate = line ? `${line} ${word}` : word;
+
+    if (
+      line &&
+      [...candidate].reduce((sum, c) => sum + advance(c), 0) > maxWidth
+    ) {
+      lines.push(line);
+      line = word;
+    } else line = candidate;
+  }
+
+  lines.push(line);
+}
+
+const lineHeight = size * 1.5;
+
+const height =
+  lines.length * lineHeight + padding * 2 + (underline ? size * 0.45 : 0);
+
+const seed = [...text].reduce((sum, c) => sum + c.charCodeAt(0), 0);
+
+const strokes = lines.flatMap((line, row) => {
+  const lineWidth = [...line].reduce((sum, c) => sum + advance(c), 0);
+  let cursor = Math.max(padding, (width - lineWidth) / 2);
+
+  return [...line].flatMap((char, col) => {
+    const glyph = glyphOf(char);
+    const x = cursor;
+    cursor += advance(char);
+    if (!glyph || char === " ") return [];
+    const n = seed + row * 71 + col * 29;
+    const angle = (n % 13) - 6;
+    const y = padding + row * lineHeight + ((n % 7) - 3) * scale * 0.4;
+
+    return [
+      {
+        d: glyph.paths[n % glyph.paths.length]!,
+        transform: `translate(${x} ${y}) scale(${scale}) rotate(${angle} 5 10) scale(${0.94 + (n % 5) * 0.03} ${0.92 + (n % 4) * 0.045})`,
+        pressure: 2.35 + (n % 5) * 0.12,
+        opacity: 0.78 + (n % 4) * 0.05,
+      },
+    ];
+  });
+});
+---
+
+<span
+  data-marker-text={text}
+  class:list={[
+    "block mix-blend-multiply",
+    /\btext-\[?#/.test(className ?? "") ? "" : "text-marker",
+    className,
+  ]}
+>
+  <span class="sr-only">{text}</span>
+  <svg
+    aria-hidden="true"
+    viewBox={`0 0 ${width} ${height}`}
+    class="block h-auto w-full overflow-visible"
+    fill="none"
+    stroke="currentColor"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  >
+    {
+      strokes.map((s) => (
+        <g transform={s.transform}>
+          <path d={s.d} stroke-width={s.pressure + 0.4} stroke-opacity=".12" />
+          <path d={s.d} stroke-width={s.pressure} stroke-opacity={s.opacity} />
+          <path
+            d={s.d}
+            stroke-width=".45"
+            stroke-opacity=".16"
+            transform="translate(.28 .1)"
+          />
+        </g>
+      ))
+    }
+    {
+      underline && (
+        <g stroke-width={scale * 1.65} stroke-opacity=".8">
+          <path
+            d={`M${width * 0.13} ${height - 9} Q${width * 0.48} ${height - 6} ${width * 0.88} ${height - 10}`}
+          />
+          <path
+            d={`M${width * 0.15} ${height - 3} Q${width * 0.54} ${height} ${width * 0.9} ${height - 5}`}
+          />
+        </g>
+      )
+    }
+  </svg>
+</span>

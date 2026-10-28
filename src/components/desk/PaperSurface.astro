@@ -1,0 +1,54 @@
+---
+import Grain from "./Grain.astro";
+import PaperCrease from "./PaperCrease.astro";
+import RayShadow from "./RayShadow.astro";
+import { paperEdgeMask, type PaperWear } from "../../lib/paperWear";
+import { componentId } from "../../lib/componentId";
+
+interface Props {
+  seed: string;
+  color?: string;
+  wear?: PaperWear;
+  material?: "cotton" | "kraft" | "laid" | "card" | "photo" | "map";
+  strength?: "faint" | "light" | "heavy";
+  /** How far (CSS px) the sheet's edges stand off whatever lies beneath it. */
+  height?: number;
+}
+
+const {
+  seed,
+  color = "#eee9d4",
+  wear = "paper",
+  material = "cotton",
+  strength = "light",
+  height = 8,
+} = Astro.props;
+
+const shadow = componentId("paper-shadow");
+---
+
+<!-- Only the backing is masked: attached clips, magnets and slotted content
+     remain outside the mask and keep their complete silhouettes. -->
+<span
+  data-paper-backing
+  data-ray-caster={shadow}
+  aria-hidden="true"
+  style={`filter:url(#${shadow})`}
+  class="pointer-events-none absolute inset-0 -z-10"
+>
+  <span
+    data-paper-edge={wear}
+    class="absolute inset-0 rounded-[inherit]"
+    style={{
+      backgroundColor: color,
+      maskImage: paperEdgeMask(seed, wear),
+      maskSize: "100% 100%",
+      maskRepeat: "no-repeat",
+    }}
+  >
+    <Grain {material} {strength} {seed} creases={false} />
+  </span>
+</span>
+<RayShadow id={shadow} {height} />
+<!-- Fold light/shadow belongs above the printed ink, not inside the backing. -->
+{material === "laid" && <PaperCrease {seed} />}
