@@ -1,0 +1,32 @@
+---
+import Layout from "../layouts/Layout.astro";
+import InspoBoard from "../components/inspo/InspoBoard";
+import { availableInspoItems } from "../server/inspo/availability";
+import { unavailable } from "../components/inspo/styles";
+
+export const prerender = false;
+Astro.response.headers.set("Cache-Control", "no-store");
+
+let items = null;
+try {
+  items = await availableInspoItems();
+} catch {
+  Astro.response.status = 503;
+  Astro.response.statusText = "Service Unavailable";
+}
+---
+
+<Layout title="Inspo — Ananjan Mitra">
+  <meta
+    slot="head"
+    name="description"
+    content="A collection of images, words, sounds, and things worth keeping. Explore Ananjan Mitra’s inspiration canvas."
+  />
+  {
+    items ? (
+      <InspoBoard items={items} client:load />
+    ) : (
+      <main class={unavailable}>Homelab is down</main>
+    )
+  }
+</Layout>
