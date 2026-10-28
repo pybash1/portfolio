@@ -23,25 +23,15 @@ export default function InspoBoard({ items }: Props) {
   const [selected, setSelected] = useState<InspoItem | null>(null);
   const [adding, setAdding] = useState(false);
   const [signInError, setSignInError] = useState("");
-  const [shared, setShared] = useState<InspoItem[]>([]);
+  const [collection, setCollection] = useState<InspoItem[]>(items);
   const [homelabDown, setHomelabDown] = useState(false);
   const [addedId, setAddedId] = useState<string | null>(null);
   const [owner, setOwner] = useState(false);
-  const [removed, setRemoved] = useState<ReadonlySet<string>>(new Set());
   const searchRef = useRef<HTMLInputElement>(null);
+  const mutationVersion = useRef(0);
   const searching = !!query.trim();
   const isCanvas = !searching && !homelabDown;
   const { viewportRef, sceneRef, reveal } = useCanvas(isCanvas);
-  const collection = useMemo(
-    () => [
-      ...new Map(
-        [...items, ...shared]
-          .filter((item) => !removed.has(item.id))
-          .map((item) => [item.id, item]),
-      ).values(),
-    ],
-    [items, shared, removed],
-  );
   const results = useMemo(
     () => searchInspo(collection, query),
     [collection, query],
@@ -72,16 +62,21 @@ export default function InspoBoard({ items }: Props) {
       controller?.abort();
       controller = new AbortController();
       const signal = controller.signal;
+      // An older snapshot must not undo a local add or delete.
+      const version = mutationVersion.current;
       editorRequest<{ items: InspoItem[] }>("items", {
         signal,
       })
         .then(({ items: next }) => {
           if (!signal.aborted) {
-            setShared((current) => [
-              ...new Map(
-                [...current, ...next].map((item) => [item.id, item]),
-              ).values(),
-            ]);
+            if (version === mutationVersion.current) {
+              setCollection(next);
+              setSelected((current) =>
+                current
+                  ? (next.find((item) => item.id === current.id) ?? null)
+                  : null,
+              );
+            }
             setHomelabDown(false);
           }
         })
@@ -120,7 +115,10 @@ export default function InspoBoard({ items }: Props) {
       await editorRequest(`items/${encodeURIComponent(item.id)}`, {
         method: "DELETE",
       });
-      setRemoved((current) => new Set(current).add(item.id));
+      mutationVersion.current++;
+      setCollection((current) =>
+        current.filter((entry) => entry.id !== item.id),
+      );
       setSelected((current) => (current?.id === item.id ? null : current));
     } catch (error) {
       window.alert(
@@ -347,7 +345,8 @@ export default function InspoBoard({ items }: Props) {
             checkOwner();
           }}
           onAdded={(item) => {
-            setShared((current) => [
+            mutationVersion.current++;
+            setCollection((current) => [
               ...current.filter((entry) => entry.id !== item.id),
               item,
             ]);
