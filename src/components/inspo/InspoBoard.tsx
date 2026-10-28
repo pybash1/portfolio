@@ -12,7 +12,7 @@ import InspoAddDialog from "./InspoAddDialog";
 import type { InspoItem } from "./types";
 import { useCanvas } from "./useCanvas";
 import { useCanvasLayout } from "./useCanvasLayout";
-import { iconButton, textButton, unavailable } from "./styles";
+import { iconButton, textButton } from "./styles";
 
 interface Props {
   items: InspoItem[];
@@ -24,13 +24,12 @@ export default function InspoBoard({ items }: Props) {
   const [adding, setAdding] = useState(false);
   const [signInError, setSignInError] = useState("");
   const [collection, setCollection] = useState<InspoItem[]>(items);
-  const [homelabDown, setHomelabDown] = useState(false);
   const [addedId, setAddedId] = useState<string | null>(null);
   const [owner, setOwner] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const mutationVersion = useRef(0);
   const searching = !!query.trim();
-  const isCanvas = !searching && !homelabDown;
+  const isCanvas = !searching;
   const results = useMemo(
     () => searchInspo(collection, query),
     [collection, query],
@@ -80,15 +79,11 @@ export default function InspoBoard({ items }: Props) {
                   : null,
               );
             }
-            setHomelabDown(false);
           }
         })
         .catch(() => {
-          if (!signal.aborted) {
-            setHomelabDown(true);
-            setSelected(null);
-            setAdding(false);
-          }
+          // SSR already supplied a successful snapshot. Keep it visible and
+          // retry on the next focus or poll instead of discarding an open form.
         });
     };
     refresh();
@@ -179,8 +174,6 @@ export default function InspoBoard({ items }: Props) {
     window.addEventListener("keydown", shortcut);
     return () => window.removeEventListener("keydown", shortcut);
   }, [selected, adding]);
-
-  if (homelabDown) return <main className={unavailable}>Homelab is down</main>;
 
   return (
     <div
