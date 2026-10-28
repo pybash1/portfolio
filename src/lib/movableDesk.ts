@@ -685,22 +685,23 @@ export function initializeDesk(canvas: HTMLElement) {
       }
 
       velocity = { x: velocity.x * friction, y: velocity.y * friction };
+      const speed = Math.hypot(velocity.x, velocity.y),
+        moving = speed > 6;
 
-      // The pen stays aloft while moving quickly, then drops as it slows.
+      // The pen stays aloft while moving quickly, then drops as it slows and
+      // lands once it settles; exponential decay alone never reaches zero.
       liftTo(
         body,
         pen
-          ? Math.min(1, Math.hypot(velocity.x, velocity.y) / 500)
+          ? moving
+            ? Math.min(1, speed / 500)
+            : 0
           : Math.max(0, body.lift - dt / 0.12),
         grab,
       );
       aimBody(body);
 
-      if (
-        Math.hypot(velocity.x, velocity.y) > 6 ||
-        Math.abs(spin) > 0.02 ||
-        body.lift > 0
-      )
+      if (moving || Math.abs(spin) > 0.02 || body.lift > 0)
         glideFrame = requestAnimationFrame(glide);
       else done();
     };
