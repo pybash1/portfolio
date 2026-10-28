@@ -31,10 +31,13 @@ export default function InspoBoard({ items }: Props) {
   const mutationVersion = useRef(0);
   const searching = !!query.trim();
   const isCanvas = !searching && !homelabDown;
-  const { viewportRef, sceneRef, reveal } = useCanvas(isCanvas);
   const results = useMemo(
     () => searchInspo(collection, query),
     [collection, query],
+  );
+  // The viewport only mounts with results, so the first item starts the camera.
+  const { viewportRef, sceneRef, reveal } = useCanvas(
+    isCanvas && results.length > 0,
   );
   useCanvasLayout(sceneRef, results, isCanvas);
 
