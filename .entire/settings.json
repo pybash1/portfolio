@@ -1,15 +1,15 @@
 {
-  "enabled": true,
+  "checkpoints": {
+    "primary": {
+      "type": "git-refs"
+    }
+  },
+  "enabled": false,
   "strategy_options": {
     "checkpoint_remote": {
       "provider": "github",
       "repo": "pybash1/entire-checkpoints"
     }
   },
-  "telemetry": false,
-  "checkpoints": {
-    "primary": {
-      "type": "git-refs"
-    }
-  }
+  "telemetry": false
 }
