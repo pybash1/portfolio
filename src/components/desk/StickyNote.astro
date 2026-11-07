@@ -1,0 +1,74 @@
+---
+/** A sticky note, written on by hand. Only its gummed top strip holds to the
+ * desk; the rest curls up off it a little, and further when the note is
+ * picked up or peeled. Put down on a sheet, it sticks there (movableDesk).
+ * A real 76 mm note is ~92 px at the desk's scale; this is the 100 mm size. */
+interface Props {
+  text: string;
+  color?: string;
+  class?: string;
+}
+
+const { text, color = "#f7e56f", class: className } = Astro.props;
+
+const paper =
+  "absolute inset-x-0 bg-(color:--note) bg-[url('/textures/paper-grain.svg')] bg-blend-multiply";
+const ease =
+  "transition-[transform,translate,filter,opacity] duration-300 ease-out";
+---
+
+<article
+  data-sticky-note
+  data-focus-turn="0"
+  aria-label={`Sticky note: ${text}`}
+  style={`--note:${color}`}
+  class:list={[
+    "relative isolate aspect-square w-30 [container-type:inline-size]",
+    className,
+  ]}
+>
+  <!-- Under the lifted part: a soft shadow that grows away from the strip,
+       with only a tight contact shadow under the strip itself. -->
+  <span
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-x-0 top-0 h-[22%] shadow-[1px_1.5px_1.5px_#0006]"
+  ></span>
+  <span
+    aria-hidden="true"
+    class:list={[
+      "pointer-events-none absolute bottom-[-3%] left-[3%] right-0 top-[20%] translate-x-[3%] translate-y-[2%] bg-black/55 blur-[5px] [mask-image:linear-gradient(#0000,#000_45%)]",
+      "group-hover/movable:translate-y-[4%] group-hover/movable:blur-[6px] group-data-[dragging=true]/movable:translate-x-[6%] group-data-[dragging=true]/movable:translate-y-[9%] group-data-[dragging=true]/movable:opacity-80 group-data-[dragging=true]/movable:blur-[9px]",
+      ease,
+    ]}></span>
+
+  <!-- The gummed strip: flat on whatever is under it, a faint sheen of glue. -->
+  <span aria-hidden="true" class:list={[paper, "top-0 h-[22%]"]}>
+    <span
+      class="absolute inset-0 bg-[linear-gradient(#fff2,#0000_60%,#0000000d)]"
+    ></span>
+    <i data-sticky-point class="absolute left-[12%] top-1/2 size-0"></i>
+    <i data-sticky-point class="absolute left-1/2 top-1/2 size-0"></i>
+    <i data-sticky-point class="absolute left-[88%] top-1/2 size-0"></i>
+  </span>
+
+  <!-- The free part hinges at the strip's edge: darker at the crease, catching
+       light toward its curled lower edge. -->
+  <div
+    class:list={[
+      paper,
+      "bottom-0 top-[22%] origin-top [transform:perspective(420px)_rotateX(7deg)] [backface-visibility:hidden]",
+      "group-hover/movable:[transform:perspective(420px)_rotateX(9deg)] group-data-[dragging=true]/movable:[transform:perspective(420px)_rotateX(17deg)]",
+      ease,
+    ]}
+  >
+    <span
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 bg-[linear-gradient(#00000014,#0000_22%,#0000_70%,#ffffff26)] shadow-[inset_0_-5px_6px_-5px_#fff8]"
+    ></span>
+    <p
+      class="relative whitespace-pre-line px-[9%] pt-[3%] font-hand text-[16cqw] leading-none text-[#2f3a52] -rotate-2"
+    >
+      {text}
+    </p>
+  </div>
+</article>

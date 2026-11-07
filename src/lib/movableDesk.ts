@@ -154,17 +154,67 @@ export function initializeDesk(canvas: HTMLElement) {
       ].map((element) => Number(element.style.zIndex) || 0),
     );
 
-  /** Items held together by paper clips, in their current stacking order. */
-  const unitOf = (item: HTMLElement) =>
-    clippedUnit(canvas, item)
+  const notes = items.filter((item) =>
+    item.querySelector("[data-sticky-note]"),
+  );
+
+  /** The sheet a sticky note is stuck to: the one lying under most of its
+   * gummed strip, below it on the desk. The rest of the note holds nothing. */
+  const stuckTo = (note: HTMLElement) => {
+    const hits = new Map<HTMLElement, number>();
+
+    for (const point of note.querySelectorAll("[data-sticky-point]")) {
+      const { x, y } = point.getBoundingClientRect();
+
+      for (const hit of document.elementsFromPoint(x, y)) {
+        const item = hit.closest<HTMLElement>("[data-movable-item]");
+        if (item === note || hit.closest("[data-hardware]")) continue;
+
+        if (
+          item &&
+          positions.has(item) &&
+          positions.get(item)!.z < positions.get(note)!.z &&
+          hit.closest(
+            "[data-clip-surface], [data-turn-back], [data-sticky-note]",
+          ) &&
+          !item.querySelector("[data-work-folder]")
+        )
+          hits.set(item, (hits.get(item) ?? 0) + 1);
+
+        break;
+      }
+    }
+
+    return [...hits].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  };
+
+  /** Items held together by paper clips, with the sticky notes stuck on any
+   * of them (and on those notes), in their current stacking order. */
+  const unitOf = (item: HTMLElement) => {
+    const unit = new Set(clippedUnit(canvas, item));
+    const hosts = new Map(notes.map((note) => [note, stuckTo(note)]));
+
+    for (let grew = true; grew; ) {
+      grew = false;
+
+      for (const [note, host] of hosts)
+        if (host && unit.has(host) && !unit.has(note)) {
+          unit.add(note);
+          grew = true;
+        }
+    }
+
+    return [...unit]
       .filter((member) => positions.has(member))
       .sort((a, b) => positions.get(a)!.z - positions.get(b)!.z);
+  };
 
   /** A fridge magnet pins whatever it sits on, and everything clipped or held
    * with it, to the desk until it is lifted off. One on the hidden side of a
    * face-down sheet is underneath it and pins nothing. */
   const pinned = (item: HTMLElement) => {
-    const unit = new Set(unitOf(item));
+    // Sticky notes on it still peel off: only clips and magnets count here.
+    const unit = new Set(clippedUnit(canvas, item));
 
     return [...canvas.querySelectorAll<HTMLElement>("[data-desk-magnet]")].some(
       (magnet) => {

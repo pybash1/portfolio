@@ -14,6 +14,7 @@ import Pen from "../components/desk/Pen.astro";
 import Breadboard from "../components/desk/Breadboard.astro";
 import JumperWires from "../components/desk/JumperWires.astro";
 import Stamp from "../components/desk/Stamp.astro";
+import StickyNote from "../components/desk/StickyNote.astro";
 import DeskCanvas from "../components/desk/DeskCanvas.astro";
 import Movable from "../components/desk/Movable.astro";
 ---
@@ -214,6 +215,22 @@ import Movable from "../components/desk/Movable.astro";
         ]}
         caption="Local Developer"
       />
+    </Movable>
+
+    <Movable
+      id="clipping-note"
+      label="A sticky note"
+      class="z-30 w-30 rotate-6 lg:absolute lg:left-[78%] lg:top-196"
+    >
+      <StickyNote text={"frame this\none?"} />
+    </Movable>
+
+    <Movable
+      id="letter-note"
+      label="A sticky note"
+      class="z-30 w-30 -rotate-3 lg:absolute lg:left-[79%] lg:top-247"
+    >
+      <StickyNote text={"reply to every\nemail (eventually)"} color="#f7a9c4" />
     </Movable>
 
     <Movable
