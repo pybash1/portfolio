@@ -1,4 +1,4 @@
-import { useRef, useState, type FormEvent } from "react";
+import { useRef, useState, type SubmitEvent } from "react";
 import {
   editorKinds,
   editorRequest,
@@ -103,7 +103,7 @@ export default function InspoItemForm({
     }
   }
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (saving) return;
     const data = new FormData(event.currentTarget);

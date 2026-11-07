@@ -4,6 +4,8 @@ lives at [pybash.xyz](https://pybash.xyz)
 
 ## Development
 
+Needs Node.js 22.23.4+ (Astro's minimum) and Bun.
+
 ```sh
 bun install
 cp .env.example .env.local   # fill in the secrets
