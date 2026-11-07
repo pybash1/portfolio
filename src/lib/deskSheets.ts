@@ -52,9 +52,10 @@ const measureSheet = (element: HTMLElement) => {
  * leaf, stays as it was), turned about the sheet's own centre; the frame
  * sits on the desk at the same place and angle on screen, with its own desk
  * layer. A hidden twin keeps the sheet's place in the leaf. A sheet out on
- * the desk can be brought up close like any document (deskFocus). Where each
- * sheet is (in the leaf, or on the desk) is saved. Keyboard: Enter takes a
- * focused sheet out beside the folder or puts it back. */
+ * the desk can be brought up close like any document (deskFocus). A sheet put
+ * back goes on top of the others in the leaf. Where each sheet is (in the
+ * leaf, or on the desk) and the leaf's order are saved. Keyboard: Enter takes
+ * a focused sheet out beside the folder or puts it back. */
 const interactive = "[data-gem-clip], [data-desk-magnet], button";
 
 type Saved = { x: number; y: number; turn: number; z: number };
@@ -70,6 +71,9 @@ export function initializeFolderSheets(canvas: HTMLElement) {
   ];
 
   if (!sheets.length) return;
+
+  // All the sheets lie in the same leaf, stacked in document order.
+  const papers = sheets[0]!.parentElement!;
 
   const homes = new Map<
     HTMLElement,
@@ -123,8 +127,7 @@ export function initializeFolderSheets(canvas: HTMLElement) {
       transformOrigin: `${sheet.offsetLeft + sheet.offsetWidth / 2}px ${sheet.offsetTop + sheet.offsetHeight / 2}px`,
     });
 
-    // Its place in the leaf, empty, so the sheet knows where home is and
-    // goes back in at the same depth.
+    // Its place in the leaf, empty, so the sheet knows where home is.
     const place = sheet.cloneNode(false) as HTMLElement;
 
     for (const name of [...place.getAttributeNames()])
@@ -174,12 +177,13 @@ export function initializeFolderSheets(canvas: HTMLElement) {
     frame.style.top = `${y - c.y}px`;
   };
 
-  /** Back in its place in the folder's leaf. */
+  /** Back in its place in the folder's leaf, on top of the others. */
   const putBack = (sheet: HTMLElement) => {
     const home = homes.get(sheet);
     if (!home || inLeaf(sheet)) return;
 
-    home.place.replaceWith(sheet);
+    home.place.remove();
+    papers.append(sheet);
     home.frame.remove();
     sheet.style.removeProperty("rotate");
     delete sheet.dataset.out;
@@ -220,8 +224,13 @@ export function initializeFolderSheets(canvas: HTMLElement) {
       };
     }
 
+    const order = [
+      ...papers.querySelectorAll<HTMLElement>(":scope > [data-folder-sheet]"),
+    ].map((sheet) => sheet.dataset.folderSheet);
+
     try {
       localStorage.setItem(storageKey, JSON.stringify(data));
+      localStorage.setItem(`${storageKey}-order`, JSON.stringify(order));
     } catch {
       /* Optional persistence. */
     }
@@ -403,16 +412,28 @@ export function initializeFolderSheets(canvas: HTMLElement) {
       frame.style.zIndex = String(saved.z);
       frame.dataset.deskLayer = "";
     }
+
+    // The leaf's sheets in the order they were left, bottom to top.
+    const order = JSON.parse(
+      localStorage.getItem(`${storageKey}-order`) ?? "[]",
+    ) as string[];
+
+    for (const id of order) {
+      const sheet = sheets.find((other) => other.dataset.folderSheet === id);
+      if (sheet && inLeaf(sheet)) papers.append(sheet);
+    }
   } catch {
     /* Optional persistence. */
   }
 
-  // The canvas reset puts every sheet back in the folder.
+  // The canvas reset puts every sheet back in the folder, in its first order.
   canvas.querySelector("[data-desk-reset]")?.addEventListener("click", () => {
     sheets.forEach(putBack);
+    papers.append(...sheets);
 
     try {
       localStorage.removeItem(storageKey);
+      localStorage.removeItem(`${storageKey}-order`);
     } catch {
       /* Optional persistence. */
     }
@@ -422,13 +443,14 @@ export function initializeFolderSheets(canvas: HTMLElement) {
 // Journal pocket sheets
 /** Journal log sheets in the folder's field-notes pocket
  * (JournalPocket.astro). A sheet can be pulled out of the pocket and laid
- * anywhere on the desk; dropped back near the pocket it slides into its slot.
+ * anywhere on the desk; dropped back near the pocket it slides in at the
+ * front, and the sheets in the pocket fan out again in their new order.
  *
  * In the pocket a sheet lives in the folder (it folds and moves with it).
  * Taken out, it moves to the desk itself, at the same place and angle on
  * screen, with its own desk layer, so it can be covered or cover things like
- * any sheet put down. Where each sheet is (in its slot, or on the desk) is
- * saved. Keyboard: Enter takes a focused sheet out (laid beside the folder)
+ * any sheet put down. Where each sheet is (in the pocket, or on the desk) and
+ * the pocket's order are saved. Keyboard: Enter takes a focused sheet out (laid beside the folder)
  * or puts it back. */
 type Place = { x: number; y: number; turn: number };
 
@@ -442,6 +464,26 @@ export function initializeJournalPocket(canvas: HTMLElement) {
   const sheets = [
     ...pocket.querySelectorAll<HTMLElement>("[data-pocket-sheet]"),
   ];
+
+  // The sleeve in front; sheets in the pocket sit before it, back to front.
+  const sleeve = pocket.querySelector(":scope > :not([data-pocket-sheet])");
+
+  const inPocket = () => [
+    ...pocket.querySelectorAll<HTMLElement>(":scope > [data-pocket-sheet]"),
+  ];
+
+  /** Fans the sheets in the pocket out in their order (as JournalPocket.astro
+   * first lays them), each one a step lower and in front of the last. */
+  const arrange = () =>
+    inPocket().forEach((sheet, i) => {
+      sheet.style.setProperty(
+        "--slot-x",
+        `${(i - (sheets.length - 1) / 2) * 1.6}cqw`,
+      );
+      sheet.style.setProperty("--slot-y", `${i * 5.2}cqw`);
+      sheet.style.setProperty("--slot-turn", `${((i % 3) - 1) * 1.2}deg`);
+      sheet.style.zIndex = String(i + 1);
+    });
 
   const announce = (text: string) => {
     const live = canvas.querySelector("[data-desk-announcement]");
@@ -467,19 +509,12 @@ export function initializeJournalPocket(canvas: HTMLElement) {
       transform: "",
     });
     sheet.dataset.out = "";
+    arrange();
   };
 
-  /** Back in its slot in the pocket. */
+  /** Back in the pocket, at the front. */
   const putBack = (sheet: HTMLElement) => {
-    const slot = Number(sheet.dataset.slot);
-    const after = sheets.find(
-      (other) =>
-        Number(other.dataset.slot) > slot && other.parentElement === pocket,
-    );
-    pocket.insertBefore(
-      sheet,
-      after ?? pocket.querySelector(":scope > :not([data-pocket-sheet])"),
-    );
+    pocket.insertBefore(sheet, sleeve);
 
     sheet.style.removeProperty("position");
     sheet.style.removeProperty("left");
@@ -488,9 +523,9 @@ export function initializeJournalPocket(canvas: HTMLElement) {
     sheet.style.removeProperty("transform");
     sheet.style.translate = "var(--slot-x) var(--slot-y)";
     sheet.style.rotate = "var(--slot-turn)";
-    sheet.style.zIndex = String(slot + 1);
     delete sheet.dataset.out;
     delete sheet.dataset.deskLayer;
+    arrange();
   };
 
   const canvasPoint = (x: number, y: number) => {
@@ -530,8 +565,11 @@ export function initializeJournalPocket(canvas: HTMLElement) {
         }),
     );
 
+    const order = inPocket().map((sheet) => sheet.dataset.slot);
+
     try {
       localStorage.setItem(storageKey, JSON.stringify(data));
+      localStorage.setItem(`${storageKey}-order`, JSON.stringify(order));
     } catch {
       /* Optional persistence. */
     }
@@ -700,15 +738,28 @@ export function initializeJournalPocket(canvas: HTMLElement) {
       sheet.style.zIndex = String(saved.z);
       sheet.dataset.deskLayer = "";
     }
+
+    // The pocket's sheets in the order they were left, back to front.
+    const order = JSON.parse(
+      localStorage.getItem(`${storageKey}-order`) ?? "[]",
+    ) as string[];
+
+    for (const slot of order) {
+      const sheet = sheets.find((other) => other.dataset.slot === slot);
+      if (sheet?.parentElement === pocket) pocket.insertBefore(sheet, sleeve);
+    }
+
+    arrange();
   } catch {
     /* Optional persistence. */
   }
 
-  // The canvas reset puts every sheet back in the pocket.
+  // The canvas reset puts every sheet back in the pocket, in its first order.
   canvas.querySelector("[data-desk-reset]")?.addEventListener("click", () => {
     sheets.forEach(putBack);
     try {
       localStorage.removeItem(storageKey);
+      localStorage.removeItem(`${storageKey}-order`);
     } catch {
       /* Optional persistence. */
     }
