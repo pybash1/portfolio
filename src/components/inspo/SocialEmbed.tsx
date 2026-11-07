@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { socialEmbed } from "../../lib/inspoEmbed";
+import { socialEmbed } from "../../lib/inspo";
 import { loadButton } from "./styles";
 import type { InspoItem } from "./types";
 

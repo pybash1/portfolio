@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { safeEmbedUrl, socialEmbed } from "../../lib/inspoEmbed";
+import { safeEmbedUrl, socialEmbed } from "../../lib/inspo";
 import Icon from "./Icon";
 import FontSpecimen from "./FontSpecimen";
 import SocialEmbed from "./SocialEmbed";

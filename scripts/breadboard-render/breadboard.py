@@ -2,7 +2,7 @@
 
     blender -b --factory-startup --python breadboard.py -- <angle°> <out.png> [samples]
 
-Geometry from model.json (src/lib/breadboardModel.ts, via export-model.ts),
+Geometry from model.json (src/lib/hardwareModels.ts, via export-model.ts),
 all in millimetres: the board's length along x, centred on the origin, its
 base on the desk at z = 0, z toward the viewer. A matte white ABS body with
 softened edges; 830 square holes cut into it (terminal strip and power rails)

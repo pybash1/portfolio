@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { editorRequest, type OwnerSession } from "../../lib/inspoEditor";
+import { editorRequest, type OwnerSession } from "../../lib/inspo";
 import Icon from "./Icon";
 import InspoItemForm from "./InspoItemForm";
 import type { InspoItem } from "./types";

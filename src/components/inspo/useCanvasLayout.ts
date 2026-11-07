@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
-import { layoutCanvasCards } from "../../lib/inspoLayout";
+import { layoutCanvasCards } from "../../lib/inspo";
 import type { InspoItem } from "./types";
 
 const useBrowserLayoutEffect =

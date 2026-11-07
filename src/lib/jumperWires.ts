@@ -1,4 +1,4 @@
-import { board, holes } from "./breadboardModel";
+import { board, holes } from "./hardwareModels";
 import { deskLight, shadowInk } from "./rayShadow";
 
 /** Male–male Dupont jumper wires that plug into the breadboard.

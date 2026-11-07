@@ -3,7 +3,7 @@ import {
   fontSpecimenText,
   loadPreviewFont,
   previewFontFamily,
-} from "../../lib/inspoFonts";
+} from "../../lib/inspo";
 import type { PreviewFont } from "./types";
 
 export default function FontSpecimen({

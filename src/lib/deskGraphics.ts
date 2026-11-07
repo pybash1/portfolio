@@ -1,3 +1,9 @@
+// Unique SVG and dialog IDs
+/** Unique IDs keep repeated components' SVG gradients and dialogs independent. */
+export const componentId = (prefix: string, id?: string) =>
+  id ?? `${prefix}-${crypto.randomUUID()}`;
+
+// Handwritten marker paths
 // Single-line felt-tip strokes, in a 12 × 20 unit writing cell (baseline
 // at 20; lowercase descenders reach 25).
 // Alternate forms keep repeated letters from looking mechanically identical.

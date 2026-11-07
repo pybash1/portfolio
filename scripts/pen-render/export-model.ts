@@ -1,4 +1,4 @@
-// Sample the pen model (src/lib/penModel.ts) for Blender: one profile per part,
+// Sample the pen model (src/lib/hardwareModels.ts) for Blender: one profile per part,
 // finely enough that the segments' filleted steps stay round.
 import { writeFileSync } from "node:fs";
 import {
@@ -7,7 +7,7 @@ import {
   penRadius,
   penSegments,
   penTravel,
-} from "../../src/lib/penModel";
+} from "../../src/lib/hardwareModels";
 
 const sample = (parts: ("body" | "button")[], from: number, to: number) => {
   const points: [number, number][] = [];

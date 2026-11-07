@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { searchInspo } from "../../lib/inspoSearch";
 import {
+  searchInspo,
   authErrorMessages,
   editorRequest,
   type OwnerSession,
-} from "../../lib/inspoEditor";
+} from "../../lib/inspo";
 import Icon from "./Icon";
 import InspoCard from "./InspoCard";
 import InspoDetail from "./InspoDetail";

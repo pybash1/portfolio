@@ -2,13 +2,13 @@
 
     blender -b --factory-startup --python pen.py -- <black|blue> <angle°> <body|button|refill> <out.png> [samples]
 
-The geometry comes from model.json (exported from src/lib/penModel.ts by
+The geometry comes from model.json (exported from src/lib/hardwareModels.ts by
 export-model.ts), the print on the barrel from print.png (print.cjs). World
 units are millimetres: x along the pen (cone mouth at 0), y toward the top of
 the screen, z toward the viewer; the pen's axis is at z = 0 and it lies on the
 desk. The camera looks straight down, orthographic, like the rest of the desk.
 
-The desk light is the site's (src/lib/folderShadow.ts defaultFolderLight): a
+The desk light is the site's (src/lib/rayShadow.ts defaultFolderLight): a
 sun whose rays fall (0.35, 0.45) per unit of height across the screen, from a
 disc 0.11 wide per unit of height. The pen is turned `angle` degrees on screen
 (CSS rotate), so the light is turned into the pen's own frame. The surface

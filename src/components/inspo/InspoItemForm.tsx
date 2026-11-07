@@ -4,7 +4,7 @@ import {
   editorRequest,
   type EditorFields,
   type EditorKind,
-} from "../../lib/inspoEditor";
+} from "../../lib/inspo";
 import type { InspoItem } from "./types";
 import InspoScreenshotField from "./InspoScreenshotField";
 import { useUrlPreview } from "./useUrlPreview";

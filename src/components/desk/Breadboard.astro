@@ -1,10 +1,10 @@
 ---
-import { componentId } from "../../lib/componentId";
-import { board } from "../../lib/breadboardModel";
+import { componentId } from "../../lib/deskGraphics";
+import { board } from "../../lib/hardwareModels";
 import { deskRays, rayOpacity, shadowInk } from "../../lib/rayShadow";
 
 /** A full-size solderless breadboard lying on the desk, seen from above. A 3D
- * model built in code (breadboardModel.ts), path-traced in Blender under the
+ * model built in code (hardwareModels.ts), path-traced in Blender under the
  * desk light at every 15° turn (scripts/breadboard-render); the page shows the
  * render for its angle on screen and traces its shadow from the same model. */
 interface Props {

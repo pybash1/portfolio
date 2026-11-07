@@ -8,7 +8,7 @@ import {
   sameOrigin,
 } from "../../../server/inspo/http";
 import { makeUrlPreview } from "../../../server/inspo/preview";
-import { itemUrlKey } from "../../../lib/inspoEditor";
+import { itemUrlKey } from "../../../lib/inspo";
 import { itemStore } from "../../../server/inspo/store";
 
 export const prerender = false;

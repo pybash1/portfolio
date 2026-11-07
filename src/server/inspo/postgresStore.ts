@@ -3,7 +3,7 @@ import { asc, eq, sql, DrizzleQueryError } from "drizzle-orm";
 import type { Database } from "../db/client";
 import { inspoItems } from "../db/schema";
 import type { InspoItem } from "../../components/inspo/types";
-import { itemUrlKey } from "../../lib/inspoEditor";
+import { itemUrlKey } from "../../lib/inspo";
 import { EditorError } from "./http";
 import type { ItemStore } from "./store";
 import { deleteInspoAsset, inspoAssetKey, uploadInspoAsset } from "./s3Assets";

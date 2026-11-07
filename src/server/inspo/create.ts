@@ -1,9 +1,13 @@
 import { z } from "zod";
 import sharp, { type Metadata, type WebpOptions } from "sharp";
 import type { InspoItem } from "../../components/inspo/types";
-import type { UrlPreview } from "../../lib/inspoEditor";
-import { itemUrlKey, normalizeItemUrl } from "../../lib/inspoEditor";
-import { safeEmbedUrl, socialEmbed } from "../../lib/inspoEmbed";
+import {
+  itemUrlKey,
+  normalizeItemUrl,
+  safeEmbedUrl,
+  socialEmbed,
+  type UrlPreview,
+} from "../../lib/inspo";
 import { EditorError } from "./http";
 import { itemStore, type ItemStore } from "./store";
 import { fetchPublicPage, publicTarget } from "./publicFetch";

@@ -12,7 +12,6 @@ import MetalClip from "../components/desk/MetalClip.astro";
 import FridgeMagnet from "../components/desk/FridgeMagnet.astro";
 import Pen from "../components/desk/Pen.astro";
 import Breadboard from "../components/desk/Breadboard.astro";
-import JumperWires from "../components/desk/JumperWires.astro";
 import Stamp from "../components/desk/Stamp.astro";
 import StickyNote from "../components/desk/StickyNote.astro";
 import DeskCanvas from "../components/desk/DeskCanvas.astro";
@@ -247,7 +246,16 @@ import Movable from "../components/desk/Movable.astro";
     >
       <Breadboard id="breadboard-board" angle={-4} />
     </Movable>
-    <JumperWires />
+    {/* Three wire layers, drawn and handled by jumperWires.ts. */}
+    {
+      (["red", "green", "blue"] as const).map((color) => (
+        <svg
+          data-jumper
+          data-color={color}
+          class="pointer-events-none absolute inset-0 z-30 h-full w-full overflow-visible"
+        />
+      ))
+    }
     <Movable
       id="blue-pen"
       label="A blue gel pen. Press Enter to click it."

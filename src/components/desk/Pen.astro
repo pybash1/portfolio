@@ -1,5 +1,5 @@
 ---
-import { componentId } from "../../lib/componentId";
+import { componentId } from "../../lib/deskGraphics";
 import {
   penClip,
   penLength,
@@ -7,11 +7,11 @@ import {
   penRadius,
   penSegments,
   penTravel,
-} from "../../lib/penModel";
+} from "../../lib/hardwareModels";
 import { deskRays, rayOpacity, shadowInk } from "../../lib/rayShadow";
 
 /** A retractable gel pen ("ADD Gel · Designer Series") lying on the desk, seen
- * from above. The pen is a 3D model (penModel.ts) path-traced in Blender under
+ * from above. The pen is a 3D model (hardwareModels.ts) path-traced in Blender under
  * the desk light (scripts/pen-render), rendered as three layers: the refill,
  * the push button, and the body over both. Clicking the pen pushes the button
  * in under the collar's rim and slides the point out of the cone; clicking

@@ -3,7 +3,7 @@ import {
   editorRequest,
   normalizeItemUrl,
   type UrlPreview,
-} from "../../lib/inspoEditor";
+} from "../../lib/inspo";
 
 /** Debounce edits and discard responses for URLs the owner has moved past. */
 export function useUrlPreview(url: string, enabled: boolean) {

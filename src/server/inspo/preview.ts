@@ -1,6 +1,10 @@
-import type { UrlDraft, UrlPreview } from "../../lib/inspoEditor";
-import { normalizeItemUrl } from "../../lib/inspoEditor";
-import { safeEmbedUrl, socialEmbed } from "../../lib/inspoEmbed";
+import {
+  normalizeItemUrl,
+  safeEmbedUrl,
+  socialEmbed,
+  type UrlDraft,
+  type UrlPreview,
+} from "../../lib/inspo";
 import { EditorError } from "./http";
 import { fetchPublicPage, publicTarget } from "./publicFetch";
 import { sign, validSignature } from "./auth";
