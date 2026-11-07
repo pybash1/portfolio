@@ -80,7 +80,7 @@ const kinds = {
 };
 
 const hosts =
-  "[data-folder-inside], [data-folder-exterior], [data-map-front], [data-map-back], [data-clip-surface]";
+  "[data-folder-inside], [data-folder-exterior], [data-map-front], [data-map-back], [data-clip-surface], [data-folder-sheet], [data-pocket-sheet]";
 
 type Shape = {
   kind: keyof typeof kinds;
@@ -281,10 +281,14 @@ export function initializeBumps(canvas: HTMLElement) {
     };
   };
 
+  // A sheet taken out of the folder (deskSheets) lies on the desk on its own.
   const itemOf = (element: Element) =>
-    element.closest<HTMLElement>("[data-movable-item]");
+    element.closest<HTMLElement>(
+      "[data-movable-item], [data-sheet-frame], [data-pocket-sheet][data-out]",
+    );
 
-  const carried = (element: Element) => !!element.closest("[data-lifted]");
+  const carried = (element: Element) =>
+    !!element.closest("[data-lifted], [data-dragging]");
   const zOf = (item: HTMLElement) => Number(getComputedStyle(item).zIndex) || 0;
 
   /** Sheets lying over the hardware, topmost first, with the host face touched. */
@@ -306,7 +310,7 @@ export function initializeBumps(canvas: HTMLElement) {
           !item ||
           item === own ||
           item.closest("[data-desk-canvas]") !== canvas ||
-          carried(item)
+          carried(element)
         )
           continue;
 

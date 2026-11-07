@@ -190,6 +190,7 @@ export function initializeFolderSheets(canvas: HTMLElement) {
     delete home.frame.dataset.deskLayer;
     home.frame.style.removeProperty("z-index");
     aimRayShadowsWithin(sheet);
+    canvas.dispatchEvent(new CustomEvent("desk:layout-changed"));
   };
 
   /** Is a screen point over the sheet's place in the leaf (or near it)? */
@@ -526,6 +527,7 @@ export function initializeJournalPocket(canvas: HTMLElement) {
     delete sheet.dataset.out;
     delete sheet.dataset.deskLayer;
     arrange();
+    canvas.dispatchEvent(new CustomEvent("desk:layout-changed"));
   };
 
   const canvasPoint = (x: number, y: number) => {
