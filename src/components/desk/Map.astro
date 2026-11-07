@@ -1,7 +1,6 @@
 ---
 import IndiaAtlas from "./IndiaAtlas.astro";
 import Pinboard from "./Pinboard.astro";
-import MarkerText from "./MarkerText.astro";
 import MetalClip from "./MetalClip.astro";
 import MarkerLocations from "./MarkerLocations.astro";
 import PaperCrease from "./PaperCrease.astro";
@@ -22,8 +21,6 @@ interface Props {
   class?: string;
   title?: string;
   caption?: string;
-  backNote?: string;
-  backReference?: string;
   clip?: "steel" | "red" | "yellow" | "blue" | false;
   pinImage?: string;
   frontTexture?: string;
@@ -39,8 +36,6 @@ const {
   class: className,
   title = "India — a personal field atlas",
   caption = "",
-  backNote = "",
-  backReference = "",
   clip = "red",
   pinImage = "/hardware/red-pushpin.webp",
   frontTexture = "/maps/atlas-paper-front.webp",
@@ -168,16 +163,6 @@ const foldPositions = [33.3, 66.7] as const;
             height="1254"
             class="absolute inset-0 h-full w-full object-fill [clip-path:polygon(0_0.5%,14%_0,31%_0.4%,52%_0,76%_0.3%,100%_0,99.7%_20%,100%_42%,99.6%_69%,100%_99.5%,73%_100%,52%_99.7%,24%_100%,0.3%_99.5%,0_75%,0.3%_44%)]"
           />
-          <p
-            class="absolute left-[10%] top-[10%] -rotate-2 font-typewriter text-[9px] text-[#826b46]/60"
-          >
-            {backReference}
-          </p>
-          <div
-            class="absolute bottom-[15%] left-[18%] w-[65%] -rotate-6 opacity-40"
-          >
-            <MarkerText text={backNote} width={300} size={19} />
-          </div>
           <div
             aria-hidden="true"
             class="pointer-events-none absolute inset-0 shadow-[inset_1px_1px_1px_#fff5,inset_-1px_-1px_2px_#66502d55]"
