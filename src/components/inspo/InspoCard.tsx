@@ -44,7 +44,11 @@ export default function InspoCard({
         <InspoContent item={item} />
         {showCaption && (
           <span className="block pt-3">
-            <span className="block text-[13px]/[1.4]">{item.title}</span>
+            <span
+              className={`block text-[13px]/[1.4] ${canvas ? "max-sm:text-[22px]" : ""}`}
+            >
+              {item.title}
+            </span>
           </span>
         )}
       </button>
@@ -59,7 +63,7 @@ export default function InspoCard({
       )}
       {item.kind === "website" && (
         <a
-          className="mt-1 inline-block text-[11px] text-inspo-muted"
+          className={`mt-1 inline-block text-[11px] text-inspo-muted ${canvas ? "max-sm:text-[19px]" : ""}`}
           href={item.source.url}
           target="_blank"
           rel="noopener noreferrer"
