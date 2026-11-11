@@ -191,6 +191,12 @@ export default function InspoBoard({ items }: Props) {
         Skip to collection
       </a>
       <h1 className="sr-only">Inspiration collection</h1>
+      <a
+        className="absolute top-6 right-6 z-2 flex h-[43px] items-center border border-inspo-line bg-inspo-bg px-3 text-[13px] text-inspo-muted hover:border-inspo-muted hover:text-inspo-ink max-[460px]:top-[80px]"
+        href="/"
+      >
+        ← Portfolio
+      </a>
       <div className="absolute top-6 left-6 z-2 flex w-[min(351px,calc(100%-48px))] gap-2">
         <div
           className="flex min-h-[43px] min-w-0 flex-1 items-center gap-3 border border-inspo-line bg-inspo-bg px-3 text-inspo-muted focus-within:border-inspo-muted"
@@ -304,7 +310,7 @@ export default function InspoBoard({ items }: Props) {
               className={
                 isCanvas
                   ? "absolute top-0 left-0 m-0 h-[1800px] w-[2400px] max-w-none origin-top-left p-0 will-change-transform"
-                  : "columns-[4_250px] gap-x-12 px-10 pt-[100px] pb-10 max-[1001px]:columns-[3_220px] max-[1001px]:gap-x-8 max-md:columns-2 max-md:gap-x-5 max-md:px-5 max-md:pt-[95px] max-md:pb-7 max-xs:mx-auto max-xs:max-w-[400px] max-xs:columns-1 max-xs:px-[30px] max-xs:pb-[30px] min-[1700px]:[column-count:5]"
+                  : "columns-[4_250px] gap-x-12 px-10 pt-[145px] pb-10 md:pt-[100px] max-[1001px]:columns-[3_220px] max-[1001px]:gap-x-8 max-md:columns-2 max-md:gap-x-5 max-md:px-5 max-md:pb-7 max-xs:mx-auto max-xs:max-w-[400px] max-xs:columns-1 max-xs:px-[30px] max-xs:pb-[30px] min-[1700px]:[column-count:5]"
               }
             >
               {results.map((item) => (
