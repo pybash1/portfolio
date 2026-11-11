@@ -199,13 +199,13 @@ export default function InspoBoard({ items }: Props) {
       </a>
       <div className="absolute top-6 left-6 z-2 flex w-[min(351px,calc(100%-48px))] gap-2">
         <div
-          className="flex min-h-[43px] min-w-0 flex-1 items-center gap-3 border border-inspo-line bg-inspo-bg px-3 text-inspo-muted focus-within:border-inspo-muted"
+          className="flex min-h-[44px] min-w-0 flex-1 items-center gap-3 border border-inspo-line bg-inspo-bg px-3 text-inspo-muted focus-within:border-inspo-muted"
           role="search"
         >
           <Icon name="search" className="w-4 shrink-0" />
           <input
             ref={searchRef}
-            className="w-full min-w-0 bg-transparent py-2.5 text-[13px] text-inspo-ink outline-none! placeholder:text-inspo-muted [&::-webkit-search-cancel-button]:hidden"
+            className="h-[44px] w-full min-w-0 bg-transparent py-2.5 text-[13px] text-inspo-ink outline-none! placeholder:text-inspo-muted [&::-webkit-search-cancel-button]:hidden"
             type="search"
             aria-label="Search collection"
             aria-describedby="inspo-search-help"
@@ -223,7 +223,7 @@ export default function InspoBoard({ items }: Props) {
           />
           {query ? (
             <button
-              className={`${iconButton} h-[30px] w-[26px] min-w-[26px]`}
+              className={`${iconButton} h-[44px] w-[44px] min-w-[44px]`}
               aria-label="Clear search"
               onClick={() => {
                 setQuery("");
@@ -242,7 +242,7 @@ export default function InspoBoard({ items }: Props) {
           </span>
         </div>
         <button
-          className="grid h-[43px] flex-[0_0_43px] place-items-center border border-inspo-line bg-inspo-bg hover:border-inspo-muted"
+          className="grid h-[44px] flex-[0_0_44px] place-items-center border border-inspo-line bg-inspo-bg hover:border-inspo-muted"
           aria-label="Add item"
           aria-haspopup="dialog"
           onClick={() => setAdding(true)}
