@@ -6,6 +6,13 @@ const useBrowserLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 const center = { x: 1100, y: 650 };
+const openingSpots = [
+  { x: 0, y: 0 },
+  { x: -500, y: -250 },
+  { x: 500, y: -250 },
+  { x: -500, y: 250 },
+  { x: 500, y: 250 },
+];
 
 /** Random spot in a field that grows with the collection, centred on the home view. */
 function scatter(count: number, width: number, height: number) {
@@ -40,12 +47,18 @@ export function useCanvasLayout(
     );
     const itemsById = new Map(items.map((item) => [item.id, item]));
     const layout = () => {
-      const boxes = cards.flatMap((card) => {
+      const boxes = cards.flatMap((card, index) => {
         const item = itemsById.get(card.dataset.inspoId ?? "");
         if (!item) return [];
         let spot = scattered.current.get(item.id);
         if (!spot) {
-          spot = scatter(items.length, card.offsetWidth, card.offsetHeight);
+          const opening = openingSpots[index];
+          spot = opening
+            ? {
+                x: center.x + opening.x - card.offsetWidth / 2,
+                y: center.y + opening.y - card.offsetHeight / 2,
+              }
+            : scatter(items.length, card.offsetWidth, card.offsetHeight);
           scattered.current.set(item.id, spot);
         }
         return [
