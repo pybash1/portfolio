@@ -157,10 +157,10 @@ const foldPositions = [33.3, 66.7] as const;
           class="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)]"
         >
           <img
-            src={backTexture}
+            data-src={backTexture}
             alt="The worn reverse of the atlas sheet"
-            width="1254"
-            height="1254"
+            width="1000"
+            height="1000"
             class="absolute inset-0 h-full w-full object-fill [clip-path:polygon(0_0.5%,14%_0,31%_0.4%,52%_0,76%_0.3%,100%_0,99.7%_20%,100%_42%,99.6%_69%,100%_99.5%,73%_100%,52%_99.7%,24%_100%,0.3%_99.5%,0_75%,0.3%_44%)]"
           />
           <div
@@ -224,6 +224,16 @@ const foldPositions = [33.3, 66.7] as const;
       const flip = sheet.querySelector<HTMLElement>("[data-map-flip]");
       const rotator = sheet.querySelector<HTMLElement>("[data-map-rotator]");
       const shadow = sheet.querySelector<SVGSVGElement>("[data-map-shadow]");
+      const backImage = sheet.querySelector<HTMLImageElement>("[data-map-back] img");
+      const loadBack = () => {
+        if (backImage?.dataset.src) {
+          backImage.src = backImage.dataset.src;
+          delete backImage.dataset.src;
+        }
+      };
+
+      flip?.addEventListener("pointerenter", loadBack, { once: true });
+      flip?.addEventListener("focusin", loadBack, { once: true });
 
       const rays = [
         ...sheet.querySelectorAll<SVGPathElement>("[data-map-ray]"),
@@ -315,6 +325,7 @@ const foldPositions = [33.3, 66.7] as const;
       };
 
       const setSide = (back: boolean, animate: boolean) => {
+        if (back) loadBack();
         if (!animate && rotator) rotator.style.transition = "none";
         sheet.dataset.side = back ? "back" : "front";
         flip?.setAttribute("aria-pressed", String(back));

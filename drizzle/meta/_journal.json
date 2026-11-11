@@ -15,6 +15,13 @@
       "when": 1792869148962,
       "tag": "0001_remove_item_metadata",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794205616588,
+      "tag": "0002_far_turbo",
+      "breakpoints": true
     }
   ]
 }

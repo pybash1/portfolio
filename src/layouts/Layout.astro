@@ -30,5 +30,47 @@ const { title } = Astro.props;
   </head>
   <body class="min-h-dvh overflow-x-clip">
     <slot />
+    <script is:inline>
+      (() => {
+        const serial = document.querySelector("[data-ticket-serial]");
+        const showCount = (count) => {
+          if (serial && Number.isSafeInteger(count) && count >= 0)
+            serial.textContent = `NO. ${String(count).padStart(6, "0")}`;
+        };
+
+        try {
+          const cached = localStorage.getItem("portfolio-visitor-count");
+          if (cached !== null) showCount(Number(cached));
+        } catch {
+          // The ticket still has its numeric fallback.
+        }
+
+        window.addEventListener(
+          "load",
+          () => {
+            void fetch("/api/visitor-count", {
+              method: "POST",
+              cache: "no-store",
+            })
+              .then((response) => (response.ok ? response.json() : null))
+              .then((result) => {
+                if (!Number.isSafeInteger(result?.count) || result.count < 0)
+                  return;
+                showCount(result.count);
+                try {
+                  localStorage.setItem(
+                    "portfolio-visitor-count",
+                    String(result.count),
+                  );
+                } catch {
+                  // Browser storage is optional.
+                }
+              })
+              .catch(() => {});
+          },
+          { once: true },
+        );
+      })();
+    </script>
   </body>
 </html>

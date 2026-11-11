@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   bigint,
   check,
+  integer,
   jsonb,
   pgSchema,
   text,
@@ -35,5 +36,17 @@ export const inspoItems = inspo.table(
       "source_identity",
       sql`(${table.sourceKey} IS NULL AND ${table.sourceHash} IS NULL) OR (${table.sourceKey} IS NOT NULL AND ${table.sourceHash} IS NOT NULL AND length(${table.sourceHash}) = 64)`,
     ),
+  ],
+);
+
+export const visitorCount = inspo.table(
+  "visitor_count",
+  {
+    id: integer("id").primaryKey(),
+    count: bigint("count", { mode: "number" }).notNull(),
+  },
+  (table) => [
+    check("visitor_count_singleton", sql`${table.id} = 1`),
+    check("visitor_count_nonnegative", sql`${table.count} >= 0`),
   ],
 );

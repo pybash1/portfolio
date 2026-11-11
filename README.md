@@ -13,8 +13,12 @@ bun run dev                  # http://localhost:4321
 ```
 
 Astro + React + Tailwind, deployed to Vercel. `/` is the desk; `/inspo` is the
-inspiration board. The board's items live only in PostgreSQL (`inspo.items`) and
-its uploads in S3; the owner signs in through Authentik to add or delete items.
+inspiration board. The board's items live in PostgreSQL (`inspo` schema), and
+its uploads live in S3. The owner signs in through Authentik to add or delete
+items. The ticket's visitor count uses CountAPI in the background and counts a
+browser once while its cookie remains available. The desk renders without
+waiting for the counter; the ticket starts with a numeric fallback and uses a
+locally cached count on return visits.
 
 ## Database
 

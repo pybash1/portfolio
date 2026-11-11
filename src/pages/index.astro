@@ -16,9 +16,13 @@ import Stamp from "../components/desk/Stamp.astro";
 import StickyNote from "../components/desk/StickyNote.astro";
 import DeskCanvas from "../components/desk/DeskCanvas.astro";
 import Movable from "../components/desk/Movable.astro";
+
+const ticketNumber = "NO. 000009";
 ---
 
 <Layout title="Portfolio — Ananjan Mitra">
+  <link slot="head" rel="preload" as="image" href="/maps/atlas-paper-front.webp" media="(min-width: 1024px)" />
+  <link slot="head" rel="preload" as="image" href="/maps/india-geography.svg" media="(min-width: 1024px)" />
   <DeskCanvas
     storageKey="portfolio"
     label="Portfolio collection"
@@ -182,14 +186,15 @@ import Movable from "../components/desk/Movable.astro";
 
     <Movable
       id="ticket"
-      label="An invitation to get in touch"
+      label="A ticket to the inspiration board"
       class="z-30 w-full max-w-77.5 -rotate-6 sm:col-span-2 lg:absolute lg:left-[32%] lg:top-296.25 lg:w-[29%] lg:max-w-none"
     >
       <Ticket
-        title="One good conversation"
-        subtitle="Admit two curious people"
-        serial="NO. 002621"
-        footer="No expiry. No particular agenda."
+        title="The other room"
+        subtitle="Admit one · back room"
+        serial={ticketNumber}
+        footer="Images, sounds, words worth keeping."
+        href="/inspo"
       />
       <FridgeMagnet class="absolute -top-3 left-[16%] z-40 w-11 rotate-18" />
     </Movable>

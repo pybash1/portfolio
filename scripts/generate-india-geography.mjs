@@ -28,16 +28,27 @@ const northeastColors = {
   SK: "#d3a18b",
 };
 
-const neighbors = atlas.neighbors.map((n) => `<path d="${n.d}"/>`).join("");
+// The map renders at 600 SVG units, so hundredth-unit coordinates add bytes
+// without visible detail. SVG also treats coordinate pairs after M as lines.
+const compactPath = (path) =>
+  path
+    .replaceAll(/\d+\.\d+/g, (value) => String(Number(value).toFixed(1)))
+    .replaceAll("L", " ");
+
+const neighbors = atlas.neighbors
+  .map((n) => `<path d="${compactPath(n.d)}"/>`)
+  .join("");
 const states = atlas.states
   .map((state, index) => {
     const fill =
       northeastColors[state.code] ??
       palette[(index * 3 + state.name.length) % palette.length];
-    return `<path d="${state.d}" fill="${fill}"/>`;
+    return `<path d="${compactPath(state.d)}" fill="${fill}"/>`;
   })
   .join("");
-const rivers = atlas.rivers.map((r) => `<path d="${r.d}"/>`).join("");
+const rivers = atlas.rivers
+  .map((r) => `<path d="${compactPath(r.d)}"/>`)
+  .join("");
 
 const svg = [
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 676">',

@@ -35,7 +35,7 @@ export function postgresConfig(value: string): PoolConfig {
               : {}),
           },
     max: 3,
-    idleTimeoutMillis: 10_000,
+    idleTimeoutMillis: 60_000,
     connectionTimeoutMillis: 8_000,
     statement_timeout: 10_000,
     query_timeout: 12_000,
