@@ -16,8 +16,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     sameOrigin(request);
     requireOwner(cookies);
-    const body = (await readJson(request, 4096)) as { url?: unknown };
-    if (typeof body.url !== "string" || body.url.length > 2048)
+    const body = await readJson(request, 4096);
+    if (
+      typeof body !== "object" ||
+      body === null ||
+      !("url" in body) ||
+      typeof body.url !== "string" ||
+      body.url.length > 2048
+    )
       throw new EditorError("Enter a valid website URL.");
     let key: string;
     try {
