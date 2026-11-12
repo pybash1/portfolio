@@ -166,6 +166,15 @@ export async function createItem(
       420,
     ),
   };
+  let uploadedAsset: string | null = null;
+  const uploadAsset: ItemStore["asset"] = async (
+    bytes,
+    extension,
+    contentType,
+  ) => {
+    uploadedAsset = await store.asset(bytes, extension, contentType);
+    return uploadedAsset;
+  };
   let item: InspoItem;
   if (fields.kind === "url") {
     if (!targetUrl || !parsed.data.preview)
@@ -174,6 +183,13 @@ export async function createItem(
       parsed.data.preview as UrlPreview,
       targetUrl.href,
     );
+    if (
+      draft.kind !== "website" &&
+      !["music", "video", "youtube", "figma", "embed", "link"].includes(
+        draft.kind,
+      )
+    )
+      throw new EditorError("Choose another format for this item.");
     const common = {
       ...base,
       title: fields.title || draft.title,
@@ -191,7 +207,7 @@ export async function createItem(
         : (await fetchPage(fields.imageUrl!, 4_000_000)).body;
       const screenshot = await image(bytes);
       previewImage = {
-        src: await store.asset(screenshot.bytes, "webp", "image/webp"),
+        src: await uploadAsset(screenshot.bytes, "webp", "image/webp"),
         alt:
           draft.kind === "website"
             ? `Landing page of ${common.title}`
@@ -213,12 +229,7 @@ export async function createItem(
       item = {
         ...common,
         kind: draft.kind as
-          | "music"
-          | "video"
-          | "youtube"
-          | "figma"
-          | "embed"
-          | "link",
+          "music" | "video" | "youtube" | "figma" | "embed" | "link",
         description: draft.description,
         ...(previewImage ? { image: previewImage } : {}),
         ...(draft.embed ? { embed: draft.embed } : {}),
@@ -272,7 +283,7 @@ export async function createItem(
           }
         : {}),
       image: {
-        src: await store.asset(converted.bytes, "webp", "image/webp"),
+        src: await uploadAsset(converted.bytes, "webp", "image/webp"),
         alt: itemTitle,
         aspectRatio: converted.aspectRatio,
       },
@@ -280,7 +291,7 @@ export async function createItem(
   } else if (fields.kind === "font") {
     const bytes = Buffer.from(fields.fileData, "base64");
     const { extension, font } = fontMetadata(bytes);
-    const src = await store.asset(bytes, extension, `font/${extension}`);
+    const src = await uploadAsset(bytes, extension, `font/${extension}`);
     item = {
       ...base,
       title: font.family,
@@ -309,5 +320,18 @@ export async function createItem(
       },
     };
   }
-  return store.add(item);
+  let added: InspoItem;
+  try {
+    added = await store.add(item);
+  } catch (error) {
+    if (uploadedAsset) await store.discardAsset(uploadedAsset);
+    throw error;
+  }
+  if (
+    uploadedAsset &&
+    !("image" in added && added.image?.src === uploadedAsset) &&
+    !(added.kind === "font" && added.font.src === uploadedAsset)
+  )
+    await store.discardAsset(uploadedAsset);
+  return added;
 }

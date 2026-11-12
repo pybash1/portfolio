@@ -2,7 +2,6 @@ import { randomUUID } from "node:crypto";
 import {
   GetObjectCommand,
   DeleteObjectCommand,
-  HeadBucketCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
@@ -42,14 +41,6 @@ function s3() {
     responseChecksumValidation: "WHEN_REQUIRED",
   });
   return { client, bucket: settings.bucket };
-}
-
-/** A cheap authenticated check for the bucket used by the collection. */
-export async function assertInspoBucketAvailable(): Promise<void> {
-  const { client, bucket } = s3();
-  await client.send(new HeadBucketCommand({ Bucket: bucket }), {
-    abortSignal: AbortSignal.timeout(5_000),
-  });
 }
 
 export function validAssetName(name: string): boolean {
@@ -102,6 +93,7 @@ export async function uploadInspoAsset(
   // Names are random, never derived from the request or the uploaded file.
   const name = `${randomUUID()}.${extension}`;
   if (!validAssetName(name)) throw new EditorError("Invalid media filename.");
+  const url = assetUrl(name);
   const { client, bucket } = target ?? s3();
   await client.send(
     new PutObjectCommand({
@@ -112,7 +104,7 @@ export async function uploadInspoAsset(
       CacheControl: "public, max-age=31536000, immutable",
     }),
   );
-  return assetUrl(name);
+  return url;
 }
 
 export async function readInspoAsset(

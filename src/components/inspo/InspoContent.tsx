@@ -24,10 +24,8 @@ export default function InspoContent({
   useEffect(() => {
     const element = imageRef.current;
     // A failed server-rendered image may finish before React attaches onError.
-    if (item.kind === "website" && element?.complete && !element.naturalWidth) {
-      setImageFailed(true);
-    }
-  }, [item.kind, image?.src]);
+    setImageFailed(!!image && !!element?.complete && !element.naturalWidth);
+  }, [image?.src]);
 
   const textClass = "wrap-anywhere whitespace-pre-wrap";
   const bodyText = expanded
@@ -92,7 +90,7 @@ export default function InspoContent({
 
   return (
     <>
-      {image ? (
+      {image && !imageFailed ? (
         <div
           className={`relative overflow-hidden bg-inspo-surface ${expanded ? "max-h-[55dvh]" : ""}`}
           style={{ aspectRatio: image.aspectRatio }}
@@ -105,9 +103,7 @@ export default function InspoContent({
             loading="lazy"
             decoding="async"
             draggable={false}
-            onError={
-              item.kind === "website" ? () => setImageFailed(true) : undefined
-            }
+            onError={() => setImageFailed(true)}
           />
           {(item.kind === "video" || item.kind === "youtube") && !expanded && (
             <span className="absolute inset-0 grid place-content-center bg-[#0002]">
@@ -117,6 +113,10 @@ export default function InspoContent({
               />
             </span>
           )}
+        </div>
+      ) : image && imageFailed ? (
+        <div className="border border-inspo-line bg-inspo-surface p-6 text-[13px] text-inspo-muted max-md:p-[18px]">
+          Preview unavailable. Try again later.
         </div>
       ) : item.kind === "music" ? (
         <div

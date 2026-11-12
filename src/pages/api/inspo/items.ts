@@ -21,7 +21,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     sameOrigin(request);
     requireOwner(cookies);
-    await availableInspoItems();
     const item = await createItem(await readJson(request));
     return json({ item }, 201);
   } catch (error) {

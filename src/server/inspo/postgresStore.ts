@@ -18,7 +18,8 @@ function mediaSources(item: InspoItem): string[] {
 }
 
 function itemSource(item: InspoItem) {
-  const key = item.source ? itemUrlKey(item.source.url) : null;
+  const url = item.source?.url ?? (item.kind === "tweet" ? item.url : null);
+  const key = url ? itemUrlKey(url) : null;
   return {
     key,
     hash: key ? createHash("sha256").update(key).digest("hex") : null,
@@ -75,31 +76,42 @@ export function createPostgresStore(db: Database): ItemStore {
       }
     },
     async remove(id) {
-      const [removed] = await db
-        .delete(inspoItems)
+      const [found] = await db
+        .select({ item: inspoItems.item })
+        .from(inspoItems)
         .where(eq(inspoItems.id, id))
-        .returning({ item: inspoItems.item });
-      if (!removed) return;
-      for (const src of mediaSources(removed.item)) {
+        .limit(1);
+      if (!found) return;
+      for (const src of mediaSources(found.item)) {
         const key = inspoAssetKey(src);
         if (!key) continue;
         // Leave files another item still points at.
         const [shared] = await db
           .select({ id: inspoItems.id })
           .from(inspoItems)
-          .where(sql`${inspoItems.item}::text LIKE ${`%${src}%`}`)
+          .where(
+            sql`${inspoItems.id} <> ${id} AND (${inspoItems.item}->'image'->>'src' = ${src} OR ${inspoItems.item}->'font'->>'src' = ${src} OR ${inspoItems.item}->>'mediaSrc' = ${src})`,
+          )
           .limit(1);
         if (shared) continue;
+        // Keep the row available for a retry if storage cannot delete its media.
         try {
           await deleteInspoAsset(key);
-        } catch (error) {
-          // The item is already gone; an orphaned file is harmless.
-          console.error(`Couldn’t delete media ${key}`, error);
+        } catch {
+          throw new EditorError(
+            "Media couldn’t be deleted right now. Please try again.",
+            503,
+          );
         }
       }
+      await db.delete(inspoItems).where(eq(inspoItems.id, id));
     },
     async asset(bytes, extension, contentType) {
       return uploadInspoAsset(bytes, extension, contentType);
+    },
+    async discardAsset(src) {
+      const key = inspoAssetKey(src);
+      if (key) await deleteInspoAsset(key);
     },
   };
 }

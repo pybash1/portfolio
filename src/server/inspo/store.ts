@@ -8,6 +8,7 @@ export interface ItemStore {
   add(item: InspoItem): Promise<InspoItem>;
   remove(id: string): Promise<void>;
   asset(bytes: Buffer, extension: string, contentType: string): Promise<string>;
+  discardAsset(src: string): Promise<void>;
 }
 
 export function storageConfigured(): boolean {
