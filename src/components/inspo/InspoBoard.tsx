@@ -5,14 +5,11 @@ import {
   editorRequest,
   type OwnerSession,
 } from "../../lib/inspo";
-import Icon from "./Icon";
-import InspoCard from "./InspoCard";
-import InspoDetail from "./InspoDetail";
 import InspoAddDialog from "./InspoAddDialog";
+import { InspoCard, InspoDetail } from "./InspoContent";
+import { useCanvas, useCanvasLayout } from "./canvas";
 import type { InspoItem } from "./types";
-import { useCanvas } from "./useCanvas";
-import { useCanvasLayout } from "./useCanvasLayout";
-import { iconButton, textButton } from "./styles";
+import { Icon, iconButton, textButton } from "./ui";
 
 interface Props {
   items: InspoItem[];

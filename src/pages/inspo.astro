@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 import InspoBoard from "../components/inspo/InspoBoard";
 import { availableInspoItems } from "../server/inspo/availability";
-import { unavailable } from "../components/inspo/styles";
+import { unavailable } from "../components/inspo/ui";
 
 export const prerender = false;
 Astro.response.headers.set("Cache-Control", "no-store");
