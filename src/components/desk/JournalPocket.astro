@@ -1,0 +1,174 @@
+---
+import Grain from "./Grain.astro";
+import PaperSurface from "./PaperSurface.astro";
+import RayShadow from "./RayShadow.astro";
+import { componentId } from "../../lib/deskGraphics";
+import { getArticles } from "../../lib/journal";
+
+/** The folder's field-notes pocket, holding one log sheet per journal
+ * article (src/lib/journal.ts, read at build time). The sheets stand fanned
+ * in the pocket with their tops showing; each can be pulled out and laid on
+ * the desk, and slides back in when brought back to the pocket
+ * (src/lib/deskSheets.ts). */
+interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label = "Field notes", class: className } = Astro.props;
+const articles = (await getArticles()).reverse();
+const shadow = componentId("pocket-shadow");
+const ink = "text-[#2f3a52]";
+const heading = "Field log sheet";
+const signed = "A. Mitra";
+---
+
+<div
+  data-journal-pocket
+  class:list={[
+    "relative isolate w-full [container-type:inline-size]",
+    className,
+  ]}
+>
+  {
+    articles.map((article, i) => {
+      const day = article.date.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        timeZone: "UTC",
+      });
+      const address = article.href.replace(/^https?:\/\//, "");
+      const entryNumber = String(i + 1).padStart(3, "0");
+
+      return (
+        <div
+          data-pocket-sheet
+          data-slot={i}
+          role="button"
+          tabindex="0"
+          aria-label={`Journal entry: ${article.title}. Drag it out of the pocket to read; Enter to take it out or put it back.`}
+          class="absolute left-[3%] top-0 w-[94%] cursor-grab touch-none select-none data-near-pocket:opacity-85"
+          style={`--slot-x:${(i - (articles.length - 1) / 2) * 1.6}cqw;--slot-y:${i * 5.2}cqw;--slot-turn:${((i % 3) - 1) * 1.2}deg;translate:var(--slot-x) var(--slot-y);rotate:var(--slot-turn);z-index:${i + 1}`}
+        >
+          <article
+            data-log-sheet
+            class="relative isolate aspect-[3/4] w-full text-ink [container-type:inline-size]"
+          >
+            <PaperSurface
+              seed={article.title}
+              material="laid"
+              color="#f3eedc"
+              height={3}
+            />
+
+            <div class="absolute inset-0 px-[7%] pt-[5%]">
+              <p class="text-center font-book text-[5.4cqw] uppercase tracking-[0.12em] text-stamp">
+                {heading}
+              </p>
+
+              <div class="-mx-[7%] mt-[3%] bg-[#c8463a] px-[5%] py-[2.4%]">
+                <h3 class="bg-[#f6f2e2] px-[4%] pb-[2%] pt-[2.4%] text-center font-sans text-[7.6cqw] italic leading-[1.05]">
+                  <a
+                    href={article.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    class="hover:underline"
+                  >
+                    {article.title}
+                  </a>
+                </h3>
+              </div>
+
+              <div class="mt-[5%] border-[1.5px] border-ink/70 font-print text-[3.6cqw]">
+                <div class="flex border-b border-ink/60">
+                  <p class="flex flex-1 items-baseline gap-[3%] px-[3%] py-[2%]">
+                    <span class="font-bold uppercase tracking-wide">Date</span>
+                    <span
+                      class:list={["font-hand text-[6cqw] leading-none", ink]}
+                    >
+                      {day}
+                    </span>
+                  </p>
+                  <p class="flex items-baseline gap-[3%] border-l border-ink/60 px-[3%] py-[2%]">
+                    <span class="font-bold uppercase tracking-wide">Filed</span>
+                    <span
+                      class:list={["font-hand text-[6cqw] leading-none", ink]}
+                    >
+                      Journal
+                    </span>
+                  </p>
+                </div>
+                <div class="border-b border-ink/60 px-[3%] pb-[3%] pt-[2%]">
+                  <p class="font-bold uppercase tracking-wide">
+                    Details of entry
+                  </p>
+                  <p
+                    class:list={[
+                      "mt-[2%] font-hand text-[6.4cqw] leading-[1.1]",
+                      ink,
+                    ]}
+                  >
+                    {article.summary}
+                  </p>
+                </div>
+                <div class="flex border-b border-ink/60">
+                  <p class="flex flex-1 items-baseline gap-[3%] px-[3%] py-[2%]">
+                    <span class="font-bold uppercase tracking-wide">
+                      Reading
+                    </span>
+                    <span
+                      class:list={["font-hand text-[6cqw] leading-none", ink]}
+                    >
+                      {article.minutes} min
+                    </span>
+                  </p>
+                  <p class="flex items-baseline gap-[3%] border-l border-ink/60 px-[3%] py-[2%]">
+                    <span class="whitespace-nowrap font-bold uppercase tracking-wide">
+                      No.
+                    </span>
+                    <span
+                      class:list={["font-hand text-[6cqw] leading-none", ink]}
+                    >
+                      {entryNumber}
+                    </span>
+                  </p>
+                </div>
+                <p class="flex items-baseline gap-[3%] px-[3%] py-[2%]">
+                  <span class="font-bold uppercase tracking-wide">
+                    Recorded by
+                  </span>
+                  <span
+                    class:list={["font-hand text-[6cqw] leading-none", ink]}
+                  >
+                    {signed}
+                  </span>
+                </p>
+              </div>
+
+              <p class="mt-[4%] flex items-center justify-between font-mono text-[3.3cqw] text-ink/70">
+                <span>→ {address}</span>
+                <span>{entryNumber}</span>
+              </p>
+            </div>
+          </article>
+        </div>
+      );
+    })
+  }
+
+  {/* The sleeve in front: only the sheets' tops show above it. */}
+  <div
+    data-ray-caster={shadow}
+    style={`filter:url(#${shadow})`}
+    class="pointer-events-none absolute inset-x-0 bottom-0 z-100 h-[46%] border-x border-b border-[#c4c6bb]/60 bg-[#eeeee5] shadow-[inset_0_1px_1px_#fff9]"
+  >
+    <RayShadow id={shadow} height={2} />
+    <p
+      class="absolute inset-x-[12%] bottom-[17%] border border-ink/20 bg-[#a4b59d] px-[3%] py-[8%] text-center font-bold text-[7cqw] uppercase tracking-wide"
+    >
+      {label}
+    </p>
+    <Grain material="cotton" strength="light" />
+  </div>
+</div>

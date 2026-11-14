@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs><pattern id="laid" width="4" height="28" patternUnits="userSpaceOnUse"><path d="M0 1h4" stroke="#626947" stroke-width=".4" opacity=".25"/><path d="M0 2h4" stroke="#fff9da" stroke-width=".5" opacity=".5"/><path d="M1 0v28" stroke="#777a57" stroke-width=".3" opacity=".15"/></pattern><filter id="f"><feTurbulence type="fractalNoise" baseFrequency=".32 .8" numOctaves="3" seed="12" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feDiffuseLighting surfaceScale=".35" diffuseConstant="1" lighting-color="#f3f1df"><feDistantLight azimuth="225" elevation="65"/></feDiffuseLighting></filter></defs>
+  <path d="M0 0h256v256H0z" filter="url(#f)" opacity=".45"/><path d="M0 0h256v256H0z" fill="url(#laid)"/>
+</svg>

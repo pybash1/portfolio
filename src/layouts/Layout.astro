@@ -1,29 +1,76 @@
 ---
 import "../styles/globals.css";
-import SmoothScroll from "../components/SmoothScroll";
 
 interface Props {
   title: string;
-  preloadPortrait?: boolean;
 }
 
-const { title, preloadPortrait = false } = Astro.props;
+const { title } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth bg-bg text-primary">
+<html
+  lang="en"
+  class="min-h-full overflow-x-clip bg-[#111] font-sans text-white antialiased select-none"
+>
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Making things, but with more intention" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" href="/favicon.ico" />
-    {preloadPortrait && <link rel="preload" as="image" href="/portrait.webp" type="image/webp" />}
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <link
+      rel="preload"
+      href="/fonts/balete-variablevf.woff"
+      as="font"
+      type="font/woff"
+      crossorigin
+    />
     <slot name="head" />
   </head>
-  <body class="m-0 min-h-screen overflow-x-hidden bg-bg p-0 font-mono text-primary antialiased selection:bg-accent selection:text-white">
-    <SmoothScroll client:load />
+  <body class="min-h-dvh overflow-x-clip">
     <slot />
+    <script is:inline>
+      (() => {
+        const serial = document.querySelector("[data-ticket-serial]");
+        const showCount = (count) => {
+          if (serial && Number.isSafeInteger(count) && count >= 0)
+            serial.textContent = `NO. ${String(count).padStart(6, "0")}`;
+        };
+
+        try {
+          const cached = localStorage.getItem("portfolio-visitor-count");
+          if (cached !== null) showCount(Number(cached));
+        } catch {
+          // The ticket still has its numeric fallback.
+        }
+
+        window.addEventListener(
+          "load",
+          () => {
+            void fetch("/api/visitor-count", {
+              method: "POST",
+              cache: "no-store",
+            })
+              .then((response) => (response.ok ? response.json() : null))
+              .then((result) => {
+                if (!Number.isSafeInteger(result?.count) || result.count < 0)
+                  return;
+                showCount(result.count);
+                try {
+                  localStorage.setItem(
+                    "portfolio-visitor-count",
+                    String(result.count),
+                  );
+                } catch {
+                  // Browser storage is optional.
+                }
+              })
+              .catch(() => {});
+          },
+          { once: true },
+        );
+      })();
+    </script>
   </body>
 </html>

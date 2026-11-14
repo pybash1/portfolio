@@ -1,0 +1,51 @@
+---
+import { rayShadowMarkup } from "../../lib/rayShadow";
+
+/** A ray-traced shadow filter for a flat caster `height` CSS px above whatever
+ * it rests on. Mark the caster with `data-ray-caster={id}` and apply the
+ * filter (`filter: url(#id)` or SVG `filter` attribute). Inside an existing
+ * <svg>, pass `inline`; `unitsPerPx` aims the server render in viewBox units. */
+interface Props {
+  id: string;
+  height: number;
+  inline?: boolean;
+  unitsPerPx?: number;
+  region?: string;
+}
+
+const {
+  id,
+  height,
+  inline = false,
+  unitsPerPx = 1,
+  region = "-25% -25% 150% 150%",
+} = Astro.props;
+
+const [x, y, width, h] = region.split(/\s+/);
+const filter = {
+  id,
+  "data-ray-shadow": true,
+  "data-height": height,
+  x,
+  y,
+  width,
+  height: h,
+  "color-interpolation-filters": "sRGB" as const,
+};
+const markup = rayShadowMarkup(height, unitsPerPx);
+---
+
+{
+  inline ? (
+    <filter {...filter} set:html={markup} />
+  ) : (
+    <svg
+      aria-hidden="true"
+      width="0"
+      height="0"
+      class="pointer-events-none absolute size-0 overflow-hidden"
+    >
+      <filter {...filter} set:html={markup} />
+    </svg>
+  )
+}

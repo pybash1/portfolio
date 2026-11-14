@@ -1,0 +1,106 @@
+{
+  "id": "ff479f9e-d7d0-49b4-a583-787acb719004",
+  "prevId": "01856eb5-0040-4560-98ef-0d00fa3d5643",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "inspo.items": {
+      "name": "items",
+      "schema": "inspo",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "ordinal": {
+          "name": "ordinal",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "identity": {
+            "name": "items_ordinal_seq",
+            "increment": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "startWith": "1",
+            "cache": "1",
+            "cycle": false,
+            "schema": "inspo",
+            "type": "always"
+          }
+        },
+        "source_key": {
+          "name": "source_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source_hash": {
+          "name": "source_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "item": {
+          "name": "item",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "items_ordinal_key": {
+          "name": "items_ordinal_key",
+          "columns": [
+            "ordinal"
+          ],
+          "nullsNotDistinct": false
+        },
+        "items_source_hash_key": {
+          "name": "items_source_hash_key",
+          "columns": [
+            "source_hash"
+          ],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "item_identity": {
+          "name": "item_identity",
+          "value": "jsonb_typeof(\"inspo\".\"items\".\"item\") = 'object' AND \"inspo\".\"items\".\"item\" ? 'id' AND \"inspo\".\"items\".\"item\" ->> 'id' = \"inspo\".\"items\".\"id\""
+        },
+        "source_identity": {
+          "name": "source_identity",
+          "value": "(\"inspo\".\"items\".\"source_key\" IS NULL AND \"inspo\".\"items\".\"source_hash\" IS NULL) OR (\"inspo\".\"items\".\"source_key\" IS NOT NULL AND \"inspo\".\"items\".\"source_hash\" IS NOT NULL AND length(\"inspo\".\"items\".\"source_hash\") = 64)"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {
+    "inspo": "inspo"
+  },
+  "views": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

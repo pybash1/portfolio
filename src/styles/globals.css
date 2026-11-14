@@ -3,24 +3,156 @@
 @font-face {
   font-family: "Berkeley Mono";
   src: url("/fonts/Berkeley-Mono-Variable.woff2") format("woff2");
-  font-weight: 100 900;
   font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Balete";
+  src: url("/fonts/balete-variablevf.woff") format("woff");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Helvetica Now";
+  src: url("/fonts/HelveticaNowDisplay-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Helvetica Now";
+  src: url("/fonts/HelveticaNowDisplay-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Caveat";
+  src: url("/fonts/Caveat-Regular.ttf") format("truetype");
+  font-weight: 400;
   font-display: swap;
 }
 
 @theme {
-  --color-primary: oklch(88% 0.004 85);
-  --color-accent: oklch(0.684 0.212 40.592);
-  --color-bg: oklch(9% 0.004 85);
-  --color-white: #ffffff;
-
-  --font-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
-  --animate-blink: blink 1s step-end infinite;
+  /* Small phones: the inspo board drops to one column. */
+  --breakpoint-xs: 30.0625rem; /* 481px */
+  --font-sans: "Balete", sans-serif;
+  --font-serif: "Balete", serif;
+  --font-print: "Helvetica Now", "Arial Narrow", sans-serif;
+  --font-typewriter: "Courier New", monospace;
+  --font-mono: "Berkeley Mono", ui-monospace, monospace;
+  --font-hand: "Caveat", cursive;
+  --color-marker: #b32b26;
+  --color-paper: #eee9d4;
+  --color-ink: #292a24;
+  --color-kraft: #ab784b;
+  --color-stamp: #a23c32;
+  --color-inspo-bg: #111;
+  --color-inspo-surface: #1b1b1a;
+  --color-inspo-line: #333330;
+  --color-inspo-ink: #e9e7df;
+  --color-inspo-muted: #aaa9a1;
+  --color-inspo-faint: #85857e;
+  --shadow-paper:
+    3px 5px 3px #17201666, 9px 17px 20px #0009, inset 0 0 28px #7c875222;
+  --shadow-card:
+    3px 6px 3px #17201680, 10px 19px 22px #000a, inset 0 0 24px #39482b22;
+  --shadow-photo:
+    4px 8px 4px #15231b80, 12px 24px 24px #000a, inset 0 0 16px #63745022;
+  --shadow-folder:
+    5px 10px 5px #11180dcc, 14px 24px 30px #000b, inset 0 0 50px #39482b33;
 }
 
-@keyframes blink {
-  50% {
-    opacity: 0;
+@layer utilities {
+  [data-desk-canvas] :focus,
+  [data-gem-clip]:focus {
+    @apply outline-none;
   }
+  [data-desk-canvas] :focus-visible,
+  [data-gem-clip]:focus-visible {
+    @apply outline-none opacity-100;
+  }
+  [data-gem-reverse] {
+    @apply invisible;
+  }
+  /* A sheet turned face-down shows only its back: its own paper, unprinted.
+     Hardware on its front goes face-down with it. */
+  [data-turn-back] {
+    @apply invisible;
+  }
+  /* :where() keeps this rule's weight low, so the overrides below win. A pen
+     looks the same either way up, so a face-down pen still shows. */
+  [data-turned-over="true"]
+    *:not(
+      :where(
+        [data-stack-view],
+        [data-stack-view] *,
+        [data-gem-clip][data-mounted="true"],
+        [data-gem-clip][data-mounted="true"] *,
+        [data-bump-layer],
+        [data-bump-layer] *,
+        [data-pen],
+        [data-pen] *
+      )
+    ) {
+    @apply invisible;
+  }
+  [data-turned-over="true"] [data-turn-back],
+  [data-turned-over="true"] [data-turn-back] *,
+  [data-turned-over="true"] [data-stack-view],
+  [data-turned-over="true"] [data-gem-clip][data-mounted="true"],
+  [data-turned-over="true"] [data-bump-layer] {
+    @apply visible;
+  }
+  /* Clips seen from behind show their back arm: on a map turned over, inside
+     the folder, on a sheet turned face-down (a clip wraps its edge), or
+     re-seated on top of the stack it binds. */
+  :is(
+      [data-map-sheet][data-facing="back"]
+        [data-hardware="paperclip"][data-mounted="true"],
+      [data-folder-clip-layer="inside"]
+        > [data-hardware="paperclip"][data-mounted="true"],
+      [data-turned-over="true"]
+        [data-gem-clip][data-mounted="true"]:not([data-stack-view="obverse"]),
+      [data-stack-view="reverse"]
+    )
+    [data-gem-obverse] {
+    @apply invisible;
+  }
+  :is(
+      [data-map-sheet][data-facing="back"]
+        [data-hardware="paperclip"][data-mounted="true"],
+      [data-folder-clip-layer="inside"]
+        > [data-hardware="paperclip"][data-mounted="true"],
+      [data-turned-over="true"]
+        [data-gem-clip][data-mounted="true"]:not([data-stack-view="obverse"]),
+      [data-stack-view="reverse"]
+    )
+    [data-gem-reverse] {
+    @apply visible;
+  }
+  [data-folder-leaf] > [data-hardware] {
+    @apply [translate:0_0_2px];
+  }
+  [data-folder-leaf][data-leaf-facing="open"] > [data-hardware] {
+    @apply [translate:0_0_-2px];
+  }
+}
+
+/* Nothing on the page is selectable as text, except form fields. */
+input,
+textarea,
+[contenteditable="true"] {
+  user-select: text;
+}
+
+/* Brought up close (deskFocus): no shadows or dents. The sheet lifted to read
+   casts nothing, and nothing lying under it shows a dent through it. */
+[data-desk-focused] [data-bump-layer] {
+  visibility: hidden;
+}
+[data-focused] [data-ray-caster] {
+  filter: none !important;
 }

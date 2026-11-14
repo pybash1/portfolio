@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792865317416,
+      "tag": "0000_inspo_collection",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792869148962,
+      "tag": "0001_remove_item_metadata",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794205616588,
+      "tag": "0002_far_turbo",
+      "breakpoints": true
+    }
+  ]
+}

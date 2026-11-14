@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300">
+  <filter id="f"><feTurbulence type="fractalNoise" baseFrequency=".48" numOctaves="3" seed="31" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feDiffuseLighting surfaceScale=".9" diffuseConstant="1" lighting-color="#f0efda"><feDistantLight azimuth="225" elevation="65"/></feDiffuseLighting></filter>
+  <path d="M0 0h300v300H0z" filter="url(#f)" opacity=".65"/>
+  <g stroke="#e5dec0" stroke-width=".4" opacity=".45"><path d="m9 8 1 31m2-28v18m260 209-4 35m3-27-2 19M29 274l14-2m-10 4 18-2M214 26l11-2m-7 5 6-1"/></g>
+</svg>

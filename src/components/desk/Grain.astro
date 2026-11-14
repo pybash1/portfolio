@@ -1,0 +1,79 @@
+---
+import PaperCrease from "./PaperCrease.astro";
+
+interface Props {
+  strength?: "faint" | "light" | "heavy";
+  material?: "cotton" | "kraft" | "laid" | "card" | "photo" | "map";
+  seed?: string;
+  creases?: boolean;
+}
+
+const {
+  strength = "light",
+  material = "cotton",
+  seed = material,
+  creases = true,
+} = Astro.props;
+
+const texture = {
+  cotton: "bg-[url('/textures/paper-grain.svg')]",
+  kraft: "bg-[url('/textures/kraft-fibers.svg')]",
+  laid: "bg-[url('/textures/laid-paper.svg')]",
+  card: "bg-[url('/textures/card-stock.svg')]",
+  photo: "bg-[url('/textures/photo-emulsion.svg')]",
+  map: "bg-[url('/textures/laid-paper.svg')]",
+};
+
+const patina = {
+  cotton:
+    "bg-[radial-gradient(ellipse_at_0%_100%,#77845630,transparent_45%),radial-gradient(ellipse_at_95%_0%,#a9975d22,transparent_40%)]",
+  kraft:
+    "bg-[radial-gradient(ellipse_at_8%_12%,#d2b87b44,transparent_50%),radial-gradient(ellipse_at_100%_85%,#3e542d50,transparent_45%),linear-gradient(110deg,#e3c69318,transparent_45%,#3e49281c)]",
+  laid: "bg-[radial-gradient(ellipse_at_100%_0%,#85926533,transparent_50%),radial-gradient(ellipse_at_0%_90%,#b9a36b30,transparent_35%),linear-gradient(165deg,#fffce510,transparent_70%,#8b8e5c20)]",
+  card: "bg-[radial-gradient(ellipse_at_0%_20%,#c4c68922,transparent_50%),radial-gradient(ellipse_at_100%_95%,#384a2838,transparent_45%)]",
+  photo:
+    "bg-[linear-gradient(125deg,#fffde41a,transparent_30%,transparent_65%,#3c635026),radial-gradient(ellipse_at_0%_100%,#677b5c26,transparent_45%)]",
+  map: "bg-[radial-gradient(ellipse_at_0%_0%,#566b4140,transparent_45%),radial-gradient(ellipse_at_95%_100%,#a18e5330,transparent_50%)]",
+};
+---
+
+<span
+  aria-hidden="true"
+  data-material={material}
+  class="pointer-events-none absolute inset-0 z-30 rounded-[inherit] mix-blend-multiply"
+>
+  <span
+    class:list={[
+      "absolute inset-0 rounded-[inherit] mix-blend-multiply",
+      texture[material],
+      // Light stock shows its fibres far more than dark stock does: "faint"
+      // gives a pale card the same look as a dark one at "heavy".
+      strength === "heavy"
+        ? "opacity-75"
+        : strength === "faint"
+          ? "opacity-[.18]"
+          : "opacity-45",
+    ]}></span>
+  {
+    material !== "photo" && (
+      <span class="absolute inset-0 rounded-[inherit] bg-[url('/textures/paper-grain.svg')] opacity-15 mix-blend-multiply" />
+    )
+  }
+  <span
+    class:list={[
+      "absolute inset-0 rounded-[inherit] mix-blend-multiply",
+      patina[material],
+    ]}></span>
+  <span
+    class="absolute inset-0 rounded-[inherit] shadow-[inset_-1px_-2px_2px_#34432830,inset_0_0_14px_#646b3e18]"
+  ></span>
+</span>
+{
+  material === "photo" && (
+    <span
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-0 z-30 rounded-[inherit] bg-[linear-gradient(135deg,#fff5,transparent_20%,transparent_72%,#fff1_80%,transparent)] opacity-20 mix-blend-screen"
+    />
+  )
+}
+{material === "laid" && creases && <PaperCrease {seed} />}
