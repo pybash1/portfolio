@@ -31,7 +31,7 @@ const {
 const lines = [headlineProp].flat();
 const headline = lines.join(" ");
 const shadow = componentId("clipping-shadow");
-const { outer, inner } = tornSheet(headline);
+const { outer, inner, outline } = tornSheet(headline);
 const mask = (image: string) => ({
   maskImage: image,
   maskSize: "100% 100%",
@@ -77,6 +77,15 @@ const mask = (image: string) => ({
     </span>
   </span>
   <RayShadow id={shadow} height={5} />
+  <!-- Clips seat on the torn edge, not the box around it (paperClips.ts). -->
+  <svg
+    aria-hidden="true"
+    viewBox="0 0 1000 1000"
+    preserveAspectRatio="none"
+    class="pointer-events-none invisible absolute inset-0 size-full"
+  >
+    <polygon data-clip-outline points={outline}></polygon>
+  </svg>
 
   <div
     class="absolute inset-[9%] flex flex-col mix-blend-multiply [text-rendering:geometricPrecision]"

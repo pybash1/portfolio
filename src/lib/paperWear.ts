@@ -155,5 +155,10 @@ export function tornSheet(
       `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="none"><defs><filter id="s" x="-2%" y="-2%" width="104%" height="104%"><feGaussianBlur stdDeviation="${blur}"/></filter></defs><polygon points="${points.join(" ")}" fill="white" filter="url(#s)"/></svg>`,
     )}")`;
 
-  return { outer: mask(outer, 0.5), inner: mask(inner, 1.4) };
+  return {
+    outer: mask(outer, 0.5),
+    inner: mask(inner, 1.4),
+    /** The paper's own outline, for clips to find its real edges. */
+    outline: outer.join(" "),
+  };
 }

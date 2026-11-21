@@ -214,7 +214,21 @@ export function initializePaperClips(canvas: HTMLElement) {
     element.style.zIndex = "1000001";
   };
 
-  const folderEdges = new Map<HTMLElement, SVGPathElement>();
+  // Real paper outlines (in a 1000-unit box), where a sheet's edges are not
+  // its box: a folder's die-cut leaves (drawn mirrored) and torn cuttings.
+  const outlines = new Map<
+    HTMLElement,
+    { shape: SVGGeometryElement; mirrored: boolean }
+  >();
+
+  for (const surface of surfaces) {
+    const shape = surface.querySelector<SVGGeometryElement>(
+      "[data-clip-outline]",
+    );
+
+    if (shape?.closest("[data-clip-surface]") === surface)
+      outlines.set(surface, { shape, mirrored: false });
+  }
 
   const folderClipLayers = new Map<
     HTMLElement,
@@ -228,7 +242,7 @@ export function initializePaperClips(canvas: HTMLElement) {
       "[data-folder-exterior] [data-folder-stock] g > path",
     );
 
-    if (outline) folderEdges.set(surface, outline);
+    if (outline) outlines.set(surface, { shape: outline, mirrored: true });
 
     const layer = (inside: boolean) => {
       const plane = document.createElement("div");
@@ -288,25 +302,30 @@ export function initializePaperClips(canvas: HTMLElement) {
       attributeFilter: ["data-leaf-facing"],
     });
 
-  const sideEdge = (
-    surface: HTMLElement,
-    edge: "left" | "right",
-    y: number,
-  ) => {
-    const outline = folderEdges.get(surface);
-    if (!outline) return edge === "left" ? 0 : 1;
+  /** Where an edge really is, at a point along it: the box edge, or the
+   * sheet's own outline (a folder's inset front and projecting rear tab, a
+   * cutting's torn rim) where it has one. */
+  const edgeAt = (surface: HTMLElement, edge: Edge, along: number) => {
+    const outline = outlines.get(surface);
+    const near = edge === "left" || edge === "top";
+    if (!outline) return near ? 0 : 1;
 
-    // The exterior SVG is mirrored into leaf coordinates. Intersect its real
-    // die-cut outline, including the inset front and the projecting rear tab.
+    const across = edge === "top" || edge === "bottom";
     let inside = 0.5,
-      outside = edge === "left" ? -0.1 : 1.1;
+      outside = near ? -0.1 : 1.1;
 
     for (let i = 0; i < 18; i++) {
-      const x = (inside + outside) / 2;
+      const t = (inside + outside) / 2;
+      const x = across ? along : t,
+        y = across ? t : along;
 
-      if (outline.isPointInFill(new DOMPoint((1 - x) * 1000, y * 1000)))
-        inside = x;
-      else outside = x;
+      const point = new DOMPoint(
+        (outline.mirrored ? 1 - x : x) * 1000,
+        y * 1000,
+      );
+
+      if (outline.shape.isPointInFill(point)) inside = t;
+      else outside = t;
     }
 
     return (inside + outside) / 2;
@@ -347,12 +366,10 @@ export function initializePaperClips(canvas: HTMLElement) {
 
     if (surface && hinged(surface, placement.edge)) return false;
 
-    if (
-      surface &&
-      folderEdges.has(surface) &&
-      (placement.edge === "left" || placement.edge === "right")
-    ) {
-      placement.x = sideEdge(surface, placement.edge, placement.y);
+    if (surface && outlines.has(surface)) {
+      if (placement.edge === "left" || placement.edge === "right")
+        placement.x = edgeAt(surface, placement.edge, placement.y);
+      else placement.y = edgeAt(surface, placement.edge, placement.x);
     }
 
     const element = clip.element;
@@ -537,15 +554,23 @@ export function initializePaperClips(canvas: HTMLElement) {
       if (u < -42 / w || u > 1 + 42 / w || v < -42 / h || v > 1 + 42 / h)
         continue;
 
+      const insetX = Math.min(0.25, width / 2 / w),
+        insetY = Math.min(0.25, width / 2 / h);
+
+      const alongX = Math.max(insetX, Math.min(1 - insetX, u)),
+        alongY = Math.max(insetY, Math.min(1 - insetY, v));
+
       const edgeY = Math.max(0.001, Math.min(0.999, v));
 
-      const left = sideEdge(surface, "left", edgeY),
-        right = sideEdge(surface, "right", edgeY);
+      const left = edgeAt(surface, "left", edgeY),
+        right = edgeAt(surface, "right", edgeY),
+        top = edgeAt(surface, "top", alongX),
+        bottom = edgeAt(surface, "bottom", alongX);
 
       const edges: [Edge, number][] = [
-        ["top", Math.abs(v) * h],
+        ["top", Math.abs(v - top) * h],
         ["right", Math.abs(right - u) * w],
-        ["bottom", Math.abs(1 - v) * h],
+        ["bottom", Math.abs(bottom - v) * h],
         ["left", Math.abs(u - left) * w],
       ];
 
@@ -555,27 +580,14 @@ export function initializePaperClips(canvas: HTMLElement) {
 
       if (distance > 42) continue;
 
-      const insetX = Math.min(0.25, width / 2 / w),
-        insetY = Math.min(0.25, width / 2 / h);
-
       targets.push({
         surface,
         distance,
         placement: {
           surface: surfaceKeys.get(surface)!,
           edge,
-          x:
-            edge === "left"
-              ? left
-              : edge === "right"
-                ? right
-                : Math.max(insetX, Math.min(1 - insetX, u)),
-          y:
-            edge === "top"
-              ? 0
-              : edge === "bottom"
-                ? 1
-                : Math.max(insetY, Math.min(1 - insetY, v)),
+          x: edge === "left" ? left : edge === "right" ? right : alongX,
+          y: edge === "top" ? top : edge === "bottom" ? bottom : alongY,
         },
       });
     }
