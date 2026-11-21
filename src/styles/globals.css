@@ -10,7 +10,7 @@
 
 @font-face {
   font-family: "Balete";
-  src: url("/fonts/balete-variablevf.woff") format("woff");
+  src: url("/fonts/balete-variablevf.woff2") format("woff2");
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -30,7 +30,7 @@
 }
 @font-face {
   font-family: "Caveat";
-  src: url("/fonts/Caveat-Regular.ttf") format("truetype");
+  src: url("/fonts/Caveat-Regular.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
 }
