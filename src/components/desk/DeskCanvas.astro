@@ -89,26 +89,6 @@ const {
       void document.fonts.ready.then(showSavedLayout, showSavedLayout);
     })();
   </script>
-  <button
-    type="button"
-    data-desk-reset
-    aria-label="Reset object arrangement"
-    title="Reset arrangement"
-    class="absolute bottom-4 right-4 z-[2147483647] flex size-9 cursor-pointer items-center justify-center rounded-full border border-paper/10 bg-black/70 text-paper/40 outline-offset-4 hover:border-paper/30 hover:text-paper focus-visible:outline-2 focus-visible:outline-paper"
-  >
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 24 24"
-      class="size-4"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    >
-      <path d="M4 10a8 8 0 1 1 1 7M4 4v6h6"></path>
-    </svg>
-  </button>
   <span data-desk-announcement aria-live="polite" class="sr-only"></span>
 </main>
 <script>
@@ -154,6 +134,42 @@ const {
       );
 
       canvas.addEventListener("desk:settled", () => refreshRayShadows(canvas));
+
+      // Cheat codes, typed quickly anywhere on the page.
+      const visit = (url: string) => () => window.open(url, "_blank", "noopener");
+      const cheats: Record<string, () => void> = {
+        reset: () => canvas.dispatchEvent(new CustomEvent("desk:reset")),
+        tweet: visit("https://x.com/py_bash1"),
+        oss: visit("https://github.com/pybash1"),
+        linkup: visit("https://www.linkedin.com/in/ananjanmitra"),
+        surpriseme: () => location.assign("/inspo"),
+      };
+      const longest = Math.max(...Object.keys(cheats).map((c) => c.length));
+      let typed = "";
+      let last = 0;
+
+      window.addEventListener("keydown", (event) => {
+        const target = event.target as HTMLElement | null;
+        if (
+          event.repeat ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.altKey ||
+          event.key.length !== 1 ||
+          target?.closest("input,textarea,select,[contenteditable]")
+        )
+          return;
+
+        if (event.timeStamp - last > 600) typed = "";
+        last = event.timeStamp;
+        typed = (typed + event.key.toLowerCase()).slice(-longest);
+
+        for (const [code, cheat] of Object.entries(cheats))
+          if (typed.endsWith(code)) {
+            typed = "";
+            cheat();
+          }
+      });
 
       // While a leaf or the map turns, aim only what rides on it, from its real 3D tilt.
       canvas.addEventListener("desk:turning", (event) => {

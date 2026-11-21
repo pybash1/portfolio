@@ -941,7 +941,7 @@ export function initializeJumperWires(canvas: HTMLElement) {
 
   window.addEventListener("resize", follow);
 
-  canvas.querySelector("[data-desk-reset]")?.addEventListener("click", () => {
+  canvas.addEventListener("desk:reset", () => {
     try {
       localStorage.removeItem(storageKey);
     } catch {

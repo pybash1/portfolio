@@ -473,7 +473,7 @@ export function initializeTurnover(canvas: HTMLElement) {
     );
   });
 
-  canvas.querySelector("[data-desk-reset]")?.addEventListener("click", () => {
+  canvas.addEventListener("desk:reset", () => {
     turns = {};
 
     try {

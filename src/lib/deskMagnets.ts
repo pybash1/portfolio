@@ -655,7 +655,7 @@ export function initializeMagnets(canvas: HTMLElement) {
     }
   });
 
-  canvas.querySelector("[data-desk-reset]")?.addEventListener("click", () => {
+  canvas.addEventListener("desk:reset", () => {
     finish(true);
     magnets.forEach((magnet) => restore(magnet, magnet.initial));
     saved = {};

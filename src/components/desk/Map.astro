@@ -384,11 +384,9 @@ const foldPositions = [33.3, 66.7] as const;
 
       if (sideKey && sides()[sheetId] === "back") setSide(true, false);
 
-      canvas
-        ?.querySelector("[data-desk-reset]")
-        ?.addEventListener("click", () => {
-          if (sheet.dataset.side === "back") setSide(false, false);
-        });
+      canvas?.addEventListener("desk:reset", () => {
+        if (sheet.dataset.side === "back") setSide(false, false);
+      });
 
       flip?.addEventListener("click", (event) => {
         if (

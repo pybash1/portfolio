@@ -428,7 +428,7 @@ export function initializeFolderSheets(canvas: HTMLElement) {
   }
 
   // The canvas reset puts every sheet back in the folder, in its first order.
-  canvas.querySelector("[data-desk-reset]")?.addEventListener("click", () => {
+  canvas.addEventListener("desk:reset", () => {
     sheets.forEach(putBack);
     papers.append(...sheets);
 
@@ -757,7 +757,7 @@ export function initializeJournalPocket(canvas: HTMLElement) {
   }
 
   // The canvas reset puts every sheet back in the pocket, in its first order.
-  canvas.querySelector("[data-desk-reset]")?.addEventListener("click", () => {
+  canvas.addEventListener("desk:reset", () => {
     sheets.forEach(putBack);
     try {
       localStorage.removeItem(storageKey);

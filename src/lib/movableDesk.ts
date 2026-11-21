@@ -271,7 +271,7 @@ export function initializeDesk(canvas: HTMLElement) {
       }));
 
   // No margins: objects can be moved anywhere, off the screen too (the
-  // reset button brings everything back).
+  // "reset" cheat code brings everything back).
   function constrain(_rect: DOMRect, x: number, y: number) {
     return { x, y };
   }
@@ -1077,7 +1077,7 @@ export function initializeDesk(canvas: HTMLElement) {
   ])
     canvas.addEventListener(name, () => requestAnimationFrame(updatePins));
 
-  canvas.querySelector("[data-desk-reset]")?.addEventListener("click", () => {
+  canvas.addEventListener("desk:reset", () => {
     finish(true);
     for (const stop of new Set(glides.values())) stop();
     layouts = {};

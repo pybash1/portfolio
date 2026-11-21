@@ -1178,7 +1178,7 @@ export function initializePaperClips(canvas: HTMLElement) {
     true,
   );
 
-  canvas.querySelector("[data-desk-reset]")?.addEventListener("click", () => {
+  canvas.addEventListener("desk:reset", () => {
     finish(true);
     clips.forEach((clip) => restore(clip, clip.initial));
     saved = {};
