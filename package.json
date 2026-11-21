@@ -3,8 +3,8 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "node scripts/generate-india-geography.mjs && astro dev",
-    "build": "node scripts/generate-india-geography.mjs && astro check && astro build",
+    "dev": "bun scripts/generate-india-geography.mjs && astro dev",
+    "build": "bun scripts/generate-india-geography.mjs && astro check && astro build",
     "db:generate": "drizzle-kit generate",
     "db:check": "drizzle-kit check",
     "db:migrate": "bun scripts/db/migrate.ts",
@@ -13,11 +13,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/react": "^7.1.4",
-    "@astrojs/vercel": "^11.0.20",
+    "@astrojs/react": "^7.1.9",
+    "@astrojs/vercel": "^11.0.22",
     "@aws-sdk/client-s3": "^3.1164.0",
     "@tailwindcss/vite": "^4.3.5",
-    "astro": "7.4.7",
+    "astro": "^7.4.13",
     "drizzle-orm": "^0.45.4",
     "fontkit": "^2.0.4",
     "openid-client": "^6.8.9",
