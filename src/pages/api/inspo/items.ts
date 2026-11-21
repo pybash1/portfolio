@@ -7,7 +7,7 @@ import {
   readJson,
   sameOrigin,
 } from "../../../server/inspo/http";
-import { availableInspoItems } from "../../../server/inspo/availability";
+import { availableInspoItems } from "../../../server/inspo/store";
 
 export const prerender = false;
 export const GET: APIRoute = async () => {

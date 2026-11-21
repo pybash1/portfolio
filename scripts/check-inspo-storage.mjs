@@ -19,10 +19,8 @@ mock.module(
 );
 
 const { createItem } = await import("../src/server/inspo/create.ts");
-const { createPostgresStore } =
-  await import("../src/server/inspo/postgresStore.ts");
-const { availableInspoItems } =
-  await import("../src/server/inspo/availability.ts");
+const { createPostgresStore, availableInspoItems } =
+  await import("../src/server/inspo/store.ts");
 
 const image = await sharp({
   create: { width: 2, height: 2, channels: 3, background: "white" },

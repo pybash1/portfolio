@@ -2,18 +2,16 @@ import type { APIRoute } from "astro";
 import {
   cookieOptions,
   createOwnerSession,
-  ownerCookie,
-} from "../../../../server/inspo/auth";
-import { EditorError, editorError } from "../../../../server/inspo/http";
-import {
   editorRedirect,
   finishLogin,
   loginCookie,
   loginCookieOptions,
   loginOrigin,
   oidcConfiguration,
+  ownerCookie,
   readLoginTransaction,
-} from "../../../../server/inspo/oidc";
+} from "../../../../server/inspo/auth";
+import { EditorError, editorError } from "../../../../server/inspo/http";
 
 export const prerender = false;
 export const GET: APIRoute = async ({ request, cookies }) => {

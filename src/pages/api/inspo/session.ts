@@ -2,11 +2,12 @@ import type { APIRoute } from "astro";
 import {
   checkOwnerSession,
   cookieOptions,
+  loginCookie,
+  loginCookieOptions,
   ownerConfigured,
   ownerCookie,
 } from "../../../server/inspo/auth";
 import { editorError, json, sameOrigin } from "../../../server/inspo/http";
-import { loginCookie, loginCookieOptions } from "../../../server/inspo/oidc";
 import { storageConfigured } from "../../../server/inspo/store";
 
 export const prerender = false;

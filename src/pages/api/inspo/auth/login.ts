@@ -6,7 +6,7 @@ import {
   loginCookieOptions,
   loginOrigin,
   oidcConfiguration,
-} from "../../../../server/inspo/oidc";
+} from "../../../../server/inspo/auth";
 
 export const prerender = false;
 export const POST: APIRoute = async ({ request, cookies }) => {
