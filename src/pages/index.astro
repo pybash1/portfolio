@@ -17,10 +17,36 @@ import StickyNote from "../components/desk/StickyNote.astro";
 import DeskCanvas from "../components/desk/DeskCanvas.astro";
 import Movable from "../components/desk/Movable.astro";
 
-const ticketNumber = "NO. 000009";
+const ticketNumber = "NO. 000018";
+
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Ananjan Mitra",
+  alternateName: "pybash",
+  url: "https://pybash.xyz",
+  email: "mailto:hi@pybash.xyz",
+  jobTitle: "Interdisciplinary Engineer",
+  image: "https://pybash.xyz/photos/headshot-mini.webp",
+  sameAs: [
+    "https://github.com/pybash1",
+    "https://journal.pybash.xyz",
+    "https://x.com/py_bash1",
+    "https://www.linkedin.com/in/ananjanmitra",
+  ],
+};
 ---
 
-<Layout title="Portfolio — Ananjan Mitra">
+<Layout
+  title="Portfolio — Ananjan Mitra"
+  description="18-year-old engineer building software, side projects, and bits of hardware. Have a look around the desk."
+>
+  <script
+    slot="head"
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(person)}
+  />
   <link slot="head" rel="preload" as="image" href="/maps/atlas-paper-front.webp" media="(min-width: 1024px)" />
   <link slot="head" rel="preload" as="image" href="/maps/india-geography.svg" media="(min-width: 1024px)" />
   <DeskCanvas
@@ -98,7 +124,7 @@ const ticketNumber = "NO. 000009";
       <BusinessCard
         house="pybash"
         name="Ananjan Mitra"
-        role="Builder, engineer, curious person."
+        role="Interdisciplinary Engineer"
         details={["pybash.xyz · github.com/pybash1", "hi@pybash.xyz"]}
       />
     </Movable>

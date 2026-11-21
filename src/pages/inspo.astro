@@ -16,12 +16,10 @@ try {
 }
 ---
 
-<Layout title="Inspo — Ananjan Mitra">
-  <meta
-    slot="head"
-    name="description"
-    content="A collection of images, words, sounds, and things worth keeping. Explore Ananjan Mitra’s inspiration canvas."
-  />
+<Layout
+  title="Inspo — Ananjan Mitra"
+  description="A collection of images, words, sounds, and things worth keeping. Explore my inspiration canvas."
+>
   {
     items ? (
       <InspoBoard items={items} client:load />
