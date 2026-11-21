@@ -607,7 +607,7 @@ export function initializeJumperWires(canvas: HTMLElement) {
   };
 
   /** As authored: red across the board from a rail, green from the board
-   * out onto the desk, blue lying loose beside it. */
+   * out onto the desk, blue lying loose above it. */
   const defaults = () => {
     const id = boards()[0] ? boardId(boards()[0]!) : "";
 
@@ -645,7 +645,7 @@ export function initializeJumperWires(canvas: HTMLElement) {
     if (green && id) green.ends = [plug(index("c24")), loose(150, 95, 0.5)];
 
     if (blue)
-      blue.ends = [loose(-120, 44, Math.PI + 0.1), loose(60, 47, -0.05)];
+      blue.ends = [loose(-140, -100, Math.PI + 0.1), loose(0, -94, -0.05)];
   };
 
   const restore = () => {
