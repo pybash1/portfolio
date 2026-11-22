@@ -101,7 +101,7 @@ const mask = (image: string) => ({
         ))
       }
     </h2>
-    <p class="mt-[1.6cqw] font-print text-[2.6cqw] uppercase tracking-[0.1em]">
+    <p class="mt-[1.6cqw] font-print text-[2.6cqw] uppercase tracking-widest">
       {byline}
     </p>
 
@@ -125,14 +125,19 @@ const mask = (image: string) => ({
         }
       </div>
       <figure class="w-[28%] shrink-0">
-        <div class="relative aspect-[4/5] overflow-hidden bg-[#c9bb92]">
+        <div class="relative aspect-4/5 overflow-hidden bg-[#c9bb92]">
+          <img
+            src="/photos/headshot-mini.webp"
+            alt="Ananjan sitting in front of library shelves, arms crossed"
+            width="1568"
+            height="1456"
+            loading="lazy"
+            draggable="false"
+            class="absolute inset-0 size-full object-cover object-[50%_30%] [filter:grayscale(1)_sepia(0.7)_contrast(1.25)_brightness(0.9)_blur(0.3px)]"
+          />
           <span
             aria-hidden="true"
-            class="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,#2b261c_0_22%,transparent_23%),radial-gradient(ellipse_at_50%_105%,#2b261c_0_55%,transparent_56%)] opacity-80"
-          ></span>
-          <span
-            aria-hidden="true"
-            class="absolute inset-0 bg-[radial-gradient(circle,transparent_0_40%,#d9cca4_44%)] bg-[length:1.1cqw_1.1cqw] opacity-70"
+            class="absolute inset-0 bg-[radial-gradient(circle,transparent_0_40%,#d9cca4_44%)] bg-[length:0.8cqw_0.8cqw] opacity-35"
           ></span>
         </div>
         <figcaption
