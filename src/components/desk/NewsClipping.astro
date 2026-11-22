@@ -43,7 +43,7 @@ const mask = (image: string) => ({
   data-clip-surface
   aria-label={`Newspaper cutting: ${headline}`}
   class:list={[
-    "relative isolate aspect-[4/5] text-[#2b261c] [container-type:inline-size]",
+    "relative isolate aspect-[4/5.2] text-[#2b261c] [container-type:inline-size]",
     className,
   ]}
 >
@@ -105,26 +105,30 @@ const mask = (image: string) => ({
       {byline}
     </p>
 
-    <div class="mt-[2.4cqw] flex min-h-0 flex-1 gap-[3cqw]">
-      <div
-        class="min-w-0 flex-1 columns-2 [column-fill:auto] gap-[3cqw] overflow-hidden text-left font-book text-[3.1cqw] leading-[1.32] [column-rule:1px_solid_#2b261c40] [hyphens:auto]"
-        lang="en"
+    <div
+      data-column-flow
+      class="relative mt-[2.4cqw] min-h-0 flex-1 columns-3 [column-fill:auto] gap-[3cqw] overflow-hidden text-left font-book text-[3.1cqw] leading-[1.32] [column-rule:1px_solid_#2b261c40] [hyphens:auto]"
+      lang="en"
+    >
+      {
+        paragraphs.map((p, i) => (
+          <p
+            class:list={[
+              "indent-[2.6cqw]",
+              i === 0 &&
+                "first-letter:float-left first-letter:mr-[0.6cqw] first-letter:font-sans first-letter:text-[11cqw] first-letter:font-bold first-letter:leading-[0.8] first-letter:indent-0",
+            ]}
+          >
+            {p}
+          </p>
+        ))
+      }
+      <!-- Pinned over the top of the last column; the script below pushes
+           that column's text down beneath it. -->
+      <figure
+        data-column-photo
+        class="absolute right-0 top-0 w-[calc((100%-6cqw)/3)]"
       >
-        {
-          paragraphs.map((p, i) => (
-            <p
-              class:list={[
-                "indent-[2.6cqw]",
-                i === 0 &&
-                  "first-letter:float-left first-letter:mr-[0.6cqw] first-letter:font-sans first-letter:text-[11cqw] first-letter:font-bold first-letter:leading-[0.8] first-letter:indent-0",
-              ]}
-            >
-              {p}
-            </p>
-          ))
-        }
-      </div>
-      <figure class="w-[28%] shrink-0">
         <div class="relative aspect-4/5 overflow-hidden bg-[#c9bb92]">
           <img
             src="/photos/headshot-mini.webp"
@@ -170,5 +174,71 @@ const mask = (image: string) => ({
       });
   };
 
-  document.fonts.ready.then(fit);
+  // Start the last column below the photo pinned over its top: find the
+  // first word set in that column and put a photo-tall spacer before it.
+  // The clipping may be rotated, so positions are measured along the
+  // flow's own x axis, taken from two probes at its top corners.
+  const wrapPhoto = () => {
+    document
+      .querySelectorAll<HTMLElement>("[data-column-flow]")
+      .forEach((flow) => {
+        const photo = flow.querySelector<HTMLElement>("[data-column-photo]")!;
+        const card = flow.closest<HTMLElement>("article")!;
+        flow.querySelector("[data-photo-spacer]")?.remove();
+
+        const probe = (left: string) => {
+          const el = document.createElement("span");
+          el.style.cssText = `position:absolute;top:0;left:${left};width:0;height:0`;
+          flow.append(el);
+          const { left: x, top: y } = el.getBoundingClientRect();
+          el.remove();
+          return { x, y };
+        };
+        const origin = probe("0");
+        const end = probe("100%");
+        const ax = end.x - origin.x;
+        const ay = end.y - origin.y;
+        const scale = Math.hypot(ax, ay) / flow.clientWidth;
+        if (!scale) return;
+        const localX = (r: DOMRect) =>
+          ((r.left + r.width / 2 - origin.x) * ax +
+            (r.top + r.height / 2 - origin.y) * ay) /
+          Math.hypot(ax, ay) /
+          scale;
+
+        const walker = document.createTreeWalker(flow, NodeFilter.SHOW_TEXT);
+        const range = document.createRange();
+        for (let node; (node = walker.nextNode() as Text | null); ) {
+          if (photo.contains(node)) continue;
+          for (let i = 0; i < node.length; i++) {
+            if (/\s/.test(node.data[i])) continue;
+            range.setStart(node, i);
+            range.setEnd(node, i + 1);
+            if (localX(range.getBoundingClientRect()) < photo.offsetLeft)
+              continue;
+
+            // Move the whole word down, not just its hyphenated tail.
+            while (i > 0 && !/\s/.test(node.data[i - 1])) i--;
+            const spacer = document.createElement("span");
+            spacer.dataset.photoSpacer = "";
+            spacer.style.display = "block";
+            spacer.style.breakBefore = "column";
+            spacer.style.height = `${((photo.offsetHeight / card.clientWidth) * 100 + 2.5).toFixed(2)}cqw`;
+            const para = node.parentElement!;
+            if (i === 0 && node === para.firstChild) para.before(spacer);
+            else {
+              range.setStart(node, i);
+              range.collapse(true);
+              range.insertNode(spacer);
+            }
+            return;
+          }
+        }
+      });
+  };
+
+  document.fonts.ready.then(() => {
+    fit();
+    wrapPhoto();
+  });
 </script>
