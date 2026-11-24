@@ -1,0 +1,50 @@
+---
+import FridgeMagnet from "./FridgeMagnet.astro";
+import PaperSurface from "./PaperSurface.astro";
+
+interface Props {
+  src: string;
+  alt: string;
+  date: string;
+  blue?: boolean;
+  edges?: "sharp" | "worn";
+  class?: string;
+}
+
+const {
+  src,
+  alt,
+  date,
+  blue = false,
+  edges = "sharp",
+  class: className,
+} = Astro.props;
+---
+
+<figure
+  data-clip-surface
+  class:list={["relative isolate m-0 w-full p-3 pb-4 text-ink", className]}
+>
+  <PaperSurface
+    seed={src}
+    material="photo"
+    wear={edges === "sharp" ? "sharp" : "photo"}
+    color={blue ? "#9cbdc2" : "#e9e9d7"}
+  />
+  <FridgeMagnet class="absolute -top-2 left-[43%] z-40 w-11 -rotate-6" />
+  <div class="relative overflow-hidden bg-[#3e4946]">
+    <img
+      src={src}
+      alt={alt}
+      width="800"
+      height="600"
+      loading="lazy"
+      class="aspect-[4/3] w-full object-cover"
+    />
+  </div>
+  <p
+    class="mt-4 text-center font-typewriter text-[12px] font-semibold tracking-wide"
+  >
+    {date}
+  </p>
+</figure>

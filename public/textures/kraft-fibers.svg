@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="360" viewBox="0 0 360 360">
+  <filter id="p"><feTurbulence type="fractalNoise" baseFrequency=".16 .6" numOctaves="4" seed="18" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feDiffuseLighting surfaceScale="1.1" diffuseConstant="1" lighting-color="#f3eed8"><feDistantLight azimuth="225" elevation="65"/></feDiffuseLighting></filter>
+  <path d="M0 0h360v360H0z" filter="url(#p)" opacity=".65"/>
+  <g fill="none" stroke="#3c4728" stroke-width=".6" opacity=".3"><path d="m12 32 11 3m44 58 9-2m88-59 13 4m44 16 8-3m66 66 14 3M23 181l15-3m52 48 6 2m67-66 10 2m59 34 14-1m53 57 7 2M44 319l12-3m76-29 12 2m58 36 17-2m87-16 14 3"/></g>
+  <g fill="none" stroke="#f7e7b8" stroke-width=".8" opacity=".35"><path d="m34 52 8-1m74 33 14 2m62-66 6 3m99 29 12-2M62 161l10 1m78 47 13-4m104-45 8 2m51 47 7-1M15 270l10 4m79 59 8-1m70-49 9 2m68 59 12-1"/></g>
+</svg>

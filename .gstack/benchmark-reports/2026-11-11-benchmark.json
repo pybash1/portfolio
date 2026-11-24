@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-11",
+  "environment": "local Astro dev server, headless Chrome, fresh browser context with existing visitor cookie",
+  "runs": [
+    { "view": "desktop", "state": "before", "ttfbMs": 3938, "fcpMs": 4060, "loadMs": 5196, "transferBytes": 4308829, "requests": 54 },
+    { "view": "desktop", "state": "after", "ttfbMs": 3090, "fcpMs": 3212, "loadMs": 4079, "transferBytes": 3199600, "requests": 52 },
+    { "view": "mobile", "state": "before", "ttfbMs": 477, "fcpMs": 548, "loadMs": 1101, "transferBytes": 3978233, "requests": 52 },
+    { "view": "mobile", "state": "after", "ttfbMs": 481, "fcpMs": 548, "loadMs": 1123, "transferBytes": 3115218, "requests": 51 }
+  ],
+  "staticHomeRuns": [
+    { "ttfbMs": 86, "fcpMs": 228, "loadMs": 1453 },
+    { "ttfbMs": 8, "fcpMs": 80, "loadMs": 702 }
+  ],
+  "warmPoolTtfbMs": [4027, 488, 485],
+  "warmPoolPauseBeforeLastVisitMs": 15000,
+  "limitations": "Dev timings include Vite assets. The final static home run displays a numeric fallback until the post-load CountAPI response arrives."
+}

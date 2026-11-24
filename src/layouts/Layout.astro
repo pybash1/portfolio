@@ -1,29 +1,93 @@
 ---
 import "../styles/globals.css";
-import SmoothScroll from "../components/SmoothScroll";
 
 interface Props {
   title: string;
-  preloadPortrait?: boolean;
+  description: string;
 }
 
-const { title, preloadPortrait = false } = Astro.props;
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const image = new URL("/og.jpg", Astro.site);
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth bg-bg text-primary">
+<html
+  lang="en"
+  class="min-h-full overflow-x-clip bg-inspo-bg font-sans text-white antialiased select-none"
+>
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Making things, but with more intention" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" href="/favicon.ico" />
-    {preloadPortrait && <link rel="preload" as="image" href="/portrait.webp" type="image/webp" />}
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Ananjan Mitra" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@py_bash1" />
+    <meta name="twitter:creator" content="@py_bash1" />
+    <link
+      rel="preload"
+      href="/fonts/balete-variablevf.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <slot name="head" />
   </head>
-  <body class="m-0 min-h-screen overflow-x-hidden bg-bg p-0 font-mono text-primary antialiased selection:bg-accent selection:text-white">
-    <SmoothScroll client:load />
+  <body class="min-h-dvh overflow-x-clip">
     <slot />
+    <script is:inline>
+      (() => {
+        const serial = document.querySelector("[data-ticket-serial]");
+        const showCount = (count) => {
+          if (serial && Number.isSafeInteger(count) && count >= 0)
+            serial.textContent = `NO. ${String(count).padStart(6, "0")}`;
+        };
+
+        try {
+          const cached = localStorage.getItem("portfolio-visitor-count");
+          if (cached !== null) showCount(Number(cached));
+        } catch {
+          // The ticket still has its numeric fallback.
+        }
+
+        window.addEventListener(
+          "load",
+          () => {
+            void fetch("/api/visitor-count", {
+              method: "POST",
+              cache: "no-store",
+            })
+              .then((response) => (response.ok ? response.json() : null))
+              .then((result) => {
+                if (!Number.isSafeInteger(result?.count) || result.count < 0)
+                  return;
+                showCount(result.count);
+                try {
+                  localStorage.setItem(
+                    "portfolio-visitor-count",
+                    String(result.count),
+                  );
+                } catch {
+                  // Browser storage is optional.
+                }
+              })
+              .catch(() => {});
+          },
+          { once: true },
+        );
+      })();
+    </script>
   </body>
 </html>

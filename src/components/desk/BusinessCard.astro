@@ -1,0 +1,72 @@
+---
+import PaperSurface from "./PaperSurface.astro";
+
+/** A plain printed business card on coloured card stock, held upright so
+ * its print runs sideways: the house name between two daggers, the name and
+ * role in the middle, the details along the bottom edge. A real card is
+ * 89 × 51 mm: about 107 px wide on the desk (the pens' and board's scale). */
+interface Props {
+  house: string;
+  name: string;
+  role: string;
+  /** Bottom-left and bottom-right details (e.g. a website, an email). */
+  details: [string, string];
+  class?: string;
+}
+
+const { house, name, role, details, class: className } = Astro.props;
+
+// A dagger with a short rule, as the card's ornament.
+const dagger = "M6 1v18M2 6h8M6 19l-1.2 3h2.4z";
+---
+
+<article
+  data-clip-surface
+  data-focus-turn="-90"
+  aria-label={`Business card: ${name}, ${role}. ${details.join(", ")}.`}
+  class:list={[
+    "relative isolate aspect-[2/3.5] [container-type:inline-size]",
+    className,
+  ]}
+>
+  <PaperSurface
+    seed={name}
+    material="card"
+    wear="sharp"
+    color="#efa43c"
+    strength="faint"
+  />
+
+  <!-- Printed landscape, turned upright: read with the card on its side. -->
+  <div
+    class="absolute left-1/2 top-1/2 flex h-[100cqw] w-[175cqw] -translate-x-1/2 -translate-y-1/2 rotate-90 flex-col items-center px-[8%] pb-[7%] pt-[9%] text-[#231b12] mix-blend-multiply"
+  >
+    <p
+      class="flex items-center gap-[3cqw] font-sans text-[7cqw] uppercase leading-none tracking-[0.06em]"
+    >
+      <svg viewBox="0 0 12 23" class="h-[9cqw] w-auto -rotate-90" fill="none">
+        <path d={dagger} stroke="currentColor" stroke-width="1.6"></path>
+      </svg>
+      {house}
+      <svg viewBox="0 0 12 23" class="h-[9cqw] w-auto rotate-90" fill="none">
+        <path d={dagger} stroke="currentColor" stroke-width="1.6"></path>
+      </svg>
+    </p>
+
+    <h2
+      class="mt-auto font-sans text-[17cqw] font-bold uppercase leading-none tracking-tight"
+    >
+      {name}
+    </h2>
+    <p class="mt-[2cqw] font-sans text-[7.5cqw] italic leading-none">
+      {role}
+    </p>
+
+    <div
+      class="mt-auto flex w-full justify-between font-mono text-[5.2cqw] leading-none"
+    >
+      <span>{details[0]}</span>
+      <span>{details[1]}</span>
+    </div>
+  </div>
+</article>
